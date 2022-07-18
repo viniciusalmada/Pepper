@@ -13,3 +13,18 @@
 * Physics
 * File I/O, Virtual File System
 * Build system
+
+### Event system
+
++-----------+      +------+
+|Application+----->|Window|
++-----------+      +--+---+
+                      |
+ +OnEvent <-----------+
+
+ +-----------------+
+ |Event            |
+ | Mouse(x,y,bt)   |
+ |  MousePressEvent|
+ |  ...            |
+ +-----------------+
