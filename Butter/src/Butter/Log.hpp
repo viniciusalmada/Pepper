@@ -26,3 +26,17 @@ namespace Butter
     static std::shared_ptr<spdlog::logger> client_logger;
   };
 }
+
+// Core log macros
+#define BT_CORE_TRACE(...) ::Butter::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define BT_CORE_INFO(...) ::Butter::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define BT_CORE_WARN(...) ::Butter::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define BT_CORE_ERROR(...) ::Butter::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define BT_CORE_FATAL(...) ::Butter::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+
+// Client log macros
+#define BT_TRACE(...) ::Butter::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define BT_INFO(...) ::Butter::Log::GetClientLogger()->info(__VA_ARGS__)
+#define BT_WARN(...) ::Butter::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define BT_ERROR(...) ::Butter::Log::GetClientLogger()->error(__VA_ARGS__)
+#define BT_FATAL(...) ::Butter::Log::GetClientLogger()->fatal(__VA_ARGS__)

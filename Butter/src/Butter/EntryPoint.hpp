@@ -9,6 +9,11 @@ extern Butter::Application* Butter::CreateApplication();
 
 int main()
 {
+  Butter::Log::Init();
+  BT_CORE_WARN("Initialized Log!");
+  int a = 5;
+  BT_INFO("App running! {0}", 5);
+
   auto* app = Butter::CreateApplication();
   app->Run();
   delete app;
