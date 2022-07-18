@@ -1,0 +1,3 @@
+[submodule "Butter/vendor/spdlog"]
+	path = Butter/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
