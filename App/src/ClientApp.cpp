@@ -1,3 +1,4 @@
+#include <ButterPCH.hpp>
 #include <Butter.hpp>
 
 class ClientApp : public Butter::Application

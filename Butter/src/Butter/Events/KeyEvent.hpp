@@ -2,8 +2,6 @@
 
 #include "Event.hpp"
 
-#include <sstream>
-
 namespace Butter
 {
   class BUTTER_API KeyEvent : public Event

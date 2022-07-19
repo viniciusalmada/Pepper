@@ -11,11 +11,14 @@ add_compile_options(/W4)
 add_library(Butter SHARED Butter/src/Butter/Application.cpp
                           Butter/src/Butter/Log.cpp)
 
+target_include_directories(Butter PRIVATE Butter/src)
 target_include_directories(Butter PRIVATE Butter/src/Butter)
 target_include_directories(Butter PRIVATE Butter/vendor/spdlog/include)
 
 target_compile_definitions(Butter PRIVATE BT_PLATFORM_WINDOWS)
 target_compile_definitions(Butter PRIVATE BT_BUILD_DLL)
+
+target_precompile_headers(Butter PRIVATE Butter/src/ButterPCH.hpp)
 
 ##########################################
 # The client application
@@ -28,3 +31,5 @@ target_include_directories(App PRIVATE Butter/vendor/spdlog/include)
 target_compile_definitions(App PRIVATE BT_PLATFORM_WINDOWS)
 
 target_link_libraries(App Butter)
+
+target_precompile_headers(App PRIVATE Butter/src/ButterPCH.hpp)
