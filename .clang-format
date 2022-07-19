@@ -40,4 +40,6 @@ BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine : false
 ForEachMacros: [TEST_CLASS, TEST_METHOD]
 IndentPPDirectives: BeforeHash
+AlignConsecutiveAssignments: Consecutive
+AlwaysBreakTemplateDeclarations: Yes
 ...
