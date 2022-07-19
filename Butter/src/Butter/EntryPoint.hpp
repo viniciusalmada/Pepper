@@ -12,7 +12,7 @@ int main()
   Butter::Log::Init();
   BT_CORE_WARN("Initialized Log!");
   int a = 5;
-  BT_INFO("App running! {0}", 5);
+  BT_INFO("App running! {0}", a);
 
   auto* app = Butter::CreateApplication();
   app->Run();
