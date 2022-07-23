@@ -11,6 +11,8 @@
 #include <utility>
 #include <vector>
 
+#include "Butter/Log.hpp"
+
 #ifdef BT_PLATFORM_WINDOWS
   #include <Windows.h>
 #endif

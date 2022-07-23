@@ -1,7 +1,6 @@
 #include "Application.hpp"
 
 #include "ButterPCH.hpp"
-#include "Log.hpp"
 
 Butter::Application::Application()
 {
