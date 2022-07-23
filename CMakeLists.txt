@@ -13,7 +13,8 @@ add_subdirectory(Butter/vendor/GLFW)
 ##########################################
 # The engine itself is a DLL
 add_library(Butter SHARED Butter/src/Butter/Application.cpp
-                          Butter/src/Butter/Log.cpp)
+                          Butter/src/Butter/Log.cpp
+                          Butter/src/Butter/Events/Event.cpp)
 
 target_include_directories(Butter PRIVATE Butter/src)
 target_include_directories(Butter PRIVATE Butter/src/Butter)
