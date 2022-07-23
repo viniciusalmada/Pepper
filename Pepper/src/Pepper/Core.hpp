@@ -31,3 +31,5 @@
   #define PP_ASSERT(x, ...)
   #define PP_CORE_ASSERT(x, ...)
 #endif
+
+#define FIND(cont, x) std::find(cont.begin(), cont.end(), x)

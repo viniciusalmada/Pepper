@@ -16,7 +16,8 @@ add_library(Pepper SHARED Pepper/src/Pepper/Application.cpp
                           Pepper/src/Pepper/Log.cpp
                           Pepper/src/Pepper/Events/Event.cpp
                           Pepper/src/Platform/WinWindow.cpp
-                          Pepper/src/Pepper/Layer.cpp)
+                          Pepper/src/Pepper/Layer.cpp
+                          Pepper/src/Pepper/LayerStack.cpp)
 
 target_include_directories(Pepper PRIVATE Pepper/src)
 target_include_directories(Pepper PRIVATE Pepper/vendor/spdlog/include)
