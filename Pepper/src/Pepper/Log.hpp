@@ -24,11 +24,8 @@ namespace Pepper
     }
 
   private:
-#pragma warning(push)
-#pragma warning(disable : 4251) // needs to have dll-interface
     static std::shared_ptr<spdlog::logger> core_logger;
     static std::shared_ptr<spdlog::logger> client_logger;
-#pragma warning(pop)
   };
 }
 

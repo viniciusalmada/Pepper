@@ -19,10 +19,7 @@ namespace Pepper
   private:
     bool OnWindowClose(WindowCloseEvent& e);
     
-#pragma warning(push)
-#pragma warning(disable : 4251) // needs to have dll-interface
     std::unique_ptr<Window> window;
-#pragma warning(pop)
     bool running = true;
   };
 
