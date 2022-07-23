@@ -9,7 +9,7 @@ static bool s_glfw_initialized = false;
 
 static void GLFWErrorCallback(int error, const char* desc)
 {
-  BT_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
+  PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
 }
 
 Pepper::Window* Pepper::Window::Create(const WindowProps& props)
@@ -27,7 +27,7 @@ void Pepper::WinWindow::Init(const WindowProps& props)
   data.width = props.width;
   data.height = props.height;
 
-  BT_CORE_INFO("Creating window {0} ({1}, {2}",
+  PP_CORE_INFO("Creating window {0} ({1}, {2}",
                props.title,
                props.width,
                props.height);
@@ -36,7 +36,7 @@ void Pepper::WinWindow::Init(const WindowProps& props)
   {
     // TODO: glfwTerminate on system shutdown
     int success = glfwInit();
-    BT_ASSERT(success, "Could not initialize GLFW!");
+    PP_ASSERT(success, "Could not initialize GLFW!");
     glfwSetErrorCallback(GLFWErrorCallback);
 
     s_glfw_initialized = true;

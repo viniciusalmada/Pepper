@@ -33,15 +33,15 @@ namespace Pepper
 }
 
 // Core log macros
-#define BT_CORE_TRACE(...) ::Pepper::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define BT_CORE_INFO(...) ::Pepper::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define BT_CORE_WARN(...) ::Pepper::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define BT_CORE_ERROR(...) ::Pepper::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define BT_CORE_FATAL(...) ::Pepper::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define PP_CORE_TRACE(...) ::Pepper::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define PP_CORE_INFO(...) ::Pepper::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define PP_CORE_WARN(...) ::Pepper::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define PP_CORE_ERROR(...) ::Pepper::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define PP_CORE_FATAL(...) ::Pepper::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
 // Client log macros
-#define BT_TRACE(...) ::Pepper::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define BT_INFO(...) ::Pepper::Log::GetClientLogger()->info(__VA_ARGS__)
-#define BT_WARN(...) ::Pepper::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define BT_ERROR(...) ::Pepper::Log::GetClientLogger()->error(__VA_ARGS__)
-#define BT_FATAL(...) ::Pepper::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define PP_TRACE(...) ::Pepper::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define PP_INFO(...) ::Pepper::Log::GetClientLogger()->info(__VA_ARGS__)
+#define PP_WARN(...) ::Pepper::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define PP_ERROR(...) ::Pepper::Log::GetClientLogger()->error(__VA_ARGS__)
+#define PP_FATAL(...) ::Pepper::Log::GetClientLogger()->fatal(__VA_ARGS__)

@@ -17,7 +17,7 @@ void Pepper::Application::OnEvent(Event& e)
   EventDispatcher dispatcher{ e };
   dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
   
-  BT_CORE_TRACE("{0}", e);
+  PP_CORE_TRACE("{0}", e);
 }
 
 void Pepper::Application::Run()

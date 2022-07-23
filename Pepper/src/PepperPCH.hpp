@@ -13,6 +13,6 @@
 
 #include "Pepper/Log.hpp"
 
-#ifdef BT_PLATFORM_WINDOWS
+#ifdef PP_PLATFORM_WINDOWS
   #include <Windows.h>
 #endif
