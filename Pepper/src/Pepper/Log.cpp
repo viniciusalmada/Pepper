@@ -1,5 +1,4 @@
-#include "PepperPCH.hpp"
-
+#include <PepperPCH.hpp>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 std::shared_ptr<spdlog::logger> Pepper::Log::core_logger;
@@ -18,7 +17,7 @@ void Pepper::Log::Init()
 
   core_logger = spdlog::stdout_color_mt("PEPPER");
   core_logger->set_level(spdlog::level::trace);
-  
+
   client_logger = spdlog::stdout_color_mt("APP");
   client_logger->set_level(spdlog::level::trace);
 }

@@ -3,7 +3,6 @@
 #include "Pepper/Events/KeyEvent.hpp"
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
-#include "PepperPCH.hpp"
 
 static bool s_glfw_initialized = false;
 

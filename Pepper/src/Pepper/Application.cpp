@@ -1,6 +1,6 @@
 #include "Application.hpp"
 
-#include "PepperPCH.hpp"
+#include <PepperPCH.hpp>
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -16,7 +16,7 @@ void Pepper::Application::OnEvent(Event& e)
 {
   EventDispatcher dispatcher{ e };
   dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-  
+
   PP_CORE_TRACE("{0}", e);
 }
 
