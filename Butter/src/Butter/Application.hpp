@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.hpp"
+#include "Events/WindowEvent.hpp"
 #include "Window.hpp"
 
 namespace Butter
@@ -13,7 +14,11 @@ namespace Butter
 
     void Run();
 
+    void OnEvent(Event& e);
+
   private:
+    bool OnWindowClose(WindowCloseEvent& e);
+    
 #pragma warning(push)
 #pragma warning(disable : 4251) // needs to have dll-interface
     std::unique_ptr<Window> window;

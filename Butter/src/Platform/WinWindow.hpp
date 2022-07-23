@@ -10,7 +10,7 @@ namespace Butter
   {
   public:
     WinWindow(const WindowProps& props);
-    virtual ~WinWindow();
+    ~WinWindow() override;
 
     void OnUpdate() override;
 
@@ -26,8 +26,15 @@ namespace Butter
     bool IsVsync() const override;
 
   private:
-    virtual void Init(const WindowProps& props);
-    virtual void Shutdown();
+    void Init(const WindowProps& props);
+    void Shutdown();
+
+    void ConfigResizeCB() const;
+    void ConfigCloseCB() const;
+    void ConfigKeyCB() const;
+    void ConfigMouseButtonCB() const;
+    void ConfigMouseScrollCB() const;
+    void ConfigMouseMoveCB() const;
 
   private:
     GLFWwindow* window;
