@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.hpp"
+#include "Butter/Core.hpp"
 
 namespace Butter
 {
@@ -46,6 +46,8 @@ namespace Butter
 
     std::string GetName() const { return event_type_names.at(type); }
 
+    EvType GetType() const { return type; }
+
   private:
     EvType type;
     int category_flags;
@@ -68,6 +70,15 @@ namespace Butter
       { EvType::MOUSE_SCROLL, "MOUSE_SCROLL" },
     };
   };
+
+#define EVENT_INFO(x)                                                          \
+  EventInfo GetEventInfo() const override                                      \
+  {                                                                            \
+    return EventInfo{ GetStaticType(), x };                                    \
+  }
+
+#define STATIC_TYPE(x)                                                         \
+  static EvType GetStaticType() { return x; }
 
   class BUTTER_API Event
   {
@@ -99,13 +110,14 @@ namespace Butter
   public:
     EventDispatcher(Event& e) : event(e) {}
 
-    template <typename Type>
-    bool Dispatch(EventFn<Type> fun)
+    template <typename TypeParam>
+    bool Dispatch(EventFn<TypeParam> fun)
     {
-      if (event.GetEventInfo() == Type::GetStaticType())
+      EvType type = event.GetEventInfo().GetType();
+      if (type == TypeParam::GetStaticType())
       {
         // Transform reference into pointer
-        Type* event_ptr = (Type*)&event;
+        TypeParam* event_ptr = (TypeParam*)&event;
 
         event.handled = fun(*event_ptr);
 

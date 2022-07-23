@@ -21,11 +21,8 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::MOUSE | EvCategory::INPUT;
-      return EventInfo{ EvType::MOUSE_MOVE, flags };
-    }
+    EVENT_INFO(EvCategory::INPUT | EvCategory::MOUSE)
+    STATIC_TYPE(EvType::MOUSE_MOVE)
 
   private:
     float x_pos, y_pos;
@@ -49,11 +46,8 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::MOUSE | EvCategory::INPUT;
-      return EventInfo{ EvType::MOUSE_SCROLL, flags };
-    }
+    EVENT_INFO(EvCategory::INPUT | EvCategory::MOUSE)
+    STATIC_TYPE(EvType::MOUSE_SCROLL)
 
   private:
     float x_offset, y_offset;
@@ -84,11 +78,8 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = GetFlags();
-      return EventInfo{ EvType::MOUSE_SCROLL, flags };
-    }
+    EVENT_INFO(GetFlags())
+    STATIC_TYPE(EvType::MOUSE_BUTTON_PRESSED)
   };
 
   class BUTTER_API MouseButtonReleasedEvent : public MouseButtonEvent
@@ -103,11 +94,8 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = GetFlags();
-      return EventInfo{ EvType::MOUSE_BUTTON_RELEASE, flags };
-    }
+    EVENT_INFO(GetFlags())
+    STATIC_TYPE(EvType::MOUSE_BUTTON_RELEASE)
   };
 
 }

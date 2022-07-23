@@ -19,7 +19,7 @@ namespace Butter
   {
   public:
     KeyPressedEvent(int keyCode, int repeatCount)
-        : KeyEvent(key_code), repeat_count(repeatCount)
+        : KeyEvent(keyCode), repeat_count(repeatCount)
     {
     }
 
@@ -33,12 +33,8 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::INPUT | EvCategory::KEYBOARD;
-
-      return EventInfo{ EvType::KEY_PRESS, flags };
-    }
+    EVENT_INFO(EvCategory::INPUT | EvCategory::KEYBOARD)
+    STATIC_TYPE(EvType::KEY_PRESS)
 
   private:
     int repeat_count;
@@ -47,7 +43,7 @@ namespace Butter
   class BUTTER_API KeyReleaseEvent : public KeyEvent
   {
   public:
-    KeyReleaseEvent(int keyCode) : KeyEvent(key_code) {}
+    KeyReleaseEvent(int keyCode) : KeyEvent(keyCode) {}
 
     std::string ToString() const override
     {
@@ -56,11 +52,7 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::INPUT | EvCategory::KEYBOARD;
-
-      return EventInfo{ EvType::KEY_PRESS, flags };
-    }
+    EVENT_INFO(EvCategory::INPUT | EvCategory::KEYBOARD)
+    STATIC_TYPE(EvType::KEY_RELEASE)
   };
 }

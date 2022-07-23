@@ -23,11 +23,8 @@ namespace Butter
       return ss.str();
     }
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::APPLICATION;
-      return EventInfo{ EvType::WINDOW_RESIZE, flags };
-    }
+    EVENT_INFO(EvCategory::APPLICATION)
+    STATIC_TYPE(EvType::WINDOW_RESIZE)
 
   private:
     unsigned int width, height;
@@ -38,11 +35,8 @@ namespace Butter
   public:
     WindowCloseEvent() {}
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::APPLICATION;
-      return EventInfo{ EvType::WINDOW_CLOSE, flags };
-    }
+    EVENT_INFO(EvCategory::APPLICATION)
+    STATIC_TYPE(EvType::WINDOW_CLOSE)
   };
 
   class BUTTER_API AppTickEvent : public Event
@@ -50,11 +44,8 @@ namespace Butter
   public:
     AppTickEvent() {}
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::APPLICATION;
-      return EventInfo{ EvType::APP_TICK, flags };
-    }
+    EVENT_INFO(EvCategory::APPLICATION)
+    STATIC_TYPE(EvType::APP_TICK)
   };
 
   class BUTTER_API AppUpdateEvent : public Event
@@ -62,11 +53,8 @@ namespace Butter
   public:
     AppUpdateEvent() {}
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::APPLICATION;
-      return EventInfo{ EvType::APP_UPDATE, flags };
-    }
+    EVENT_INFO(EvCategory::APPLICATION)
+    STATIC_TYPE(EvType::APP_UPDATE)
   };
 
   class BUTTER_API AppRenderEvent : public Event
@@ -74,10 +62,7 @@ namespace Butter
   public:
     AppRenderEvent() {}
 
-    EventInfo GetEventInfo() const override
-    {
-      int flags = EvCategory::APPLICATION;
-      return EventInfo{ EvType::APP_RENDER, flags };
-    }
+    EVENT_INFO(EvCategory::APPLICATION)
+    STATIC_TYPE(EvType::APP_RENDER)
   };
 }
