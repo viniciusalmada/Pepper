@@ -1,11 +1,11 @@
-#include "ButterPCH.hpp"
+#include "PepperPCH.hpp"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-std::shared_ptr<spdlog::logger> Butter::Log::core_logger;
-std::shared_ptr<spdlog::logger> Butter::Log::client_logger;
+std::shared_ptr<spdlog::logger> Pepper::Log::core_logger;
+std::shared_ptr<spdlog::logger> Pepper::Log::client_logger;
 
-void Butter::Log::Init()
+void Pepper::Log::Init()
 {
   /* Pattern:
    * %^: start color range (can be used only once)
@@ -16,7 +16,7 @@ void Butter::Log::Init()
    */
   spdlog::set_pattern("%^[%T] %n: %v%$");
 
-  core_logger = spdlog::stdout_color_mt("BUTTER");
+  core_logger = spdlog::stdout_color_mt("PEPPER");
   core_logger->set_level(spdlog::level::trace);
   
   client_logger = spdlog::stdout_color_mt("APP");

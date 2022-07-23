@@ -1,6 +1,6 @@
-[submodule "Butter/vendor/spdlog"]
-	path = Butter/vendor/spdlog
+[submodule "Pepper/vendor/spdlog"]
+	path = Pepper/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "Butter/vendor/GLFW"]
-	path = Butter/vendor/GLFW
+[submodule "Pepper/vendor/GLFW"]
+	path = Pepper/vendor/GLFW
 	url = https://github.com/glfw/glfw.git

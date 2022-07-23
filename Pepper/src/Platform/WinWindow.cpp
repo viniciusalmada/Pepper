@@ -1,9 +1,9 @@
 #include "WinWindow.hpp"
 
-#include "Butter/Events/KeyEvent.hpp"
-#include "Butter/Events/MouseEvent.hpp"
-#include "Butter/Events/WindowEvent.hpp"
-#include "ButterPCH.hpp"
+#include "Pepper/Events/KeyEvent.hpp"
+#include "Pepper/Events/MouseEvent.hpp"
+#include "Pepper/Events/WindowEvent.hpp"
+#include "PepperPCH.hpp"
 
 static bool s_glfw_initialized = false;
 
@@ -12,16 +12,16 @@ static void GLFWErrorCallback(int error, const char* desc)
   BT_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
 }
 
-Butter::Window* Butter::Window::Create(const WindowProps& props)
+Pepper::Window* Pepper::Window::Create(const WindowProps& props)
 {
   return new WinWindow(props);
 }
 
-Butter::WinWindow::WinWindow(const WindowProps& props) { Init(props); }
+Pepper::WinWindow::WinWindow(const WindowProps& props) { Init(props); }
 
-Butter::WinWindow::~WinWindow() { Shutdown(); }
+Pepper::WinWindow::~WinWindow() { Shutdown(); }
 
-void Butter::WinWindow::Init(const WindowProps& props)
+void Pepper::WinWindow::Init(const WindowProps& props)
 {
   data.title = props.title;
   data.width = props.width;
@@ -59,9 +59,9 @@ void Butter::WinWindow::Init(const WindowProps& props)
   ConfigMouseMoveCB();
 }
 
-void Butter::WinWindow::Shutdown() { glfwDestroyWindow(window); }
+void Pepper::WinWindow::Shutdown() { glfwDestroyWindow(window); }
 
-void Butter::WinWindow::ConfigResizeCB() const
+void Pepper::WinWindow::ConfigResizeCB() const
 {
   auto size_callback = [](GLFWwindow* win, int w, int h)
   {
@@ -75,7 +75,7 @@ void Butter::WinWindow::ConfigResizeCB() const
   glfwSetWindowSizeCallback(window, size_callback);
 }
 
-void Butter::WinWindow::ConfigCloseCB() const
+void Pepper::WinWindow::ConfigCloseCB() const
 {
   auto close_callback = [](GLFWwindow* win)
   {
@@ -87,7 +87,7 @@ void Butter::WinWindow::ConfigCloseCB() const
   glfwSetWindowCloseCallback(window, close_callback);
 }
 
-void Butter::WinWindow::ConfigKeyCB() const
+void Pepper::WinWindow::ConfigKeyCB() const
 {
   auto key_callback = [](GLFWwindow* win, int key, int, int action, int)
   {
@@ -118,7 +118,7 @@ void Butter::WinWindow::ConfigKeyCB() const
   glfwSetKeyCallback(window, key_callback);
 }
 
-void Butter::WinWindow::ConfigMouseButtonCB() const
+void Pepper::WinWindow::ConfigMouseButtonCB() const
 {
   auto mouse_callback = [](GLFWwindow* win, int bt, int action, int)
   {
@@ -143,7 +143,7 @@ void Butter::WinWindow::ConfigMouseButtonCB() const
   glfwSetMouseButtonCallback(window, mouse_callback);
 }
 
-void Butter::WinWindow::ConfigMouseScrollCB() const
+void Pepper::WinWindow::ConfigMouseScrollCB() const
 {
   auto mouse_callback = [](GLFWwindow* win, double xOff, double yOff)
   {
@@ -156,7 +156,7 @@ void Butter::WinWindow::ConfigMouseScrollCB() const
   glfwSetScrollCallback(window, mouse_callback);
 }
 
-void Butter::WinWindow::ConfigMouseMoveCB() const
+void Pepper::WinWindow::ConfigMouseMoveCB() const
 {
   auto mouse_callback = [](GLFWwindow* win, double xPos, double yPos)
   {
@@ -168,13 +168,13 @@ void Butter::WinWindow::ConfigMouseMoveCB() const
   glfwSetCursorPosCallback(window, mouse_callback);
 }
 
-void Butter::WinWindow::OnUpdate()
+void Pepper::WinWindow::OnUpdate()
 {
   glfwPollEvents();
   glfwSwapBuffers(window);
 }
 
-void Butter::WinWindow::SetVsync(bool enabled)
+void Pepper::WinWindow::SetVsync(bool enabled)
 {
   if (enabled)
     glfwSwapInterval(1);
@@ -184,4 +184,4 @@ void Butter::WinWindow::SetVsync(bool enabled)
   data.vsync = enabled;
 }
 
-bool Butter::WinWindow::IsVsync() const { return data.vsync; }
+bool Pepper::WinWindow::IsVsync() const { return data.vsync; }

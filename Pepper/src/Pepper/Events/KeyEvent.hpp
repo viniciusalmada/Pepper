@@ -2,9 +2,9 @@
 
 #include "Event.hpp"
 
-namespace Butter
+namespace Pepper
 {
-  class BUTTER_API KeyEvent : public Event
+  class PEPPER_API KeyEvent : public Event
   {
   public:
     int GetKeyCode() const { return key_code; }
@@ -15,7 +15,7 @@ namespace Butter
     int key_code;
   };
 
-  class BUTTER_API KeyPressedEvent : public KeyEvent
+  class PEPPER_API KeyPressedEvent : public KeyEvent
   {
   public:
     KeyPressedEvent(int keyCode, int repeatCount)
@@ -40,7 +40,7 @@ namespace Butter
     int repeat_count;
   };
 
-  class BUTTER_API KeyReleaseEvent : public KeyEvent
+  class PEPPER_API KeyReleaseEvent : public KeyEvent
   {
   public:
     KeyReleaseEvent(int keyCode) : KeyEvent(keyCode) {}

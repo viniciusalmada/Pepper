@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Butter/Core.hpp"
+#include "Pepper/Core.hpp"
 
-namespace Butter
+namespace Pepper
 {
 
-  // Events in Butter are currently blocking, meaning when an event occurs it
+  // Events in Pepper are currently blocking, meaning when an event occurs it
   // immediately gets dispatched and must be dealt with right then an there.
 
   enum class EvType {
@@ -80,7 +80,7 @@ namespace Butter
 #define STATIC_TYPE(x)                                                         \
   static EvType GetStaticType() { return x; }
 
-  class BUTTER_API Event
+  class PEPPER_API Event
   {
     friend class EventDispatcher;
 

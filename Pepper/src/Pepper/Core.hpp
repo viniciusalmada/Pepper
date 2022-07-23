@@ -2,12 +2,12 @@
 
 #ifdef BT_PLATFORM_WINDOWS
   #ifdef BT_BUILD_DLL
-    #define BUTTER_API __declspec(dllexport)
+    #define PEPPER_API __declspec(dllexport)
   #else
-    #define BUTTER_API __declspec(dllimport)
+    #define PEPPER_API __declspec(dllimport)
   #endif
 #else
-  #error Butter only support Windows!
+  #error Pepper only support Windows!
 #endif
 
 #ifdef BT_ENABLE_ASSERTS

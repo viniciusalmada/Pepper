@@ -2,10 +2,10 @@
 
 #include "Event.hpp"
 
-namespace Butter
+namespace Pepper
 {
 
-  class BUTTER_API WindowResizeEvent : public Event
+  class PEPPER_API WindowResizeEvent : public Event
   {
   public:
     WindowResizeEvent(unsigned int width, unsigned int height)
@@ -30,7 +30,7 @@ namespace Butter
     unsigned int width, height;
   };
 
-  class BUTTER_API WindowCloseEvent : public Event
+  class PEPPER_API WindowCloseEvent : public Event
   {
   public:
     WindowCloseEvent() {}
@@ -39,7 +39,7 @@ namespace Butter
     STATIC_TYPE(EvType::WINDOW_CLOSE)
   };
 
-  class BUTTER_API AppTickEvent : public Event
+  class PEPPER_API AppTickEvent : public Event
   {
   public:
     AppTickEvent() {}
@@ -48,7 +48,7 @@ namespace Butter
     STATIC_TYPE(EvType::APP_TICK)
   };
 
-  class BUTTER_API AppUpdateEvent : public Event
+  class PEPPER_API AppUpdateEvent : public Event
   {
   public:
     AppUpdateEvent() {}
@@ -57,7 +57,7 @@ namespace Butter
     STATIC_TYPE(EvType::APP_UPDATE)
   };
 
-  class BUTTER_API AppRenderEvent : public Event
+  class PEPPER_API AppRenderEvent : public Event
   {
   public:
     AppRenderEvent() {}

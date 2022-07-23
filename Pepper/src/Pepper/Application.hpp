@@ -4,9 +4,9 @@
 #include "Events/WindowEvent.hpp"
 #include "Window.hpp"
 
-namespace Butter
+namespace Pepper
 {
-  class BUTTER_API Application
+  class PEPPER_API Application
   {
   public:
     Application();

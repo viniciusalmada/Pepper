@@ -1,11 +1,11 @@
-#include <ButterPCH.hpp>
-#include <Butter.hpp>
+#include <PepperPCH.hpp>
+#include <Pepper.hpp>
 
-class ClientApp : public Butter::Application
+class ClientApp : public Pepper::Application
 {
 public:
   ClientApp() {}
   ~ClientApp() {}
 };
 
-Butter::Application* Butter::CreateApplication() { return new ClientApp(); }
+Pepper::Application* Pepper::CreateApplication() { return new ClientApp(); }

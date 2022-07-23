@@ -1,9 +1,9 @@
 #pragma once
-#include "ButterPCH.hpp"
+#include "PepperPCH.hpp"
 #include "Core.hpp"
 #include "Events/Event.hpp"
 
-namespace Butter
+namespace Pepper
 {
   struct WindowProps
   {
@@ -11,7 +11,7 @@ namespace Butter
     unsigned int width;
     unsigned int height;
 
-    WindowProps(const std::string& title = "Butter engine",
+    WindowProps(const std::string& title = "Pepper engine",
                 unsigned int w = 1280,
                 unsigned int h = 720)
         : title(title), width(w), height(h)
@@ -19,7 +19,7 @@ namespace Butter
     }
   };
 
-  class BUTTER_API Window
+  class PEPPER_API Window
   {
   public:
     using EventCallbackFn = std::function<void(Event&)>;

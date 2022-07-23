@@ -2,10 +2,10 @@
 
 #include "Event.hpp"
 
-namespace Butter
+namespace Pepper
 {
 
-  class BUTTER_API MouseMovedEvent : public Event
+  class PEPPER_API MouseMovedEvent : public Event
   {
   public:
     MouseMovedEvent(float x, float y) : x_pos(x), y_pos(y) {}
@@ -28,7 +28,7 @@ namespace Butter
     float x_pos, y_pos;
   };
 
-  class BUTTER_API MouseScrolledEvent : public Event
+  class PEPPER_API MouseScrolledEvent : public Event
   {
   public:
     MouseScrolledEvent(float xOffset, float yOffset)
@@ -53,7 +53,7 @@ namespace Butter
     float x_offset, y_offset;
   };
 
-  class BUTTER_API MouseButtonEvent : public Event
+  class PEPPER_API MouseButtonEvent : public Event
   {
   public:
     int GetMouseButton() const { return button; }
@@ -66,7 +66,7 @@ namespace Butter
     int button;
   };
 
-  class BUTTER_API MouseButtonPressedEvent : public MouseButtonEvent
+  class PEPPER_API MouseButtonPressedEvent : public MouseButtonEvent
   {
   public:
     MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
@@ -82,7 +82,7 @@ namespace Butter
     STATIC_TYPE(EvType::MOUSE_BUTTON_PRESSED)
   };
 
-  class BUTTER_API MouseButtonReleasedEvent : public MouseButtonEvent
+  class PEPPER_API MouseButtonReleasedEvent : public MouseButtonEvent
   {
   public:
     MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}

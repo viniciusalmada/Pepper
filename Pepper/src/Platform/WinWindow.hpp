@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Butter/Window.hpp"
+#include "Pepper/Window.hpp"
 
 #include <GLFW/glfw3.h>
 
-namespace Butter
+namespace Pepper
 {
   class WinWindow : public Window
   {
