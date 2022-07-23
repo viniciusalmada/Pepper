@@ -18,14 +18,15 @@ namespace Butter
     APP_TICK,
     APP_UPDATE,
     APP_RENDER,
-    KEY_PRESSED,
-    KEY_RELEASED,
+    KEY_PRESS,
+    KEY_RELEASE,
     MOUSE_BUTTON_PRESSED,
-    MOUSE_BUTTON_RELEASED,
-    MOUSE_MOVED,
-    MOUSE_SCROLLED
+    MOUSE_BUTTON_RELEASE,
+    MOUSE_MOVE,
+    MOUSE_SCROLL
   };
 
+  // clang-format off
   enum EvCategory : int {
     NONE         = 0,
     APPLICATION  = 0b00001,
@@ -34,6 +35,7 @@ namespace Butter
     MOUSE        = 0b01000,
     MOUSE_BUTTON = 0b10000,
   };
+  // clang-format on
 
   class EventInfo
   {
@@ -58,12 +60,12 @@ namespace Butter
       { EvType::APP_TICK, "APP_TICK" },
       { EvType::APP_UPDATE, "APP_UPDATE" },
       { EvType::APP_RENDER, "APP_RENDER" },
-      { EvType::KEY_PRESSED, "KEY_PRESSED" },
-      { EvType::KEY_RELEASED, "KEY_RELEASED" },
+      { EvType::KEY_PRESS, "KEY_PRESS" },
+      { EvType::KEY_RELEASE, "KEY_RELEASE" },
       { EvType::MOUSE_BUTTON_PRESSED, "MOUSE_BUTTON_PRESSED" },
-      { EvType::MOUSE_BUTTON_RELEASED, "MOUSE_BUTTON_RELEASED" },
-      { EvType::MOUSE_MOVED, "MOUSE_MOVED" },
-      { EvType::MOUSE_SCROLLED, "MOUSE_SCROLLED" },
+      { EvType::MOUSE_BUTTON_RELEASE, "MOUSE_BUTTON_RELEASE" },
+      { EvType::MOUSE_MOVE, "MOUSE_MOVE" },
+      { EvType::MOUSE_SCROLL, "MOUSE_SCROLL" },
     };
   };
 

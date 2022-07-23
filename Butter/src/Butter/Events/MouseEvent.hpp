@@ -24,7 +24,7 @@ namespace Butter
     EventInfo GetEventInfo() const override
     {
       int flags = EvCategory::MOUSE | EvCategory::INPUT;
-      return EventInfo{ EvType::MOUSE_MOVED, flags };
+      return EventInfo{ EvType::MOUSE_MOVE, flags };
     }
 
   private:
@@ -52,7 +52,7 @@ namespace Butter
     EventInfo GetEventInfo() const override
     {
       int flags = EvCategory::MOUSE | EvCategory::INPUT;
-      return EventInfo{ EvType::MOUSE_SCROLLED, flags };
+      return EventInfo{ EvType::MOUSE_SCROLL, flags };
     }
 
   private:
@@ -87,7 +87,7 @@ namespace Butter
     EventInfo GetEventInfo() const override
     {
       int flags = GetFlags();
-      return EventInfo{ EvType::MOUSE_SCROLLED, flags };
+      return EventInfo{ EvType::MOUSE_SCROLL, flags };
     }
   };
 
@@ -106,7 +106,7 @@ namespace Butter
     EventInfo GetEventInfo() const override
     {
       int flags = GetFlags();
-      return EventInfo{ EvType::MOUSE_BUTTON_RELEASED, flags };
+      return EventInfo{ EvType::MOUSE_BUTTON_RELEASE, flags };
     }
   };
 

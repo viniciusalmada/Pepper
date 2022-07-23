@@ -10,3 +10,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+
+#ifdef BT_PLATFORM_WINDOWS
+  #include <Windows.h>
+#endif

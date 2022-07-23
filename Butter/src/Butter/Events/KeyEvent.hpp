@@ -37,7 +37,7 @@ namespace Butter
     {
       int flags = EvCategory::INPUT | EvCategory::KEYBOARD;
 
-      return EventInfo{ EvType::KEY_PRESSED, flags };
+      return EventInfo{ EvType::KEY_PRESS, flags };
     }
 
   private:
@@ -60,7 +60,7 @@ namespace Butter
     {
       int flags = EvCategory::INPUT | EvCategory::KEYBOARD;
 
-      return EventInfo{ EvType::KEY_PRESSED, flags };
+      return EventInfo{ EvType::KEY_PRESS, flags };
     }
   };
 }
