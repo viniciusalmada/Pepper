@@ -1,9 +1,9 @@
 #include "WinWindow.hpp"
 
+#include "Butter/Events/KeyEvent.hpp"
+#include "Butter/Events/MouseEvent.hpp"
+#include "Butter/Events/WindowEvent.hpp"
 #include "ButterPCH.hpp"
-#include "Events/KeyEvent.hpp"
-#include "Events/MouseEvent.hpp"
-#include "Events/WindowEvent.hpp"
 
 static bool s_glfw_initialized = false;
 
@@ -38,7 +38,7 @@ void Butter::WinWindow::Init(const WindowProps& props)
     int success = glfwInit();
     BT_ASSERT(success, "Could not initialize GLFW!");
     glfwSetErrorCallback(GLFWErrorCallback);
-    
+
     s_glfw_initialized = true;
   }
 

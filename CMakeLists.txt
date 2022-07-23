@@ -18,7 +18,6 @@ add_library(Butter SHARED Butter/src/Butter/Application.cpp
                           Butter/src/Platform/WinWindow.cpp)
 
 target_include_directories(Butter PRIVATE Butter/src)
-target_include_directories(Butter PRIVATE Butter/src/Butter)
 target_include_directories(Butter PRIVATE Butter/vendor/spdlog/include)
 target_include_directories(Butter PRIVATE Butter/vendor/GLFW/include)
 
