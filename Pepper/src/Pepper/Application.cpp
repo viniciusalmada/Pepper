@@ -28,7 +28,7 @@ void Pepper::Application::Run()
   }
 }
 
-bool Pepper::Application::OnWindowClose(WindowCloseEvent& e)
+bool Pepper::Application::OnWindowClose(WindowCloseEvent&)
 {
   running = false;
   return true;
