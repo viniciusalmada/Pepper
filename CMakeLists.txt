@@ -24,6 +24,9 @@ target_include_directories(Butter PRIVATE Butter/vendor/GLFW/include)
 target_compile_definitions(Butter PRIVATE BT_PLATFORM_WINDOWS)
 target_compile_definitions(Butter PRIVATE BT_BUILD_DLL)
 
+# Debug defines
+target_compile_definitions(Butter PRIVATE $<$<CONFIG:Debug>:BT_ENABLE_ASSERTS>)
+
 target_link_libraries(Butter glfw opengl32.lib)
 
 target_precompile_headers(Butter PRIVATE Butter/src/ButterPCH.hpp)
