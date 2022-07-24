@@ -13,6 +13,11 @@ void Pepper::LayerStack::PushLayer(Layer* layer)
   layer_insert = layers.emplace(layer_insert, layer);
 }
 
+void Pepper::LayerStack::PushOverlay(Layer* overlay)
+{
+  layers.emplace_back(overlay);
+}
+
 void Pepper::LayerStack::PopLayer(Layer* layer)
 {
   auto iter = FIND(layers, layer);
