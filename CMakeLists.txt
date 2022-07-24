@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 add_compile_options(/W0)
 add_compile_options("$<$<CONFIG:Debug>:/MDd>")
 add_compile_options("$<$<CONFIG:Release>:/MD>")
-add_compile_options("$<$<CONFIG:RelMinSize>:/MD>")
+add_compile_options("$<$<CONFIG:MinSizeRel>:/MD>")
 
 ##########################################
 # GLFW library
