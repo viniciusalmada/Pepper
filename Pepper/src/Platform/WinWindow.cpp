@@ -26,7 +26,7 @@ void Pepper::WinWindow::Init(const WindowProps& props)
   data.width = props.width;
   data.height = props.height;
 
-  PP_CORE_INFO("Creating window {0} ({1}, {2}",
+  PP_CORE_INFO("Creating window {0} ({1}, {2})",
                props.title,
                props.width,
                props.height);
