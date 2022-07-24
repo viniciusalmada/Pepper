@@ -98,6 +98,8 @@ namespace Pepper
       return GetCategoryFlags() & (int)category;
     }
 
+    bool IsHandled() const { return handled; }
+
   protected:
     bool handled = false;
   };
