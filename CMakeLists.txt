@@ -4,7 +4,10 @@ project(PepperEngine VERSION 0.1)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-add_compile_options(/W4)
+add_compile_options(/W0)
+add_compile_options("$<$<CONFIG:Debug>:/MDd>")
+add_compile_options("$<$<CONFIG:Release>:/MD>")
+add_compile_options("$<$<CONFIG:RelMinSize>:/MD>")
 
 ##########################################
 # GLFW library
