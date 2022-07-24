@@ -14,6 +14,10 @@ add_compile_options("$<$<CONFIG:RelMinSize>:/MD>")
 add_subdirectory(Pepper/vendor/GLFW)
 
 ##########################################
+# GLAD library
+add_subdirectory(Pepper/vendor/GLAD)
+
+##########################################
 # The engine itself is a DLL
 add_library(Pepper SHARED Pepper/src/Pepper/Application.cpp
                           Pepper/src/Pepper/Log.cpp
@@ -25,6 +29,7 @@ add_library(Pepper SHARED Pepper/src/Pepper/Application.cpp
 target_include_directories(Pepper PRIVATE Pepper/src)
 target_include_directories(Pepper PRIVATE Pepper/vendor/spdlog/include)
 target_include_directories(Pepper PRIVATE Pepper/vendor/GLFW/include)
+target_include_directories(Pepper PRIVATE Pepper/vendor/GLAD/include)
 
 target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
@@ -32,7 +37,7 @@ target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
 # Debug defines
 target_compile_definitions(Pepper PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS>)
 
-target_link_libraries(Pepper glfw opengl32.lib)
+target_link_libraries(Pepper GLAD glfw opengl32.lib)
 
 target_precompile_headers(Pepper PRIVATE Pepper/src/PepperPCH.hpp)
 
