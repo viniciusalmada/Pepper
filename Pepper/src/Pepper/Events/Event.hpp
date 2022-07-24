@@ -133,5 +133,5 @@ namespace Pepper
     Event& event;
   };
 
-  std::ostream& operator<<(std::ostream& os, const Event& e);
+  PEPPER_API std::ostream& operator<<(std::ostream& os, const Event& e);
 }
