@@ -4,6 +4,8 @@
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
 
+#include <glad/glad.h>
+
 static bool s_glfw_initialized = false;
 
 static void GLFWErrorCallback(int error, const char* desc)
@@ -33,9 +35,8 @@ void Pepper::WinWindow::Init(const WindowProps& props)
 
   if (!s_glfw_initialized)
   {
-    // TODO: glfwTerminate on system shutdown
     int success = glfwInit();
-    PP_ASSERT(success, "Could not initialize GLFW!");
+    PP_CORE_ASSERT(success, "Could not initialize GLFW!");
     glfwSetErrorCallback(GLFWErrorCallback);
 
     s_glfw_initialized = true;
@@ -47,6 +48,9 @@ void Pepper::WinWindow::Init(const WindowProps& props)
                             nullptr,
                             nullptr);
   glfwMakeContextCurrent(window);
+  int glad_status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  PP_CORE_ASSERT(glad_status, "Failed to initialize GLAD!");
+
   glfwSetWindowUserPointer(window, &data);
   SetVsync(true);
 
@@ -58,7 +62,11 @@ void Pepper::WinWindow::Init(const WindowProps& props)
   ConfigMouseMoveCB();
 }
 
-void Pepper::WinWindow::Shutdown() { glfwDestroyWindow(window); }
+void Pepper::WinWindow::Shutdown()
+{
+  glfwDestroyWindow(window);
+  glfwTerminate();
+}
 
 void Pepper::WinWindow::ConfigResizeCB() const
 {

@@ -33,6 +33,7 @@ target_include_directories(Pepper PRIVATE Pepper/vendor/GLAD/include)
 
 target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
+target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 
 # Debug defines
 target_compile_definitions(Pepper PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS>)
