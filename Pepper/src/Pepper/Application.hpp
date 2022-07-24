@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.hpp"
+#include "Events/Event.hpp"
 #include "Events/WindowEvent.hpp"
 #include "LayerStack.hpp"
 #include "Window.hpp"
@@ -18,7 +19,7 @@ namespace Pepper
     void OnEvent(Event& e);
 
     void PushLayer(Layer* layer);
-    
+
     void PushOverlay(Layer* overlay);
 
   private:
