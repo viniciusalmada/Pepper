@@ -22,12 +22,19 @@ namespace Pepper
 
     void PushOverlay(Layer* overlay);
 
+    Window& GetWindow() { return *window; }
+
+    static Application& Get() { return *app_instance; }
+
   private:
     bool OnWindowClose(WindowCloseEvent& e);
 
     std::unique_ptr<Window> window;
     bool running = true;
     LayerStack layer_stack;
+
+  private:
+    static Application* app_instance;
   };
 
   // To be defined in client
