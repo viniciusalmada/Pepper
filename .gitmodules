@@ -4,3 +4,7 @@
 [submodule "Pepper/vendor/GLFW"]
 	path = Pepper/vendor/GLFW
 	url = https://github.com/glfw/glfw.git
+[submodule "Pepper/vendor/imgui"]
+	path = Pepper/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking

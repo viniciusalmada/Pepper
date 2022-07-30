@@ -18,6 +18,17 @@ add_subdirectory(Pepper/vendor/GLFW)
 add_subdirectory(Pepper/vendor/GLAD)
 
 ##########################################
+# Dear ImGui library
+add_library(ImGui STATIC Pepper/vendor/imgui/imgui_demo.cpp
+                         Pepper/vendor/imgui/imgui_draw.cpp
+                         Pepper/vendor/imgui/imgui_tables.cpp
+                         Pepper/vendor/imgui/imgui_widgets.cpp
+                         Pepper/vendor/imgui/imgui.cpp)
+
+target_include_directories(ImGui PRIVATE Pepper/vendor/imgui)
+
+
+##########################################
 # The engine itself is a DLL
 add_library(Pepper SHARED Pepper/src/Pepper/Application.cpp
                           Pepper/src/Pepper/Log.cpp
@@ -38,7 +49,7 @@ target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 # Debug defines
 target_compile_definitions(Pepper PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS>)
 
-target_link_libraries(Pepper GLAD glfw opengl32.lib)
+target_link_libraries(Pepper GLAD glfw ImGui opengl32.lib)
 
 target_precompile_headers(Pepper PRIVATE Pepper/src/PepperPCH.hpp)
 
