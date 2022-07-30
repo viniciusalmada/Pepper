@@ -40,12 +40,15 @@ add_library(Pepper SHARED ${SOURCE_DIR}/Pepper/Application.cpp
                           ${SOURCE_DIR}/Pepper/Events/Event.cpp
                           ${SOURCE_DIR}/Platform/WinWindow.cpp
                           ${SOURCE_DIR}/Pepper/Layer.cpp
-                          ${SOURCE_DIR}/Pepper/LayerStack.cpp)
+                          ${SOURCE_DIR}/Pepper/LayerStack.cpp
+                          ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp
+                          ${SOURCE_DIR}/Platform/OpenGL/ImGuiOpenGLRenderer.cpp)
 
 target_include_directories(Pepper PRIVATE ${SOURCE_DIR})
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imGui)
 
 target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)

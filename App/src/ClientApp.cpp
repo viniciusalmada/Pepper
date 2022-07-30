@@ -14,7 +14,11 @@ public:
 class ClientApp : public Pepper::Application
 {
 public:
-  ClientApp() { PushLayer(new ExampleLayer{}); }
+  ClientApp()
+  {
+    PushLayer(new ExampleLayer{});
+    PushLayer(new Pepper::ImGuiLayer{});
+  }
   ~ClientApp() {}
 };
 

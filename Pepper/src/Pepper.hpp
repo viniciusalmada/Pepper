@@ -6,6 +6,8 @@
 #include "Pepper/Layer.hpp"
 #include "Pepper/Log.hpp"
 
+#include "Pepper/ImGui/ImGuiLayer.hpp"
+
 // --Entry Point------------------------
 #include "Pepper/EntryPoint.hpp"
 // -------------------------------------
