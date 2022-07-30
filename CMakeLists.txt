@@ -10,37 +10,42 @@ add_compile_options("$<$<CONFIG:Release>:/MD>")
 add_compile_options("$<$<CONFIG:MinSizeRel>:/MD>")
 
 ##########################################
+# Global constants
+set(VENDOR_DIR Pepper/vendor)
+set(SOURCE_DIR Pepper/src)
+
+##########################################
 # GLFW library
-add_subdirectory(Pepper/vendor/GLFW)
+add_subdirectory(${VENDOR_DIR}/GLFW)
 
 ##########################################
 # GLAD library
-add_subdirectory(Pepper/vendor/GLAD)
+add_subdirectory(${VENDOR_DIR}/GLAD)
 
 ##########################################
 # Dear ImGui library
-add_library(ImGui STATIC Pepper/vendor/imgui/imgui_demo.cpp
-                         Pepper/vendor/imgui/imgui_draw.cpp
-                         Pepper/vendor/imgui/imgui_tables.cpp
-                         Pepper/vendor/imgui/imgui_widgets.cpp
-                         Pepper/vendor/imgui/imgui.cpp)
+add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
+                         ${VENDOR_DIR}/imgui/imgui_draw.cpp
+                         ${VENDOR_DIR}/imgui/imgui_tables.cpp
+                         ${VENDOR_DIR}/imgui/imgui_widgets.cpp
+                         ${VENDOR_DIR}/imgui/imgui.cpp)
 
-target_include_directories(ImGui PRIVATE Pepper/vendor/imgui)
+target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
 
 
 ##########################################
 # The engine itself is a DLL
-add_library(Pepper SHARED Pepper/src/Pepper/Application.cpp
-                          Pepper/src/Pepper/Log.cpp
-                          Pepper/src/Pepper/Events/Event.cpp
-                          Pepper/src/Platform/WinWindow.cpp
-                          Pepper/src/Pepper/Layer.cpp
-                          Pepper/src/Pepper/LayerStack.cpp)
+add_library(Pepper SHARED ${SOURCE_DIR}/Pepper/Application.cpp
+                          ${SOURCE_DIR}/Pepper/Log.cpp
+                          ${SOURCE_DIR}/Pepper/Events/Event.cpp
+                          ${SOURCE_DIR}/Platform/WinWindow.cpp
+                          ${SOURCE_DIR}/Pepper/Layer.cpp
+                          ${SOURCE_DIR}/Pepper/LayerStack.cpp)
 
-target_include_directories(Pepper PRIVATE Pepper/src)
-target_include_directories(Pepper PRIVATE Pepper/vendor/spdlog/include)
-target_include_directories(Pepper PRIVATE Pepper/vendor/GLFW/include)
-target_include_directories(Pepper PRIVATE Pepper/vendor/GLAD/include)
+target_include_directories(Pepper PRIVATE ${SOURCE_DIR})
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
 
 target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
@@ -51,18 +56,18 @@ target_compile_definitions(Pepper PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS>)
 
 target_link_libraries(Pepper GLAD glfw ImGui opengl32.lib)
 
-target_precompile_headers(Pepper PRIVATE Pepper/src/PepperPCH.hpp)
+target_precompile_headers(Pepper PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
 
 ##########################################
 # The client application
 add_executable(App App/src/ClientApp.cpp)
 
 target_include_directories(App PRIVATE App/src)
-target_include_directories(App PRIVATE Pepper/src)
-target_include_directories(App PRIVATE Pepper/vendor/spdlog/include)
+target_include_directories(App PRIVATE ${SOURCE_DIR})
+target_include_directories(App PRIVATE ${VENDOR_DIR}/spdlog/include)
 
 target_compile_definitions(App PRIVATE PP_PLATFORM_WINDOWS)
 
 target_link_libraries(App Pepper)
 
-target_precompile_headers(App PRIVATE Pepper/src/PepperPCH.hpp)
+target_precompile_headers(App PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
