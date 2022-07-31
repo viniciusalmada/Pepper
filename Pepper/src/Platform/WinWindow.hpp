@@ -25,6 +25,8 @@ namespace Pepper
     void SetVsync(bool enabled) override;
     bool IsVsync() const override;
 
+    void* GetNativeWindow() const override { return (void*)window; };
+
   private:
     void Init(const WindowProps& props);
     void Shutdown();
