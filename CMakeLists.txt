@@ -52,6 +52,7 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imGui)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
 target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
@@ -71,6 +72,7 @@ add_executable(App App/src/ClientApp.cpp)
 target_include_directories(App PRIVATE App/src)
 target_include_directories(App PRIVATE ${SOURCE_DIR})
 target_include_directories(App PRIVATE ${VENDOR_DIR}/spdlog/include)
+target_include_directories(App PRIVATE ${VENDOR_DIR}/glm/)
 
 target_compile_definitions(App PRIVATE PP_PLATFORM_WINDOWS)
 
