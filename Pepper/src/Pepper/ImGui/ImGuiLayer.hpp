@@ -28,7 +28,7 @@ namespace Pepper
     bool OnMouseScrolledEvent(MouseScrolledEvent& e);
     bool OnKeyPressedEvent(KeyPressedEvent& e);
     bool OnKeyReleasedEvent(KeyReleaseEvent& e);
-    // bool OnKeyTypedEvent(KeyTypedEvent& e);
+    bool OnKeyTypedEvent(KeyTypedEvent& e);
     bool OnWindowResizedEvent(WindowResizeEvent& e);
 
   private:

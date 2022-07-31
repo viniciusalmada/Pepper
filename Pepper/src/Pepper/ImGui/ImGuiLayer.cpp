@@ -95,7 +95,8 @@ void Pepper::ImGuiLayer::OnEvent(Event& event)
   dispatcher.Dispatch<KeyReleaseEvent>(
     PP_BIND_EVENT_FN(ImGuiLayer::OnKeyReleasedEvent));
 
-  // dispatcher.Dispatch<KeyTypedEvent>(PP_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
+  dispatcher.Dispatch<KeyTypedEvent>(
+    PP_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
 
   dispatcher.Dispatch<WindowResizeEvent>(
     PP_BIND_EVENT_FN(ImGuiLayer::OnWindowResizedEvent));
@@ -134,12 +135,44 @@ bool Pepper::ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& e)
   return false;
 }
 
-bool Pepper::ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e) { return false; }
-bool Pepper::ImGuiLayer::OnKeyReleasedEvent(KeyReleaseEvent& e)
+bool Pepper::ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
 {
+  ImGuiIO& io = ImGui::GetIO();
+  io.KeysDown[e.GetKeyCode()] = true;
+
+#define KEY_DOWN(l, r) io.KeysDown[l] || io.KeysDown[r]
+  io.KeyCtrl = KEY_DOWN(GLFW_KEY_LEFT_CONTROL, GLFW_KEY_RIGHT_CONTROL);
+  io.KeyAlt = KEY_DOWN(GLFW_KEY_LEFT_ALT, GLFW_KEY_RIGHT_ALT);
+  io.KeyShift = KEY_DOWN(GLFW_KEY_LEFT_SHIFT, GLFW_KEY_RIGHT_SHIFT);
+  io.KeySuper = KEY_DOWN(GLFW_KEY_LEFT_SUPER, GLFW_KEY_RIGHT_SUPER);
+
   return false;
 }
+
+bool Pepper::ImGuiLayer::OnKeyReleasedEvent(KeyReleaseEvent& e)
+{
+  ImGuiIO& io = ImGui::GetIO();
+  io.KeysDown[e.GetKeyCode()] = false;
+
+  return false;
+}
+
+bool Pepper::ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
+{
+  ImGuiIO& io = ImGui::GetIO();
+  int c = e.GetKeyCode();
+  if (c > 0 && c < 0x10000)
+    io.AddInputCharacter((unsigned short)c);
+
+  return false;
+}
+
 bool Pepper::ImGuiLayer::OnWindowResizedEvent(WindowResizeEvent& e)
 {
+  ImGuiIO& io = ImGui::GetIO();
+  io.DisplaySize = ImVec2(e.GetWidth(), e.GetHeight());
+  io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+  glViewport(0, 0, e.GetWidth(), e.GetHeight());
+
   return false;
 }
