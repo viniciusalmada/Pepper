@@ -25,27 +25,27 @@ void Pepper::ImGuiLayer::OnAttach()
   io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
   // TEMPORARY: should eventually use Hazel key codes
-  io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-  io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-  io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-  io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-  io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-  io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-  io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-  io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-  io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-  io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-  io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-  io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-  io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-  io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-  io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-  io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-  io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-  io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-  io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-  io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-  io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+  io.KeyMap[ImGuiKey_Tab] = PP_KEY_TAB.keyCode;
+  io.KeyMap[ImGuiKey_LeftArrow] = PP_KEY_LEFT.keyCode;
+  io.KeyMap[ImGuiKey_RightArrow] = PP_KEY_RIGHT.keyCode;
+  io.KeyMap[ImGuiKey_UpArrow] = PP_KEY_UP.keyCode;
+  io.KeyMap[ImGuiKey_DownArrow] = PP_KEY_DOWN.keyCode;
+  io.KeyMap[ImGuiKey_PageUp] = PP_KEY_PAGE_UP.keyCode;
+  io.KeyMap[ImGuiKey_PageDown] = PP_KEY_PAGE_DOWN.keyCode;
+  io.KeyMap[ImGuiKey_Home] = PP_KEY_HOME.keyCode;
+  io.KeyMap[ImGuiKey_End] = PP_KEY_END.keyCode;
+  io.KeyMap[ImGuiKey_Insert] = PP_KEY_INSERT.keyCode;
+  io.KeyMap[ImGuiKey_Delete] = PP_KEY_DELETE.keyCode;
+  io.KeyMap[ImGuiKey_Backspace] = PP_KEY_BACKSPACE.keyCode;
+  io.KeyMap[ImGuiKey_Space] = PP_KEY_SPACE.keyCode;
+  io.KeyMap[ImGuiKey_Enter] = PP_KEY_ENTER.keyCode;
+  io.KeyMap[ImGuiKey_Escape] = PP_KEY_ESCAPE.keyCode;
+  io.KeyMap[ImGuiKey_A] = PP_KEY_A.keyCode;
+  io.KeyMap[ImGuiKey_C] = PP_KEY_C.keyCode;
+  io.KeyMap[ImGuiKey_V] = PP_KEY_V.keyCode;
+  io.KeyMap[ImGuiKey_X] = PP_KEY_X.keyCode;
+  io.KeyMap[ImGuiKey_Y] = PP_KEY_Y.keyCode;
+  io.KeyMap[ImGuiKey_Z] = PP_KEY_Z.keyCode;
 
   ImGui_ImplOpenGL3_Init("#version 410");
 }
@@ -105,7 +105,7 @@ void Pepper::ImGuiLayer::OnEvent(Event& event)
 bool Pepper::ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e)
 {
   ImGuiIO& io = ImGui::GetIO();
-  io.MouseDown[e.GetMouseButton()] = true;
+  io.MouseDown[e.GetMouseButton().button] = true;
 
   return false;
 }
@@ -113,7 +113,7 @@ bool Pepper::ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e)
 bool Pepper::ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e)
 {
   ImGuiIO& io = ImGui::GetIO();
-  io.MouseDown[e.GetMouseButton()] = false;
+  io.MouseDown[e.GetMouseButton().button] = false;
 
   return false;
 }
@@ -138,13 +138,13 @@ bool Pepper::ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& e)
 bool Pepper::ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
 {
   ImGuiIO& io = ImGui::GetIO();
-  io.KeysDown[e.GetKeyCode()] = true;
+  io.KeysDown[e.GetKeyCode().keyCode] = true;
 
-#define KEY_DOWN(l, r) io.KeysDown[l] || io.KeysDown[r]
-  io.KeyCtrl = KEY_DOWN(GLFW_KEY_LEFT_CONTROL, GLFW_KEY_RIGHT_CONTROL);
-  io.KeyAlt = KEY_DOWN(GLFW_KEY_LEFT_ALT, GLFW_KEY_RIGHT_ALT);
-  io.KeyShift = KEY_DOWN(GLFW_KEY_LEFT_SHIFT, GLFW_KEY_RIGHT_SHIFT);
-  io.KeySuper = KEY_DOWN(GLFW_KEY_LEFT_SUPER, GLFW_KEY_RIGHT_SUPER);
+#define KEY_DOWN(l, r) io.KeysDown[l.keyCode] || io.KeysDown[r.keyCode]
+  io.KeyCtrl = KEY_DOWN(PP_KEY_LEFT_CONTROL, PP_KEY_RIGHT_CONTROL);
+  io.KeyAlt = KEY_DOWN(PP_KEY_LEFT_ALT, PP_KEY_RIGHT_ALT);
+  io.KeyShift = KEY_DOWN(PP_KEY_LEFT_SHIFT, PP_KEY_RIGHT_SHIFT);
+  io.KeySuper = KEY_DOWN(PP_KEY_LEFT_SUPER, PP_KEY_RIGHT_SUPER);
 
   return false;
 }
@@ -152,7 +152,7 @@ bool Pepper::ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
 bool Pepper::ImGuiLayer::OnKeyReleasedEvent(KeyReleaseEvent& e)
 {
   ImGuiIO& io = ImGui::GetIO();
-  io.KeysDown[e.GetKeyCode()] = false;
+  io.KeysDown[e.GetKeyCode().keyCode] = false;
 
   return false;
 }
@@ -160,7 +160,7 @@ bool Pepper::ImGuiLayer::OnKeyReleasedEvent(KeyReleaseEvent& e)
 bool Pepper::ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
 {
   ImGuiIO& io = ImGui::GetIO();
-  int c = e.GetKeyCode();
+  int c = e.GetKeyCode().keyCode;
   if (c > 0 && c < 0x10000)
     io.AddInputCharacter((unsigned short)c);
 

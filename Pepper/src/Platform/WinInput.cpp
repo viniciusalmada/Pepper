@@ -9,22 +9,22 @@
 
 Pepper::Input* Pepper::Input::instance = new WinInput{};
 
-bool Pepper::WinInput::IsKeyPressedImpl(int keyCode)
+bool Pepper::WinInput::IsKeyPressedImpl(PPKey keyCode)
 {
   Window& window = Application::Get().GetWindow();
   auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
 
-  auto state = glfwGetKey(glfw_window, keyCode);
+  auto state = glfwGetKey(glfw_window, PPKeyToGLFWKey(keyCode));
 
-  return state == GLFW_PRESS || state == GLFW_REPEAT;
+  return state == GLFW_PRESS;
 }
 
-bool Pepper::WinInput::IsMouseButtonImpl(int button)
+bool Pepper::WinInput::IsMouseButtonImpl(PPMouseBt button)
 {
   Window& window = Application::Get().GetWindow();
   auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
 
-  auto state = glfwGetMouseButton(glfw_window, button);
+  auto state = glfwGetMouseButton(glfw_window, PPMouseBtToGLFWMouse(button));
 
   return state == GLFW_PRESS;
 }

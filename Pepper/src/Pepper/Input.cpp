@@ -1,11 +1,11 @@
 #include "Input.hpp"
 
-inline bool Pepper::Input::IsKeyPressed(int keyCode)
+inline bool Pepper::Input::IsKeyPressed(PPKey keyCode)
 {
   return instance->IsKeyPressedImpl(keyCode);
 }
 
-inline bool Pepper::Input::IsMouseButtonPressed(int button)
+inline bool Pepper::Input::IsMouseButtonPressed(PPMouseBt button)
 {
   return instance->IsMouseButtonImpl(button);
 }

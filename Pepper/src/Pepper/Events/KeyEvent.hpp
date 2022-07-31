@@ -1,24 +1,25 @@
 #pragma once
 
 #include "Event.hpp"
+#include "Pepper/KeyCodes.hpp"
 
 namespace Pepper
 {
   class PEPPER_API KeyEvent : public Event
   {
   public:
-    int GetKeyCode() const { return key_code; }
+    PPKey GetKeyCode() const { return key_code; }
 
   protected:
-    KeyEvent(int keyCode) : key_code(keyCode) {}
+    KeyEvent(PPKey keyCode) : key_code(keyCode) {}
 
-    int key_code;
+    PPKey key_code;
   };
 
   class PEPPER_API KeyPressedEvent : public KeyEvent
   {
   public:
-    KeyPressedEvent(int keyCode, int repeatCount)
+    KeyPressedEvent(PPKey keyCode, int repeatCount)
         : KeyEvent(keyCode), repeat_count(repeatCount)
     {
     }
@@ -43,7 +44,7 @@ namespace Pepper
   class PEPPER_API KeyReleaseEvent : public KeyEvent
   {
   public:
-    KeyReleaseEvent(int keyCode) : KeyEvent(keyCode) {}
+    KeyReleaseEvent(PPKey keyCode) : KeyEvent(keyCode) {}
 
     std::string ToString() const override
     {
@@ -59,7 +60,7 @@ namespace Pepper
   class PEPPER_API KeyTypedEvent : public KeyEvent
   {
   public:
-    KeyTypedEvent(int keyCode) : KeyEvent(keyCode) {}
+    KeyTypedEvent(PPKey keyCode) : KeyEvent(keyCode) {}
 
     std::string ToString() const override
     {

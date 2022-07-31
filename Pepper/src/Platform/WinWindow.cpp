@@ -104,19 +104,19 @@ void Pepper::WinWindow::ConfigKeyCB() const
     {
     case GLFW_PRESS:
     {
-      KeyPressedEvent event{ key, 0 };
+      KeyPressedEvent event{ GLFWKeyToPPKey(key), 0 };
       data.eventCallback(event);
       break;
     }
     case GLFW_RELEASE:
     {
-      KeyReleaseEvent event{ key };
+      KeyReleaseEvent event{ GLFWKeyToPPKey(key) };
       data.eventCallback(event);
       break;
     }
     case GLFW_REPEAT:
     {
-      KeyPressedEvent event{ key, 1 };
+      KeyPressedEvent event{ GLFWKeyToPPKey(key), 1 };
       data.eventCallback(event);
       break;
     }
@@ -128,7 +128,7 @@ void Pepper::WinWindow::ConfigKeyCB() const
   {
     WindowData& data = *(WindowData*)glfwGetWindowUserPointer(win);
 
-    KeyTypedEvent event{ static_cast<int>(key) };
+    KeyTypedEvent event{ GLFWKeyToPPKey(static_cast<int>(key)) };
     data.eventCallback(event);
   };
 
@@ -145,13 +145,13 @@ void Pepper::WinWindow::ConfigMouseButtonCB() const
     {
     case GLFW_PRESS:
     {
-      MouseButtonPressedEvent event{ bt };
+      MouseButtonPressedEvent event{ GLFWMouseToPPMouseBt(bt) };
       data.eventCallback(event);
       break;
     }
     case GLFW_RELEASE:
     {
-      MouseButtonReleasedEvent event{ bt };
+      MouseButtonReleasedEvent event{ GLFWMouseToPPMouseBt(bt) };
       data.eventCallback(event);
       break;
     }

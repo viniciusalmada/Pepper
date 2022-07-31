@@ -37,8 +37,6 @@ void Pepper::Application::OnEvent(Event& e)
   EventDispatcher dispatcher{ e };
   dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-  PP_CORE_TRACE("{0}", e);
-
   // From top to bottom of stack check event handled
   for (auto iter = layer_stack.end(); iter != layer_stack.begin();)
   {
@@ -57,8 +55,6 @@ void Pepper::Application::Run()
 
     for (Layer* layer : layer_stack)
       layer->OnUpdate();
-
-    PP_CORE_TRACE("{0}, {1}", Input::GetMouseX(), Input::GetMouseY());
 
     window->OnUpdate();
   }

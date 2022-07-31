@@ -7,8 +7,8 @@ namespace Pepper
   class PEPPER_API WinInput : public Input
   {
   protected:
-    bool IsKeyPressedImpl(int keyCode) override;
-    bool IsMouseButtonImpl(int button) override;
+    bool IsKeyPressedImpl(PPKey keyCode) override;
+    bool IsMouseButtonImpl(PPMouseBt button) override;
     float GetMouseXImpl() override;
     float GetMouseYImpl() override;
   };

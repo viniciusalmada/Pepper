@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.hpp"
+#include "Pepper/MouseButtonCodes.hpp"
 
 namespace Pepper
 {
@@ -56,20 +57,20 @@ namespace Pepper
   class PEPPER_API MouseButtonEvent : public Event
   {
   public:
-    int GetMouseButton() const { return button; }
+    PPMouseBt GetMouseButton() const { return button; }
 
   protected:
     int GetFlags() const { return EvCategory::MOUSE | EvCategory::INPUT; }
 
-    MouseButtonEvent(int bt) : button(bt) {}
+    MouseButtonEvent(PPMouseBt bt) : button(bt) {}
 
-    int button;
+    PPMouseBt button;
   };
 
   class PEPPER_API MouseButtonPressedEvent : public MouseButtonEvent
   {
   public:
-    MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
+    MouseButtonPressedEvent(PPMouseBt button) : MouseButtonEvent(button) {}
 
     std::string ToString() const override
     {
@@ -85,7 +86,7 @@ namespace Pepper
   class PEPPER_API MouseButtonReleasedEvent : public MouseButtonEvent
   {
   public:
-    MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+    MouseButtonReleasedEvent(PPMouseBt button) : MouseButtonEvent(button) {}
 
     std::string ToString() const override
     {
