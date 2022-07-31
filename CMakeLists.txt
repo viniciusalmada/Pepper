@@ -40,9 +40,12 @@ add_library(Pepper SHARED ${SOURCE_DIR}/Pepper/Application.cpp
                           ${SOURCE_DIR}/Pepper/Log.cpp
                           ${SOURCE_DIR}/Pepper/Events/Event.cpp
                           ${SOURCE_DIR}/Platform/WinWindow.cpp
+                          ${SOURCE_DIR}/Platform/WinInput.cpp
                           ${SOURCE_DIR}/Pepper/Layer.cpp
                           ${SOURCE_DIR}/Pepper/LayerStack.cpp
-                          ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp)
+                          ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp
+                          ${SOURCE_DIR}/Pepper/Input.cpp
+                          )
 
 target_include_directories(Pepper PRIVATE ${SOURCE_DIR})
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)

@@ -3,13 +3,14 @@
 #include <PepperPCH.hpp>
 #include <glad/glad.h>
 
+#include "Pepper/Input.hpp"
+
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 Pepper::Application* Pepper::Application::app_instance = nullptr;
 
 Pepper::Application::Application()
 {
-
   PP_CORE_ASSERT(!app_instance, "Application already defined!");
   app_instance = this;
 
@@ -56,6 +57,8 @@ void Pepper::Application::Run()
 
     for (Layer* layer : layer_stack)
       layer->OnUpdate();
+
+    PP_CORE_TRACE("{0}, {1}", Input::GetMouseX(), Input::GetMouseY());
 
     window->OnUpdate();
   }
