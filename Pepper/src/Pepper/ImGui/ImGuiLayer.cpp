@@ -3,12 +3,12 @@
 // clang-format on
 #include "ImGuiLayer.hpp"
 
-#include "GLFW/glfw3.h"
 #include "Pepper/Application.hpp"
 #include "Pepper/Core.hpp"
-#include "Platform/OpenGL/ImGuiOpenGLReneder.hpp"
 
+#include <GLFW/glfw3.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <glad/glad.h>
 #include <imgui.h>
 
 Pepper::ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
@@ -47,7 +47,7 @@ void Pepper::ImGuiLayer::OnAttach()
   io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
   io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 
-  ImGui_ImplOpenGL3_Init_old("#version 410");
+  ImGui_ImplOpenGL3_Init("#version 410");
 }
 
 void Pepper::ImGuiLayer::OnDetach() {}
@@ -58,6 +58,7 @@ void Pepper::ImGuiLayer::OnUpdate()
   Application& app = Application::Get();
   io.DisplaySize =
     ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+  io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 
   float glfw_time = (float)glfwGetTime();
   io.DeltaTime = time > 0.0f ? (glfw_time - time) : (1.0f / 60.0f);

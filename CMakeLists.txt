@@ -28,7 +28,8 @@ add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
                          ${VENDOR_DIR}/imgui/imgui_draw.cpp
                          ${VENDOR_DIR}/imgui/imgui_tables.cpp
                          ${VENDOR_DIR}/imgui/imgui_widgets.cpp
-                         ${VENDOR_DIR}/imgui/imgui.cpp)
+                         ${VENDOR_DIR}/imgui/imgui.cpp
+                         ${VENDOR_DIR}/imgui/backends/imgui_impl_opengl3.cpp)
 
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
 
@@ -41,8 +42,7 @@ add_library(Pepper SHARED ${SOURCE_DIR}/Pepper/Application.cpp
                           ${SOURCE_DIR}/Platform/WinWindow.cpp
                           ${SOURCE_DIR}/Pepper/Layer.cpp
                           ${SOURCE_DIR}/Pepper/LayerStack.cpp
-                          ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp
-                          ${SOURCE_DIR}/Platform/OpenGL/ImGuiOpenGLRenderer.cpp)
+                          ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp)
 
 target_include_directories(Pepper PRIVATE ${SOURCE_DIR})
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)
