@@ -48,11 +48,27 @@ namespace Pepper
     std::string ToString() const override
     {
       std::stringstream ss;
-      ss << "KeyPressedKey: " << key_code;
+      ss << "KeyReleaseEvent: " << key_code;
       return ss.str();
     }
 
     EVENT_INFO(EvCategory::INPUT | EvCategory::KEYBOARD)
     STATIC_TYPE(EvType::KEY_RELEASE)
+  };
+
+  class PEPPER_API KeyTypedEvent : public KeyEvent
+  {
+  public:
+    KeyTypedEvent(int keyCode) : KeyEvent(keyCode) {}
+
+    std::string ToString() const override
+    {
+      std::stringstream ss;
+      ss << "KeyTypedEvent: " << key_code;
+      return ss.str();
+    }
+
+    EVENT_INFO(EvCategory::INPUT | EvCategory::KEYBOARD)
+    STATIC_TYPE(EvType::KEY_TYPED)
   };
 }

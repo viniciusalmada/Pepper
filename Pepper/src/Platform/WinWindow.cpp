@@ -123,6 +123,16 @@ void Pepper::WinWindow::ConfigKeyCB() const
     }
   };
   glfwSetKeyCallback(window, key_callback);
+
+  auto char_callback = [](GLFWwindow* win, unsigned int key)
+  {
+    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(win);
+
+    KeyTypedEvent event{ static_cast<int>(key) };
+    data.eventCallback(event);
+  };
+
+  glfwSetCharCallback(window, char_callback);
 }
 
 void Pepper::WinWindow::ConfigMouseButtonCB() const
