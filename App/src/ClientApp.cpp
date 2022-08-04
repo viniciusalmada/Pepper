@@ -43,7 +43,6 @@ public:
   ClientApp()
   {
     PushLayer(new ExampleLayer{});
-    PushLayer(new Pepper::ImGuiLayer{});
   }
   ~ClientApp() {}
 };

@@ -10,8 +10,6 @@
 #include "Pepper/KeyCodes.hpp"
 #include "Pepper/MouseButtonCodes.hpp"
 
-#include "Pepper/ImGui/ImGuiLayer.hpp"
-
 // --Entry Point------------------------
 #include "Pepper/EntryPoint.hpp"
 // -------------------------------------
