@@ -23,6 +23,6 @@ namespace Pepper
 
   private:
     std::vector<Layer*> layers;
-    std::vector<Layer*>::iterator layer_insert;
+    unsigned int layer_index = 0;
   };
 }

@@ -1,6 +1,8 @@
 #include "LayerStack.hpp"
 
-Pepper::LayerStack::LayerStack() { layer_insert = layers.begin(); }
+Pepper::LayerStack::LayerStack()
+{
+}
 
 Pepper::LayerStack::~LayerStack()
 {
@@ -10,7 +12,8 @@ Pepper::LayerStack::~LayerStack()
 
 void Pepper::LayerStack::PushLayer(Layer* layer)
 {
-  layer_insert = layers.emplace(layer_insert, layer);
+  layers.emplace(layers.begin() + layer_index, layer);
+  layer_index++;
 }
 
 void Pepper::LayerStack::PushOverlay(Layer* overlay)
@@ -24,7 +27,7 @@ void Pepper::LayerStack::PopLayer(Layer* layer)
   if (iter != layers.end())
   {
     layers.erase(iter);
-    layer_insert--;
+    layer_index--;
   }
 }
 
