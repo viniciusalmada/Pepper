@@ -29,10 +29,12 @@ add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
                          ${VENDOR_DIR}/imgui/imgui_tables.cpp
                          ${VENDOR_DIR}/imgui/imgui_widgets.cpp
                          ${VENDOR_DIR}/imgui/imgui.cpp
-                         ${VENDOR_DIR}/imgui/backends/imgui_impl_opengl3.cpp)
+                         ${VENDOR_DIR}/imgui/backends/imgui_impl_opengl3.cpp
+                         ${VENDOR_DIR}/imgui/backends/imgui_impl_glfw.cpp
+                         )
 
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
-
+target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 
 ##########################################
 # The engine itself is a DLL

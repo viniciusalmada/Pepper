@@ -17,19 +17,11 @@ namespace Pepper
 
     void OnDetach() override;
 
-    void OnUpdate() override;
+    void OnImGuiRender() override;
 
-    void OnEvent(Event&) override;
+    void Begin() const;
 
-  private:
-    bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
-    bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
-    bool OnMouseMovedEvent(MouseMovedEvent& e);
-    bool OnMouseScrolledEvent(MouseScrolledEvent& e);
-    bool OnKeyPressedEvent(KeyPressedEvent& e);
-    bool OnKeyReleasedEvent(KeyReleaseEvent& e);
-    bool OnKeyTypedEvent(KeyTypedEvent& e);
-    bool OnWindowResizedEvent(WindowResizeEvent& e);
+    void End() const;
 
   private:
     float time = 0.0f;

@@ -3,6 +3,7 @@
 #include "Core.hpp"
 #include "Events/Event.hpp"
 #include "Events/WindowEvent.hpp"
+#include "ImGui/ImGuiLayer.hpp"
 #include "LayerStack.hpp"
 #include "Window.hpp"
 
@@ -30,6 +31,7 @@ namespace Pepper
     bool OnWindowClose(WindowCloseEvent& e);
 
     std::unique_ptr<Window> window;
+    ImGuiLayer* imGuiLayer;
     bool running = true;
     LayerStack layer_stack;
 

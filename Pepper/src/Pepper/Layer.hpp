@@ -19,6 +19,8 @@ namespace Pepper
 
     virtual void OnUpdate() {}
 
+    virtual void OnImGuiRender() {}
+
     virtual void OnEvent(Event&) {}
 
     const std::string& GetName() const { return debugName; }

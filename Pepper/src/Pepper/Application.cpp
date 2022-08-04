@@ -1,9 +1,9 @@
 #include "Application.hpp"
 
+#include "Pepper/Input.hpp"
+
 #include <PepperPCH.hpp>
 #include <glad/glad.h>
-
-#include "Pepper/Input.hpp"
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -16,6 +16,9 @@ Pepper::Application::Application()
 
   window = std::unique_ptr<Window>(Window::Create());
   window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+  imGuiLayer = new ImGuiLayer();
+  PushOverlay(imGuiLayer);
 }
 
 Pepper::Application::~Application() {}
@@ -55,6 +58,11 @@ void Pepper::Application::Run()
 
     for (Layer* layer : layer_stack)
       layer->OnUpdate();
+
+    imGuiLayer->Begin();
+    for (Layer* layer : layer_stack)
+      layer->OnImGuiRender();
+    imGuiLayer->End();
 
     window->OnUpdate();
   }
