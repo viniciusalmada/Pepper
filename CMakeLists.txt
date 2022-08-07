@@ -4,7 +4,7 @@ project(PepperEngine VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-add_compile_options(/W4 /WX)
+add_compile_options(/W4 $<$<CONFIG:Debug>:/WX>)
 
 # #########################################
 # Global constants
