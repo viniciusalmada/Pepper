@@ -1,5 +1,6 @@
 #pragma once
 
+// clang-format off
 #include <algorithm>
 #include <any>
 #include <functional>
@@ -17,3 +18,4 @@
 #ifdef PP_PLATFORM_WINDOWS
   #include <Windows.h>
 #endif
+// clang-format on
