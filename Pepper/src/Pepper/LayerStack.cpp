@@ -1,8 +1,6 @@
 #include "LayerStack.hpp"
 
-Pepper::LayerStack::LayerStack()
-{
-}
+Pepper::LayerStack::LayerStack() {}
 
 Pepper::LayerStack::~LayerStack()
 {

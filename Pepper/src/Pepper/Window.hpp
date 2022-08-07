@@ -20,7 +20,7 @@ namespace Pepper
     }
   };
 
-  class PEPPER_API Window
+  class Window
   {
   public:
     using EventCallbackFn = std::function<void(Event&)>;

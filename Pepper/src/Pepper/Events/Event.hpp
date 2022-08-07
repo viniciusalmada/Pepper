@@ -82,7 +82,7 @@ namespace Pepper
 #define STATIC_TYPE(x)                                                         \
   static EvType GetStaticType() { return x; }
 
-  class PEPPER_API Event
+  class Event
   {
     friend class EventDispatcher;
 
@@ -135,5 +135,5 @@ namespace Pepper
     Event& event;
   };
 
-  PEPPER_API std::ostream& operator<<(std::ostream& os, const Event& e);
+  std::ostream& operator<<(std::ostream& os, const Event& e);
 }

@@ -6,7 +6,7 @@
 namespace Pepper
 {
 
-  class PEPPER_API MouseMovedEvent : public Event
+  class MouseMovedEvent : public Event
   {
   public:
     MouseMovedEvent(float x, float y) : x_pos(x), y_pos(y) {}
@@ -29,7 +29,7 @@ namespace Pepper
     float x_pos, y_pos;
   };
 
-  class PEPPER_API MouseScrolledEvent : public Event
+  class MouseScrolledEvent : public Event
   {
   public:
     MouseScrolledEvent(float xOffset, float yOffset)
@@ -54,7 +54,7 @@ namespace Pepper
     float x_offset, y_offset;
   };
 
-  class PEPPER_API MouseButtonEvent : public Event
+  class MouseButtonEvent : public Event
   {
   public:
     PPMouseBt GetMouseButton() const { return button; }
@@ -67,7 +67,7 @@ namespace Pepper
     PPMouseBt button;
   };
 
-  class PEPPER_API MouseButtonPressedEvent : public MouseButtonEvent
+  class MouseButtonPressedEvent : public MouseButtonEvent
   {
   public:
     MouseButtonPressedEvent(PPMouseBt button) : MouseButtonEvent(button) {}
@@ -83,7 +83,7 @@ namespace Pepper
     STATIC_TYPE(EvType::MOUSE_BUTTON_PRESSED)
   };
 
-  class PEPPER_API MouseButtonReleasedEvent : public MouseButtonEvent
+  class MouseButtonReleasedEvent : public MouseButtonEvent
   {
   public:
     MouseButtonReleasedEvent(PPMouseBt button) : MouseButtonEvent(button) {}

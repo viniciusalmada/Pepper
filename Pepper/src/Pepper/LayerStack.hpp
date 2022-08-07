@@ -7,7 +7,7 @@
 
 namespace Pepper
 {
-  class PEPPER_API LayerStack
+  class LayerStack
   {
   public:
     LayerStack();

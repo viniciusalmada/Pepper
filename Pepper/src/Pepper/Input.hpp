@@ -9,7 +9,7 @@
 
 namespace Pepper
 {
-  class PEPPER_API Input
+  class Input
   {
   public:
     static bool IsKeyPressed(PPKey keyCode);
@@ -20,7 +20,7 @@ namespace Pepper
   protected:
     virtual bool IsKeyPressedImpl(PPKey keyCode) = 0;
     virtual bool IsMouseButtonImpl(PPMouseBt button) = 0;
-    virtual std::pair<float,float> GetMouseXYImpl() = 0;
+    virtual std::pair<float, float> GetMouseXYImpl() = 0;
 
   private:
     static Input* instance;

@@ -5,7 +5,7 @@
 
 namespace Pepper
 {
-  class PEPPER_API KeyEvent : public Event
+  class KeyEvent : public Event
   {
   public:
     PPKey GetKeyCode() const { return key_code; }
@@ -16,7 +16,7 @@ namespace Pepper
     PPKey key_code;
   };
 
-  class PEPPER_API KeyPressedEvent : public KeyEvent
+  class KeyPressedEvent : public KeyEvent
   {
   public:
     KeyPressedEvent(PPKey keyCode, int repeatCount)
@@ -41,7 +41,7 @@ namespace Pepper
     int repeat_count;
   };
 
-  class PEPPER_API KeyReleaseEvent : public KeyEvent
+  class KeyReleaseEvent : public KeyEvent
   {
   public:
     KeyReleaseEvent(PPKey keyCode) : KeyEvent(keyCode) {}
@@ -57,7 +57,7 @@ namespace Pepper
     STATIC_TYPE(EvType::KEY_RELEASE)
   };
 
-  class PEPPER_API KeyTypedEvent : public KeyEvent
+  class KeyTypedEvent : public KeyEvent
   {
   public:
     KeyTypedEvent(PPKey keyCode) : KeyEvent(keyCode) {}

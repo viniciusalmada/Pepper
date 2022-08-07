@@ -9,7 +9,7 @@
 
 namespace Pepper
 {
-  class PEPPER_API Log
+  class Log
   {
   public:
     static void Init();

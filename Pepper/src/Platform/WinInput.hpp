@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Pepper/Input.hpp"
+
 #include <GLFW/glfw3.h>
 
 namespace Pepper
 {
-  class PEPPER_API WinInput : public Input
+  class WinInput : public Input
   {
   protected:
     bool IsKeyPressedImpl(PPKey keyCode) override;

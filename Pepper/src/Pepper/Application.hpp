@@ -9,7 +9,7 @@
 
 namespace Pepper
 {
-  class PEPPER_API Application
+  class Application
   {
   public:
     Application();
