@@ -8,11 +8,11 @@ struct PPKey
   {
     return os << ppKey.keyCode;
   }
+
+  static PPKey FromGLFWKey(int glfwKeyCode) { return PPKey{ glfwKeyCode }; }
+
+  static int ToGLFWKey(PPKey ppKey) { return ppKey.keyCode; }
 };
-
-static PPKey GLFWKeyToPPKey(int glfwKeyCode) { return PPKey{ glfwKeyCode }; }
-
-static int PPKeyToGLFWKey(PPKey ppKey) { return ppKey.keyCode; }
 
 // From glfw3.h, but with constexpr
 constexpr PPKey PP_KEY_SPACE{ 32 };

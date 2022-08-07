@@ -8,14 +8,14 @@ struct PPMouseBt
   {
     return os << ppBt.button;
   }
+
+  static PPMouseBt FromGLFWMouse(int glfwMouseBt)
+  {
+    return PPMouseBt{ glfwMouseBt };
+  }
+
+  static int ToGLFWMouse(PPMouseBt ppBt) { return ppBt.button; }
 };
-
-static PPMouseBt GLFWMouseToPPMouseBt(int glfwMouseBt)
-{
-  return PPMouseBt{ glfwMouseBt };
-}
-
-static int PPMouseBtToGLFWMouse(PPMouseBt ppBt) { return ppBt.button; }
 
 // from glfw3.h, but with constexpr
 constexpr PPMouseBt PP_MOUSE_BUTTON_1{ 0 };
