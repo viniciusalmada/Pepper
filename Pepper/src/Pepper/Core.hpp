@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef PP_PLATFORM_WINDOWS
-  #ifdef PP_BUILD_DLL
-    #define PEPPER_API __declspec(dllexport)
+  #ifdef PP_DYNAMIC_LINK
+    #ifdef PP_BUILD_DLL
+      #define PEPPER_API __declspec(dllexport)
+    #else
+      #define PEPPER_API __declspec(dllimport)
+    #endif
   #else
-    #define PEPPER_API __declspec(dllimport)
+    #define PEPPER_API
   #endif
 #else
   #error Pepper only support Windows!
