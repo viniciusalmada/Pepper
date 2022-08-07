@@ -11,8 +11,7 @@ Pepper::Input* Pepper::Input::instance = new WinInput{};
 
 bool Pepper::WinInput::IsKeyPressedImpl(PPKey keyCode)
 {
-  Window& window = Application::Get().GetWindow();
-  auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
+  GLFWwindow* glfw_window = GetGLFWWindow();
 
   int state = glfwGetKey(glfw_window, PPKey::ToGLFWKey(keyCode));
 
@@ -21,8 +20,7 @@ bool Pepper::WinInput::IsKeyPressedImpl(PPKey keyCode)
 
 bool Pepper::WinInput::IsMouseButtonImpl(PPMouseBt button)
 {
-  Window& window = Application::Get().GetWindow();
-  auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
+  GLFWwindow* glfw_window = GetGLFWWindow();
 
   int state = glfwGetMouseButton(glfw_window, PPMouseBt::ToGLFWMouse(button));
 
@@ -31,11 +29,17 @@ bool Pepper::WinInput::IsMouseButtonImpl(PPMouseBt button)
 
 std::pair<float, float> Pepper::WinInput::GetMouseXYImpl()
 {
-  Window& window = Application::Get().GetWindow();
-  auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
-
+  GLFWwindow* glfw_window = GetGLFWWindow();
   double x{}, y{};
   glfwGetCursorPos(glfw_window, &x, &y);
 
   return { static_cast<float>(x), static_cast<float>(y) };
+}
+
+GLFWwindow* Pepper::WinInput::GetGLFWWindow()
+{
+  Window& window = Application::Get().GetWindow();
+  GLFWwindow* glfw_window =
+    std::any_cast<GLFWwindow*>(window.GetNativeWindow());
+  return glfw_window;
 }

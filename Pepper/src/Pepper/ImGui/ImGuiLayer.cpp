@@ -36,7 +36,7 @@ void Pepper::ImGuiLayer::OnAttach()
 
   Application& app = Application::Get();
   GLFWwindow* glfw_win =
-    static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+    std::any_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
   ImGui_ImplGlfw_InitForOpenGL(glfw_win, true);
   ImGui_ImplOpenGL3_Init("#version 410");
