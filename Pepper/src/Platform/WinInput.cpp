@@ -29,24 +29,13 @@ bool Pepper::WinInput::IsMouseButtonImpl(PPMouseBt button)
   return state == GLFW_PRESS;
 }
 
-float Pepper::WinInput::GetMouseXImpl()
+std::pair<float, float> Pepper::WinInput::GetMouseXYImpl()
 {
   Window& window = Application::Get().GetWindow();
   auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
 
-  double x{};
-  glfwGetCursorPos(glfw_window, &x, nullptr);
+  double x{}, y{};
+  glfwGetCursorPos(glfw_window, &x, &y);
 
-  return (float)x;
-}
-
-float Pepper::WinInput::GetMouseYImpl()
-{
-  Window& window = Application::Get().GetWindow();
-  auto glfw_window = static_cast<GLFWwindow*>(window.GetNativeWindow());
-
-  double y{};
-  glfwGetCursorPos(glfw_window, nullptr, &y);
-
-  return (float)y;
+  return { static_cast<float>(x), static_cast<float>(y) };
 }

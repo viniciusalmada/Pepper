@@ -9,7 +9,6 @@ namespace Pepper
   protected:
     bool IsKeyPressedImpl(PPKey keyCode) override;
     bool IsMouseButtonImpl(PPMouseBt button) override;
-    float GetMouseXImpl() override;
-    float GetMouseYImpl() override;
+    std::pair<float,float> GetMouseXYImpl() override;
   };
 }

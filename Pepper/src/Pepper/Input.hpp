@@ -1,4 +1,7 @@
 #pragma once
+// clang-format off
+#include "PepperPCH.hpp"
+// clang-format on
 
 #include "Core.hpp"
 #include "Pepper/KeyCodes.hpp"
@@ -17,8 +20,7 @@ namespace Pepper
   protected:
     virtual bool IsKeyPressedImpl(PPKey keyCode) = 0;
     virtual bool IsMouseButtonImpl(PPMouseBt button) = 0;
-    virtual float GetMouseXImpl() = 0;
-    virtual float GetMouseYImpl() = 0;
+    virtual std::pair<float,float> GetMouseXYImpl() = 0;
 
   private:
     static Input* instance;
