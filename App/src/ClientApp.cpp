@@ -7,6 +7,7 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/vec3.hpp>   // glm::vec3
 #include <glm/vec4.hpp>   // glm::vec4
+#include <imgui.h>
 glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
 {
   glm::mat4 Projection =
@@ -22,8 +23,13 @@ glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
 class ExampleLayer : public Pepper::Layer
 {
 public:
-  ExampleLayer() : Layer("Example") {
-    auto a =  camera(5.0f, {1.0f, 2.0f});
+  ExampleLayer() : Layer("Example") { auto a = camera(5.0f, { 1.0f, 2.0f }); }
+
+  void OnImGuiRender() override
+  {
+    ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
   }
 
   void OnUpdate() override
@@ -33,17 +39,15 @@ public:
   }
 
   void OnEvent(Pepper::Event& event) override
-  { /* PP_TRACE("{0}", event); */
+  { 
+    PP_TRACE("{0}", event);
   }
 };
 
 class ClientApp : public Pepper::Application
 {
 public:
-  ClientApp()
-  {
-    PushLayer(new ExampleLayer{});
-  }
+  ClientApp() { PushLayer(new ExampleLayer{}); }
   ~ClientApp() {}
 };
 
