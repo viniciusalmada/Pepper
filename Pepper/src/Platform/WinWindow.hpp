@@ -25,7 +25,10 @@ namespace Pepper
     void SetVsync(bool enabled) override;
     bool IsVsync() const override;
 
-    std::any GetNativeWindow() const override { return std::make_any<GLFWwindow*>(window); };
+    std::any GetNativeWindow() const override
+    {
+      return std::make_any<GLFWwindow*>(window);
+    };
 
   private:
     void Init(const WindowProps& props);
