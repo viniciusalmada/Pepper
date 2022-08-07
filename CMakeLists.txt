@@ -1,13 +1,10 @@
 cmake_minimum_required(VERSION 3.15.0)
 project(PepperEngine VERSION 0.1)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-add_compile_options(/W4)
-add_compile_options("$<$<CONFIG:Debug>:/MDd>")
-add_compile_options("$<$<CONFIG:Release>:/MD>")
-add_compile_options("$<$<CONFIG:MinSizeRel>:/MD>")
+add_compile_options(/W4 /WX)
 
 # #########################################
 # Global constants
@@ -17,6 +14,9 @@ set(SOURCE_DIR Pepper/src)
 # #########################################
 # GLFW library
 add_subdirectory(${VENDOR_DIR}/GLFW)
+
+set_property(TARGET glfw PROPERTY
+  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
 
 # #########################################
 # GLAD library
@@ -33,12 +33,15 @@ add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
   ${VENDOR_DIR}/imgui/backends/imgui_impl_glfw.cpp
 )
 
+set_property(TARGET ImGui PROPERTY
+  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 
 # #########################################
-# The engine itself is a DLL
-add_library(Pepper SHARED ${SOURCE_DIR}/Pepper/Application.cpp
+# The engine itself is a static library
+add_library(Pepper STATIC ${SOURCE_DIR}/Pepper/Application.cpp
   ${SOURCE_DIR}/Pepper/Log.cpp
   ${SOURCE_DIR}/Pepper/Events/Event.cpp
   ${SOURCE_DIR}/Platform/WinWindow.cpp
@@ -49,6 +52,9 @@ add_library(Pepper SHARED ${SOURCE_DIR}/Pepper/Application.cpp
   ${SOURCE_DIR}/Pepper/Input.cpp
 )
 
+set_property(TARGET Pepper PROPERTY
+  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+
 target_include_directories(Pepper PRIVATE ${SOURCE_DIR})
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
@@ -56,9 +62,14 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imGui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
-target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
-target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
-target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
+if(WIN32)
+  target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
+  target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
+  target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
+endif(WIN32)
+
+# Configurations flags
+target_compile_definitions(Pepper PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>)
 
 # Debug defines
 target_compile_definitions(Pepper PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS>)
@@ -66,7 +77,7 @@ target_compile_definitions(Pepper PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS>)
 target_link_libraries(Pepper
   PRIVATE GLAD
   PRIVATE glfw
-  PUBLIC ImGui
+  PRIVATE ImGui
   PRIVATE opengl32.lib
 )
 
@@ -82,7 +93,15 @@ target_include_directories(App PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(App PRIVATE ${VENDOR_DIR}/glm/)
 target_include_directories(App PRIVATE ${VENDOR_DIR}/imGui)
 
-target_compile_definitions(App PRIVATE PP_PLATFORM_WINDOWS)
+set_property(TARGET App PROPERTY
+  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+
+# Configurations flags
+target_compile_definitions(App PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>)
+
+if(WIN32)
+  target_compile_definitions(App PRIVATE PP_PLATFORM_WINDOWS)
+endif(WIN32)
 
 target_link_libraries(App Pepper)
 
