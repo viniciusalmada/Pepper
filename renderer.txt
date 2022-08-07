@@ -1,0 +1,25 @@
+Two sides
+
+Renderer (API/platform agnostic)  │  Render API (API/platform specific)
+ * 2D/3D Renderer                 │   * Render context
+   - Forward, deferred, etc.      │   * Swap chain
+ * Scene graph                    │   * Framebuffer
+ * Sorting                        │   * Vertex buffer
+ * Culling                        │   * Index Buffer
+ * Materials                      │   * Texture
+ * LOD                            │   * Shader
+ * Animation                      │   * States
+ * Camera                         │   * Pipelines
+ * VFX                            │   * Render passes
+ * PostFX                         │
+ * Other things                   │
+   - (eg. reflections, occlusion) │
+
+Where do we start?
+* We're going to start with OpenGL
+  - Simplest, easiest API (although requires stronger design from our side)
+* Step 1: build Render API
+* Step 2: build Renderer
+* Note: these steps have overlap and mostly aren't dependent
+* After that we have a base to render anything we want
+* In the future (TBD), we will implement other APIs
