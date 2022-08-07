@@ -14,11 +14,13 @@ void Pepper::LayerStack::PushLayer(Layer* layer)
 {
   layers.emplace(layers.begin() + layer_index, layer);
   layer_index++;
+  layer->OnAttach();
 }
 
 void Pepper::LayerStack::PushOverlay(Layer* overlay)
 {
   layers.emplace_back(overlay);
+  overlay->OnAttach();
 }
 
 void Pepper::LayerStack::PopLayer(Layer* layer)
@@ -28,6 +30,7 @@ void Pepper::LayerStack::PopLayer(Layer* layer)
   {
     layers.erase(iter);
     layer_index--;
+    layer->OnDetach();
   }
 }
 
@@ -37,5 +40,6 @@ void Pepper::LayerStack::PopOverlay(Layer* overlay)
   if (iter != layers.end())
   {
     layers.erase(iter);
+    overlay->OnDetach();
   }
 }

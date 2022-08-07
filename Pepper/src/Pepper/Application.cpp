@@ -26,13 +26,11 @@ Pepper::Application::~Application() {}
 void Pepper::Application::PushLayer(Layer* layer)
 {
   layer_stack.PushLayer(layer);
-  layer->OnAttach();
 }
 
 void Pepper::Application::PushOverlay(Layer* overlay)
 {
   layer_stack.PushOverlay(overlay);
-  overlay->OnAttach();
 }
 
 void Pepper::Application::OnEvent(Event& e)
