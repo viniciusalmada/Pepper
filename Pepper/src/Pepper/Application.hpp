@@ -35,6 +35,8 @@ namespace Pepper
     bool running = true;
     LayerStack layer_stack;
 
+    unsigned int vertex_array, vertex_buffer, index_buffer;
+
   private:
     static Application* app_instance;
   };
