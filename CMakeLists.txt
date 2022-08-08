@@ -44,8 +44,8 @@ target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 add_library(Pepper STATIC ${SOURCE_DIR}/Pepper/Application.cpp
   ${SOURCE_DIR}/Pepper/Log.cpp
   ${SOURCE_DIR}/Pepper/Events/Event.cpp
-  ${SOURCE_DIR}/Platform/WinWindow.cpp
-  ${SOURCE_DIR}/Platform/WinInput.cpp
+  ${SOURCE_DIR}/Platform/Windows/WinWindow.cpp
+  ${SOURCE_DIR}/Platform/Windows/WinInput.cpp
   ${SOURCE_DIR}/Pepper/Layer.cpp
   ${SOURCE_DIR}/Pepper/LayerStack.cpp
   ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp
@@ -64,7 +64,6 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
-  target_compile_definitions(Pepper PRIVATE PP_BUILD_DLL)
   target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 endif(WIN32)
 
