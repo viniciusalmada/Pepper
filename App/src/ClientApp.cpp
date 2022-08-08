@@ -38,9 +38,8 @@ public:
       PP_INFO("Tab pressed");
   }
 
-  void OnEvent(Pepper::Event& event) override
+  void OnEvent(Pepper::Event&) override
   { 
-    PP_TRACE("{0}", event);
   }
 };
 
