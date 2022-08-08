@@ -46,6 +46,7 @@ add_library(Pepper STATIC ${SOURCE_DIR}/Pepper/Application.cpp
   ${SOURCE_DIR}/Pepper/Events/Event.cpp
   ${SOURCE_DIR}/Platform/Windows/WinWindow.cpp
   ${SOURCE_DIR}/Platform/Windows/WinInput.cpp
+  ${SOURCE_DIR}/Platform/OpenGL/OpenGLContext.cpp
   ${SOURCE_DIR}/Pepper/Layer.cpp
   ${SOURCE_DIR}/Pepper/LayerStack.cpp
   ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp

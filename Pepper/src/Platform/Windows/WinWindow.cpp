@@ -3,8 +3,7 @@
 #include "Pepper/Events/KeyEvent.hpp"
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
-
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.hpp"
 
 static bool s_glfw_initialized = false;
 
@@ -47,9 +46,8 @@ void Pepper::WinWindow::Init(const WindowProps& props)
                             props.title.c_str(),
                             nullptr,
                             nullptr);
-  glfwMakeContextCurrent(window);
-  int glad_status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-  PP_CORE_ASSERT(glad_status, "Failed to initialize GLAD!");
+  graphics_context = new OpenGLContext(window);
+  graphics_context->Init();
 
   glfwSetWindowUserPointer(window, &data);
   SetVsync(true);
@@ -188,7 +186,7 @@ void Pepper::WinWindow::ConfigMouseMoveCB() const
 void Pepper::WinWindow::OnUpdate()
 {
   glfwPollEvents();
-  glfwSwapBuffers(window);
+  graphics_context->SwapBuffers();
 }
 
 void Pepper::WinWindow::SetVsync(bool enabled)

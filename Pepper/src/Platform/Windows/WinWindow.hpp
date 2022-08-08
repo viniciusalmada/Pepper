@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Pepper/Window.hpp"
+#include "Renderer/GraphicsContext.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -43,6 +44,7 @@ namespace Pepper
 
   private:
     GLFWwindow* window;
+    GraphicsContext* graphics_context;
 
     struct WindowData : WindowProps
     {
