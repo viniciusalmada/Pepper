@@ -80,8 +80,6 @@ Pepper::Application::Application()
   shader = std::make_unique<Shader>(vertex_src, fragment_src);
 }
 
-Pepper::Application::~Application() {}
-
 void Pepper::Application::PushLayer(Layer* layer)
 {
   layer_stack.PushLayer(layer);

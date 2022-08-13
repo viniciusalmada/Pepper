@@ -13,8 +13,6 @@
 
 Pepper::ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 
-Pepper::ImGuiLayer::~ImGuiLayer() {}
-
 void Pepper::ImGuiLayer::OnAttach()
 {
   IMGUI_CHECKVERSION();
