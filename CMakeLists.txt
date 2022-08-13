@@ -4,8 +4,6 @@ project(PepperEngine VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-add_compile_options(/W4 $<$<CONFIG:Debug>:/WX>)
-
 # #########################################
 # Global constants
 set(VENDOR_DIR Pepper/vendor)
@@ -53,19 +51,27 @@ add_library(Pepper STATIC ${SOURCE_DIR}/Pepper/Application.cpp
   ${SOURCE_DIR}/Pepper/Input.cpp
 )
 
-set_property(TARGET Pepper PROPERTY
-  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+if(WIN32)
+  target_compile_options(Pepper PRIVATE /W4 $<$<CONFIG:Debug>:/WX>)
+elseif(UNIX)
+  target_compile_options(Pepper PRIVATE -Wall -Wextra $<$<CONFIG:Debug>:-Werror>)
+endif(WIN32)
+
+if(WIN32)
+  set_property(TARGET Pepper PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
 
 target_include_directories(Pepper PRIVATE ${SOURCE_DIR})
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
-target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imGui)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
+target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
-  target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 endif(WIN32)
 
 # Configurations flags
@@ -78,8 +84,13 @@ target_link_libraries(Pepper
   PRIVATE GLAD
   PRIVATE glfw
   PRIVATE ImGui
-  PRIVATE opengl32.lib
 )
+
+if(WIN32)
+  target_link_libraries(Pepper PRIVATE opengl32.lib)
+elseif(UNIX)
+  target_link_libraries(Pepper PRIVATE GL)
+endif(WIN32)
 
 target_precompile_headers(Pepper PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
 
@@ -91,7 +102,7 @@ target_include_directories(App PRIVATE App/src)
 target_include_directories(App PRIVATE ${SOURCE_DIR})
 target_include_directories(App PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(App PRIVATE ${VENDOR_DIR}/glm/)
-target_include_directories(App PRIVATE ${VENDOR_DIR}/imGui)
+target_include_directories(App PRIVATE ${VENDOR_DIR}/imgui)
 
 set_property(TARGET App PROPERTY
   MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
