@@ -1,7 +1,9 @@
 #pragma once
 
-#ifndef PP_PLATFORM_WINDOWS
-  #error Pepper only support Windows!
+#ifdef PP_PLATFORM_WINDOWS
+  #define DEBUG_BREAK __debugbreak();
+#else
+  #define DEBUG_BREAK
 #endif
 
 #ifdef PP_ENABLE_ASSERTS
@@ -10,7 +12,7 @@
       if (!x)                                                                  \
       {                                                                        \
         PP_ERROR("Assertion failed: {0}", __VA_ARGS__);                        \
-        __debugbreak();                                                        \
+        DEBUG_BREAK                                                            \
       }                                                                        \
     }
   #define PP_CORE_ASSERT(x, ...)                                               \
@@ -18,7 +20,7 @@
       if (!x)                                                                  \
       {                                                                        \
         PP_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__);                   \
-        __debugbreak();                                                        \
+        DEBUG_BREAK                                                            \
       }                                                                        \
     }
 #else
