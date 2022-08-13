@@ -50,9 +50,6 @@ Pepper::Application::Application()
   glGenVertexArrays(1, &vertex_array);
   glBindVertexArray(vertex_array);
 
-  glGenBuffers(1, &vertex_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-
   // -1.0 < x < 1.0
   // -1.0 < y < 1.0
   // clang-format off
@@ -62,20 +59,23 @@ Pepper::Application::Application()
     +0.0f, +0.5f, +0.0f, 1.0f, 0.0f, 1.0f,
   };
   // clang-format on
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  vertex_buffer = std::unique_ptr<VertexBuffer>(
+    VertexBuffer::Create(vertices, sizeof(vertices)));
+
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1,
+                        3,
+                        GL_FLOAT,
+                        false,
+                        6 * sizeof(float),
+                        (void*)(3 * sizeof(float)));
 
-  glGenBuffers(1, &index_buffer);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-  unsigned int indices[3] = { 0, 1, 2 };
-
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               sizeof(indices),
-               indices,
-               GL_STATIC_DRAW);
+  uint32_t indices[] = { 0, 1, 2 };
+  index_buffer = std::unique_ptr<IndexBuffer>(
+    IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 
   shader = std::make_unique<Shader>(vertex_src, fragment_src);
 }
@@ -115,7 +115,7 @@ void Pepper::Application::Run()
 
     shader->Bind();
     glBindVertexArray(vertex_array);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, index_buffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
     for (Layer* layer : layer_stack)
       layer->OnUpdate();

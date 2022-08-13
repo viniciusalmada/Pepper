@@ -5,6 +5,7 @@
 #include "Events/WindowEvent.hpp"
 #include "ImGui/ImGuiLayer.hpp"
 #include "LayerStack.hpp"
+#include "Renderer/Buffer.hpp"
 #include "Renderer/Shader.hpp"
 #include "Window.hpp"
 
@@ -36,8 +37,10 @@ namespace Pepper
     bool running = true;
     LayerStack layer_stack;
 
-    unsigned int vertex_array, vertex_buffer, index_buffer;
+    unsigned int vertex_array;
     std::unique_ptr<Shader> shader;
+    std::unique_ptr<VertexBuffer> vertex_buffer;
+    std::unique_ptr<IndexBuffer> index_buffer;
 
   private:
     static Application* app_instance;
