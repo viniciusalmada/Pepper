@@ -13,8 +13,10 @@ set(SOURCE_DIR Pepper/src)
 # GLFW library
 add_subdirectory(${VENDOR_DIR}/GLFW)
 
-set_property(TARGET glfw PROPERTY
-  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+if(WIN32)
+  set_property(TARGET glfw PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
 
 # #########################################
 # GLAD library
@@ -31,8 +33,10 @@ add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
   ${VENDOR_DIR}/imgui/backends/imgui_impl_glfw.cpp
 )
 
-set_property(TARGET ImGui PROPERTY
-  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+if(WIN32)
+  set_property(TARGET ImGui PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
 
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
@@ -74,6 +78,7 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
 target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
+
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 endif(WIN32)
@@ -108,8 +113,10 @@ target_include_directories(App PRIVATE ${VENDOR_DIR}/spdlog/include)
 target_include_directories(App PRIVATE ${VENDOR_DIR}/glm/)
 target_include_directories(App PRIVATE ${VENDOR_DIR}/imgui)
 
-set_property(TARGET App PROPERTY
-  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+if(WIN32)
+  set_property(TARGET App PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
 
 # Configurations flags
 target_compile_definitions(App PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>)
