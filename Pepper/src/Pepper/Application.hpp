@@ -5,6 +5,7 @@
 #include "Events/WindowEvent.hpp"
 #include "ImGui/ImGuiLayer.hpp"
 #include "LayerStack.hpp"
+#include "Renderer/Shader.hpp"
 #include "Window.hpp"
 
 namespace Pepper
@@ -36,6 +37,7 @@ namespace Pepper
     LayerStack layer_stack;
 
     unsigned int vertex_array, vertex_buffer, index_buffer;
+    std::unique_ptr<Shader> shader;
 
   private:
     static Application* app_instance;

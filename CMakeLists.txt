@@ -49,6 +49,7 @@ add_library(Pepper STATIC ${SOURCE_DIR}/Pepper/Application.cpp
   ${SOURCE_DIR}/Pepper/LayerStack.cpp
   ${SOURCE_DIR}/Pepper/ImGui/ImGuiLayer.cpp
   ${SOURCE_DIR}/Pepper/Input.cpp
+  ${SOURCE_DIR}/Renderer/Shader.cpp
 )
 
 if(WIN32)
