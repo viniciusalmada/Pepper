@@ -22,8 +22,5 @@ namespace Pepper
     void Begin() const;
 
     void End() const;
-
-  private:
-    float time = 0.0f;
   };
 }
