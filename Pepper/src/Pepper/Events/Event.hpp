@@ -2,6 +2,10 @@
 
 #include "Pepper/Core.hpp"
 
+#include <functional>
+#include <string>
+#include <unordered_map>
+
 namespace Pepper
 {
 

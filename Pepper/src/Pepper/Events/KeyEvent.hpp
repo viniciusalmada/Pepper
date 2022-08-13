@@ -1,7 +1,8 @@
 #pragma once
-
 #include "Event.hpp"
 #include "Pepper/KeyCodes.hpp"
+
+#include <string>
 
 namespace Pepper
 {
