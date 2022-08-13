@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef PP_PLATFORM_WINDOWS
-
 // Expected to be defined in client.
 // With this, the main function does not needed to be defined in client
 // application
@@ -18,5 +16,3 @@ int main()
   app->Run();
   delete app;
 }
-
-#endif
