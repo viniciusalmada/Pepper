@@ -12,12 +12,11 @@ Pepper::VertexBuffer* Pepper::VertexBuffer::Create(float* vertices,
 {
   switch (Renderer::GetAPI())
   {
-  case RendererAPI::NONE:
-    PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-    return nullptr;
-  
   case RendererAPI::OPEN_GL:
     return new OpenGLVertexBuffer(vertices, size);
+  default:
+    PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+    return nullptr;
   }
 }
 
@@ -26,11 +25,10 @@ Pepper::IndexBuffer* Pepper::IndexBuffer::Create(uint32_t* indices,
 {
   switch (Renderer::GetAPI())
   {
-  case RendererAPI::NONE:
-    PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-    return nullptr;
-  
   case RendererAPI::OPEN_GL:
     return new OpenGLIndexBuffer(indices, count);
+  default:
+    PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+    return nullptr;
   }
 }
