@@ -1,23 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 namespace Pepper
 {
-  enum class ShaderDataType {
-    None,
-    Float,
-    Float2,
-    Float3,
-    Float4,
-    Mat3,
-    Mat4,
-    Int,
-    Int2,
-    Int3,
-    Int4,
-    Bool
-  };
+  enum class ShaderDataType { None, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool };
 
   static constexpr uint32_t ShaderDataTypeSize(ShaderDataType type)
   {
@@ -57,11 +45,8 @@ namespace Pepper
 
     BufferElement() {}
 
-    BufferElement(ShaderDataType type,
-                  const std::string& name,
-                  bool normalized = false)
-        : name(name), type(type), size(ShaderDataTypeSize(type)), offset(0),
-          normalized(normalized)
+    BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
+        : name(name), type(type), size(ShaderDataTypeSize(type)), offset(0), normalized(normalized)
     {
     }
 
@@ -98,8 +83,7 @@ namespace Pepper
   public:
     BufferLayout() = default;
 
-    BufferLayout(const std::initializer_list<BufferElement>& elements)
-        : elements(elements)
+    BufferLayout(const std::initializer_list<BufferElement>& elements) : elements(elements)
     {
       CalculateOffsetAndStride();
     }
@@ -112,6 +96,8 @@ namespace Pepper
     auto end() { return elements.end(); }
     auto begin() const { return elements.cbegin(); }
     auto end() const { return elements.cend(); }
+
+    bool IsEmpty() const { return elements.empty(); }
 
   private:
     void CalculateOffsetAndStride()
@@ -148,7 +134,7 @@ namespace Pepper
 
     virtual void SetLayout(const BufferLayout& layout) = 0;
 
-    static VertexBuffer* Create(float* vertices, uint32_t size);
+    static std::shared_ptr<VertexBuffer> Create(float* vertices, uint32_t size, uint32_t parent);
   };
 
   class IndexBuffer : public Buffer
@@ -156,6 +142,6 @@ namespace Pepper
   public:
     virtual uint32_t GetCount() const = 0;
 
-    static IndexBuffer* Create(uint32_t* indices, uint32_t count);
+    static std::shared_ptr<IndexBuffer> Create(uint32_t* indices, uint32_t count, uint32_t parent);
   };
 }

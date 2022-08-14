@@ -7,6 +7,7 @@
 #include "LayerStack.hpp"
 #include "Renderer/Buffer.hpp"
 #include "Renderer/Shader.hpp"
+#include "Renderer/VertexArray.hpp"
 #include "Window.hpp"
 
 namespace Pepper
@@ -37,10 +38,11 @@ namespace Pepper
     bool running = true;
     LayerStack layer_stack;
 
-    unsigned int vertex_array;
     std::unique_ptr<Shader> shader;
-    std::unique_ptr<VertexBuffer> vertex_buffer;
-    std::unique_ptr<IndexBuffer> index_buffer;
+    std::unique_ptr<Shader> blue_shader;
+
+    std::shared_ptr<VertexArray> triangle_VAO;
+    std::shared_ptr<VertexArray> square_VAO;
 
   private:
     static Application* app_instance;
