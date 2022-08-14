@@ -9,9 +9,9 @@ const std::string vertex_src = R"glsl(
   #version 330 core
 
   layout(location = 0) in vec3 in_position;
-  layout(location = 1) in vec3 in_color;
+  layout(location = 1) in vec4 in_color;
 
-  out vec3 v_color;
+  out vec4 v_color;
 
   void main()
   {
@@ -23,18 +23,42 @@ const std::string vertex_src = R"glsl(
 const std::string fragment_src = R"glsl(
   #version 330 core
 
-  in vec3 v_color;
+  in vec4 v_color;
   out vec4 out_color;
 
   void main()
   {
-    out_color = vec4(v_color, 1.0);
+    out_color = v_color;
   }
 )glsl";
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 Pepper::Application* Pepper::Application::app_instance = nullptr;
+
+static unsigned int ShaderDataTypeToOpenGLBaseType(Pepper::ShaderDataType type)
+{
+  switch (type)
+  {
+  case Pepper::ShaderDataType::Float:
+  case Pepper::ShaderDataType::Float2:
+  case Pepper::ShaderDataType::Float3:
+  case Pepper::ShaderDataType::Float4:
+  case Pepper::ShaderDataType::Mat3:
+  case Pepper::ShaderDataType::Mat4:
+    return GL_FLOAT;
+  case Pepper::ShaderDataType::Int:
+  case Pepper::ShaderDataType::Int2:
+  case Pepper::ShaderDataType::Int3:
+  case Pepper::ShaderDataType::Int4:
+    return GL_INT;
+  case Pepper::ShaderDataType::Bool:
+    return GL_BOOL;
+  default:
+    PP_CORE_ASSERT(false, "Unknown ShaderDataType!");
+    return 0;
+  }
+}
 
 Pepper::Application::Application()
 {
@@ -54,24 +78,36 @@ Pepper::Application::Application()
   // -1.0 < y < 1.0
   // clang-format off
   float vertices[] = {
-    -0.5f, -0.5f, +0.0f, 0.0f, 1.0f, 1.0f,
-    +0.5f, -0.5f, +0.0f, 1.0f, 1.0f, 0.0f,
-    +0.0f, +0.5f, +0.0f, 1.0f, 0.0f, 1.0f,
+    //  x,     y,     z,    r,    g,    b,    a
+    -0.5f, -0.5f, +0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+    +0.5f, -0.5f, +0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+    +0.0f, +0.5f, +0.0f, 1.0f, 0.0f, 1.0f, 1.0f
   };
   // clang-format on
 
   vertex_buffer = std::unique_ptr<VertexBuffer>(
     VertexBuffer::Create(vertices, sizeof(vertices)));
+  {
+    BufferLayout layout = { { ShaderDataType::Float3, "in_position" },
+                            { ShaderDataType::Float4, "in_color" } };
 
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1,
-                        3,
-                        GL_FLOAT,
-                        false,
-                        6 * sizeof(float),
-                        (void*)(3 * sizeof(float)));
+    vertex_buffer->SetLayout(layout);
+  }
+
+  const auto& layout = vertex_buffer->GetLayout();
+  uint32_t index = 0;
+  for (const auto& element : layout)
+  {
+    glEnableVertexAttribArray(index);
+    uint64_t offset = element.offset;
+    glVertexAttribPointer(index,
+                          element.GetComponentCount(),
+                          ShaderDataTypeToOpenGLBaseType(element.type),
+                          element.normalized,
+                          layout.GetStride(),
+                          (void*)offset);
+    index++;
+  }
 
   uint32_t indices[] = { 0, 1, 2 };
   index_buffer = std::unique_ptr<IndexBuffer>(
@@ -113,7 +149,10 @@ void Pepper::Application::Run()
 
     shader->Bind();
     glBindVertexArray(vertex_array);
-    glDrawElements(GL_TRIANGLES, index_buffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES,
+                   index_buffer->GetCount(),
+                   GL_UNSIGNED_INT,
+                   nullptr);
 
     for (Layer* layer : layer_stack)
       layer->OnUpdate();

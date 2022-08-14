@@ -17,8 +17,13 @@ namespace Pepper
 
     void Unbind() const override;
 
+    const BufferLayout& GetLayout() const override;
+
+    void SetLayout(const BufferLayout& layout) override;
+
   private:
     uint32_t renderer_id;
+    BufferLayout layout;
   };
 
   class OpenGLIndexBuffer : public IndexBuffer

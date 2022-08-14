@@ -33,6 +33,16 @@ void Pepper::OpenGLVertexBuffer::Unbind() const
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+const Pepper::BufferLayout& Pepper::OpenGLVertexBuffer::GetLayout() const
+{
+  return this->layout;
+}
+
+void Pepper::OpenGLVertexBuffer::SetLayout(const Pepper::BufferLayout& layout)
+{
+  this->layout = layout;
+}
+
 /****************
  * Index Buffer *
  ****************/
