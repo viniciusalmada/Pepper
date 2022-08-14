@@ -74,6 +74,6 @@ void Pepper::ImGuiLayer::End() const
 
 void Pepper::ImGuiLayer::OnImGuiRender()
 {
-  static bool show_demo = true;
-  ImGui::ShowDemoWindow(&show_demo);
+  // static bool show_demo = false;
+  // ImGui::ShowDemoWindow(&show_demo);
 }
