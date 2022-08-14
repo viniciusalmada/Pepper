@@ -18,18 +18,12 @@ namespace Pepper
     unsigned int GetWidth() const override { return data.width; }
     unsigned int GetHeight() const override { return data.height; }
 
-    void SetEventCallback(const EventCallbackFn& callback) override
-    {
-      data.eventCallback = callback;
-    }
+    void SetEventCallback(const EventCallbackFn& callback) override { data.eventCallback = callback; }
 
     void SetVsync(bool enabled) override;
     bool IsVsync() const override;
 
-    std::any GetNativeWindow() const override
-    {
-      return std::make_any<GLFWwindow*>(window);
-    };
+    std::any GetNativeWindow() const override { return std::make_any<GLFWwindow*>(window); };
 
   private:
     void Init(const WindowProps& props);

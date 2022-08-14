@@ -32,10 +32,7 @@ namespace Pepper
   class MouseScrolledEvent : public Event
   {
   public:
-    MouseScrolledEvent(float xOffset, float yOffset)
-        : x_offset(xOffset), y_offset(yOffset)
-    {
-    }
+    MouseScrolledEvent(float xOffset, float yOffset) : x_offset(xOffset), y_offset(yOffset) {}
 
     float GetXOffset() const { return x_offset; }
     float GetYOffset() const { return y_offset; }

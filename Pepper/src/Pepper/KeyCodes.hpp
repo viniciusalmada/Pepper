@@ -4,10 +4,7 @@ struct PPKey
 {
   int keyCode;
 
-  friend std::ostream& operator<<(std::ostream& os, PPKey ppKey)
-  {
-    return os << ppKey.keyCode;
-  }
+  friend std::ostream& operator<<(std::ostream& os, PPKey ppKey) { return os << ppKey.keyCode; }
 
   static PPKey FromGLFWKey(int glfwKeyCode) { return PPKey{ glfwKeyCode }; }
 

@@ -77,13 +77,10 @@ namespace Pepper
     };
   };
 
-#define EVENT_INFO(x)                                                          \
-  EventInfo GetEventInfo() const override                                      \
-  {                                                                            \
-    return EventInfo{ GetStaticType(), x };                                    \
-  }
+#define EVENT_INFO(x)                                                                                                  \
+  EventInfo GetEventInfo() const override { return EventInfo{ GetStaticType(), x }; }
 
-#define STATIC_TYPE(x)                                                         \
+#define STATIC_TYPE(x)                                                                                                 \
   static EvType GetStaticType() { return x; }
 
   class Event
@@ -99,10 +96,7 @@ namespace Pepper
 
     int GetCategoryFlags() const { return GetEventInfo().GetFlags(); };
 
-    bool IsInCategory(EvCategory category)
-    {
-      return GetCategoryFlags() & (int)category;
-    }
+    bool IsInCategory(EvCategory category) { return GetCategoryFlags() & (int)category; }
 
     bool IsHandled() const { return handled; }
 

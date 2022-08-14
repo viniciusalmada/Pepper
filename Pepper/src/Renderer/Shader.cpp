@@ -6,8 +6,7 @@
 
 #include <glad/glad.h>
 
-Pepper::Shader::Shader(const std::string& vertexSrc,
-                       const std::string& fragmentSrc)
+Pepper::Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
 {
   auto compile_shader = [](const std::string& src, bool isVertex)
   {

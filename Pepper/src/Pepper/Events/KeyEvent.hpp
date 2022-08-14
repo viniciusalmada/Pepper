@@ -20,18 +20,14 @@ namespace Pepper
   class KeyPressedEvent : public KeyEvent
   {
   public:
-    KeyPressedEvent(PPKey keyCode, int repeatCount)
-        : KeyEvent(keyCode), repeat_count(repeatCount)
-    {
-    }
+    KeyPressedEvent(PPKey keyCode, int repeatCount) : KeyEvent(keyCode), repeat_count(repeatCount) {}
 
     int GetRepeatedCount() const { return repeat_count; }
 
     std::string ToString() const override
     {
       std::stringstream ss;
-      ss << "KeyPressedKey: " << key_code << " (" << repeat_count
-         << " repeats)";
+      ss << "KeyPressedKey: " << key_code << " (" << repeat_count << " repeats)";
       return ss.str();
     }
 

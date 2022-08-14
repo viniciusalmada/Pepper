@@ -39,7 +39,6 @@ std::pair<float, float> Pepper::WinInput::GetMouseXYImpl()
 GLFWwindow* Pepper::WinInput::GetGLFWWindow()
 {
   Window& window = Application::Get().GetWindow();
-  GLFWwindow* glfw_window =
-    std::any_cast<GLFWwindow*>(window.GetNativeWindow());
+  GLFWwindow* glfw_window = std::any_cast<GLFWwindow*>(window.GetNativeWindow());
   return glfw_window;
 }

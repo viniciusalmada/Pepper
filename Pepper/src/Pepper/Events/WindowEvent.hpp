@@ -10,10 +10,7 @@ namespace Pepper
   class WindowResizeEvent : public Event
   {
   public:
-    WindowResizeEvent(unsigned int width, unsigned int height)
-        : width(width), height(height)
-    {
-    }
+    WindowResizeEvent(unsigned int width, unsigned int height) : width(width), height(height) {}
 
     unsigned int GetWidth() const { return width; }
     unsigned int GetHeight() const { return height; }

@@ -7,8 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-Pepper::OpenGLContext::OpenGLContext(GLFWwindow* windowsHandle)
-    : window_handle(windowsHandle)
+Pepper::OpenGLContext::OpenGLContext(GLFWwindow* windowsHandle) : window_handle(windowsHandle)
 {
   PP_CORE_ASSERT(windowsHandle, "Window handle is null!")
 }

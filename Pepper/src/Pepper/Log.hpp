@@ -14,14 +14,8 @@ namespace Pepper
   public:
     static void Init();
 
-    inline static std::shared_ptr<spdlog::logger>& GetCoreLogger()
-    {
-      return core_logger;
-    }
-    inline static std::shared_ptr<spdlog::logger>& GetClientLogger()
-    {
-      return client_logger;
-    }
+    inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return core_logger; }
+    inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return client_logger; }
 
   private:
     static std::shared_ptr<spdlog::logger> core_logger;

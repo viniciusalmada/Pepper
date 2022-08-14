@@ -4,15 +4,9 @@ struct PPMouseBt
 {
   int button;
 
-  friend std::ostream& operator<<(std::ostream& os, PPMouseBt ppBt)
-  {
-    return os << ppBt.button;
-  }
+  friend std::ostream& operator<<(std::ostream& os, PPMouseBt ppBt) { return os << ppBt.button; }
 
-  static PPMouseBt FromGLFWMouse(int glfwMouseBt)
-  {
-    return PPMouseBt{ glfwMouseBt };
-  }
+  static PPMouseBt FromGLFWMouse(int glfwMouseBt) { return PPMouseBt{ glfwMouseBt }; }
 
   static int ToGLFWMouse(PPMouseBt ppBt) { return ppBt.button; }
 };

@@ -7,15 +7,9 @@
 
 static bool s_glfw_initialized = false;
 
-static void GLFWErrorCallback(int error, const char* desc)
-{
-  PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
-}
+static void GLFWErrorCallback(int error, const char* desc) { PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc); }
 
-Pepper::Window* Pepper::Window::Create(const WindowProps& props)
-{
-  return new WinWindow(props);
-}
+Pepper::Window* Pepper::Window::Create(const WindowProps& props) { return new WinWindow(props); }
 
 Pepper::WinWindow::WinWindow(const WindowProps& props) { Init(props); }
 
@@ -27,10 +21,7 @@ void Pepper::WinWindow::Init(const WindowProps& props)
   data.width = props.width;
   data.height = props.height;
 
-  PP_CORE_INFO("Creating window {0} ({1}, {2})",
-               props.title,
-               props.width,
-               props.height);
+  PP_CORE_INFO("Creating window {0} ({1}, {2})", props.title, props.width, props.height);
 
   if (!s_glfw_initialized)
   {
@@ -41,11 +32,7 @@ void Pepper::WinWindow::Init(const WindowProps& props)
     s_glfw_initialized = true;
   }
 
-  window = glfwCreateWindow(props.width,
-                            props.height,
-                            props.title.c_str(),
-                            nullptr,
-                            nullptr);
+  window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
   graphics_context = new OpenGLContext(window);
   graphics_context->Init();
 
@@ -164,8 +151,7 @@ void Pepper::WinWindow::ConfigMouseScrollCB() const
   {
     WindowData& data = *(WindowData*)glfwGetWindowUserPointer(win);
 
-    MouseScrolledEvent event{ static_cast<float>(xOff),
-                              static_cast<float>(yOff) };
+    MouseScrolledEvent event{ static_cast<float>(xOff), static_cast<float>(yOff) };
     data.eventCallback(event);
   };
   glfwSetScrollCallback(window, mouse_callback);
