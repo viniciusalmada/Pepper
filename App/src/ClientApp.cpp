@@ -119,7 +119,7 @@ void ExampleLayer::OnImGuiRender()
 void ExampleLayer::OnUpdate()
 {
   // if (Pepper::Input::IsKeyPressed(PP_KEY_TAB))
-    // PP_INFO("Tab pressed");
+  // PP_INFO("Tab pressed");
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();

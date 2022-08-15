@@ -51,7 +51,7 @@ void Pepper::OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 
 
 const Pepper::BufferLayout& Pepper::OpenGLVertexBuffer::GetLayout() const { return this->layout; }
 
-void Pepper::OpenGLVertexBuffer::SetLayout(const Pepper::BufferLayout& layout) { this->layout = layout; }
+void Pepper::OpenGLVertexBuffer::SetLayout(const Pepper::BufferLayout& newLayout) { this->layout = newLayout; }
 
 /****************
  * Index Buffer *
