@@ -158,6 +158,21 @@ void Pepper::Application::Run()
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    /*
+    RenderCommand::SetClearColor();
+    RenderCommand::Clear();
+
+    Renderer::BeginScene();
+
+    shader->Bind();
+    Renderer::Submit(triangle_VAO);
+
+    blue_shader->Bind();
+    Renderer::Submit(square_VAO);
+
+    Renderer::EndScene();
+    */
+
     shader->Bind();
     triangle_VAO->Bind();
     glDrawElements(GL_TRIANGLES, triangle_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
