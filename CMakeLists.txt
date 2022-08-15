@@ -53,11 +53,14 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Log.cpp
   ${SOURCE_DIR}/Platform/OpenGL/OpenGLBuffer.cpp
   ${SOURCE_DIR}/Platform/OpenGL/OpenGLContext.cpp
+  ${SOURCE_DIR}/Platform/OpenGL/OpenGLRendererAPI.cpp
   ${SOURCE_DIR}/Platform/OpenGL/OpenGLVertexArray.cpp
   ${SOURCE_DIR}/Platform/Windows/WinInput.cpp
   ${SOURCE_DIR}/Platform/Windows/WinWindow.cpp
   ${SOURCE_DIR}/Renderer/Buffer.cpp
+  ${SOURCE_DIR}/Renderer/RenderCommand.cpp
   ${SOURCE_DIR}/Renderer/Renderer.cpp
+  ${SOURCE_DIR}/Renderer/RendererAPI.cpp
   ${SOURCE_DIR}/Renderer/Shader.cpp
   ${SOURCE_DIR}/Renderer/VertexArray.cpp
 )

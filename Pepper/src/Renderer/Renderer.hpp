@@ -1,15 +1,18 @@
 #pragma once
 
+#include "RendererAPI.hpp"
+
 namespace Pepper
 {
-  enum class RendererAPI : unsigned int { NONE = 0, OPEN_GL = 1 };
-
   class Renderer
   {
   public:
-    static RendererAPI GetAPI() { return renderer_api; }
+    static void BeginScene(); // TODO
+    
+    static void EndScene(); // TODO
 
-  private:
-    static RendererAPI renderer_api;
+    static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+    static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
   };
 }

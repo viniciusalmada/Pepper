@@ -4,4 +4,14 @@
 
 #include "Renderer.hpp"
 
-Pepper::RendererAPI Pepper::Renderer::renderer_api = RendererAPI::OPEN_GL;
+#include "RenderCommand.hpp"
+
+void Pepper::Renderer::BeginScene() {}
+
+void Pepper::Renderer::EndScene() {}
+
+void Pepper::Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray)
+{
+  vertexArray->Bind();
+  RenderCommand::DrawIndexed(vertexArray);
+}

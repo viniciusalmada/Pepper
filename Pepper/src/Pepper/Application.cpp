@@ -1,10 +1,12 @@
+// clang-format off
+#include "PepperPCH.hpp"
+// clang-format on
+
 #include "Application.hpp"
 
 #include "Pepper/Input.hpp"
-
-#include <GLFW/glfw3.h>
-#include <PepperPCH.hpp>
-#include <glad/glad.h>
+#include "Renderer/RenderCommand.hpp"
+#include "Renderer/Renderer.hpp"
 
 const std::string vertex_src{ R"glsl(
   #version 330 core
@@ -155,11 +157,7 @@ void Pepper::Application::Run()
 {
   while (running)
   {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    /*
-    RenderCommand::SetClearColor();
+    RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     RenderCommand::Clear();
 
     Renderer::BeginScene();
@@ -171,15 +169,6 @@ void Pepper::Application::Run()
     Renderer::Submit(square_VAO);
 
     Renderer::EndScene();
-    */
-
-    shader->Bind();
-    triangle_VAO->Bind();
-    glDrawElements(GL_TRIANGLES, triangle_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-    blue_shader->Bind();
-    square_VAO->Bind();
-    glDrawElements(GL_TRIANGLES, square_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
     for (Layer* layer : layer_stack)
       layer->OnUpdate();
