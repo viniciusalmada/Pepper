@@ -84,6 +84,7 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
 target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
+
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 endif(WIN32)
@@ -110,7 +111,9 @@ target_precompile_headers(Pepper PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
 
 # #############################################################################
 # The client application
-add_executable(App App/src/ClientApp.cpp)
+add_executable(App
+  App/src/ClientApp.cpp
+)
 
 target_include_directories(App PRIVATE App/src)
 target_include_directories(App PRIVATE ${SOURCE_DIR})
