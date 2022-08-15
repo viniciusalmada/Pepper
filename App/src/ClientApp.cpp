@@ -1,6 +1,6 @@
 // clang-format off
-#include <Pepper.hpp>
 #include <PepperPCH.hpp>
+#include <Pepper.hpp>
 // clang-format on
 
 const std::string vertex_src{ R"glsl(
