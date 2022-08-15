@@ -4,12 +4,12 @@ project(PepperEngine VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-# #########################################
+# #############################################################################
 # Global constants
 set(VENDOR_DIR Pepper/vendor)
 set(SOURCE_DIR Pepper/src)
 
-# #########################################
+# #############################################################################
 # GLFW library
 add_subdirectory(${VENDOR_DIR}/GLFW)
 
@@ -18,11 +18,11 @@ if(WIN32)
     MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif(WIN32)
 
-# #########################################
+# #############################################################################
 # GLAD library
 add_subdirectory(${VENDOR_DIR}/GLAD)
 
-# #########################################
+# #############################################################################
 # Dear ImGui library
 add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
   ${VENDOR_DIR}/imgui/imgui_draw.cpp
@@ -41,7 +41,7 @@ endif(WIN32)
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 
-# #########################################
+# #############################################################################
 # The engine itself is a static library
 add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Application.cpp
@@ -81,7 +81,6 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
 
 target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
-
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 endif(WIN32)
@@ -106,7 +105,7 @@ endif(WIN32)
 
 target_precompile_headers(Pepper PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
 
-# #########################################
+# #############################################################################
 # The client application
 add_executable(App App/src/ClientApp.cpp)
 
