@@ -10,6 +10,10 @@
 #include "Pepper/KeyCodes.hpp"
 #include "Pepper/MouseButtonCodes.hpp"
 
+#include "Renderer/RenderCommand.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Renderer/Shader.hpp"
+
 // --Entry Point------------------------
 #include "Pepper/EntryPoint.hpp"
 // -------------------------------------

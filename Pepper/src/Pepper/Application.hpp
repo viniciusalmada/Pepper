@@ -5,9 +5,6 @@
 #include "Events/WindowEvent.hpp"
 #include "ImGui/ImGuiLayer.hpp"
 #include "LayerStack.hpp"
-#include "Renderer/Buffer.hpp"
-#include "Renderer/Shader.hpp"
-#include "Renderer/VertexArray.hpp"
 #include "Window.hpp"
 
 namespace Pepper
@@ -37,12 +34,6 @@ namespace Pepper
     ImGuiLayer* imGuiLayer;
     bool running = true;
     LayerStack layer_stack;
-
-    std::unique_ptr<Shader> shader;
-    std::unique_ptr<Shader> blue_shader;
-
-    std::shared_ptr<VertexArray> triangle_VAO;
-    std::shared_ptr<VertexArray> square_VAO;
 
   private:
     static Application* app_instance;
