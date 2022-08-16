@@ -6,6 +6,8 @@
 #include "Pepper/Layer.hpp"
 #include "Pepper/Log.hpp"
 
+#include "Pepper/Core/Timestep.hpp"
+
 // --Input------------------------
 #include "Pepper/Input.hpp"
 #include "Pepper/KeyCodes.hpp"

@@ -9,7 +9,7 @@ public:
 
   void OnImGuiRender() override;
 
-  void OnUpdate() override;
+  void OnUpdate(Pepper::Timestep timestep) override;
 
   void OnEvent(Pepper::Event&) override;
 
@@ -21,8 +21,8 @@ private:
   std::shared_ptr<Pepper::VertexArray> square_VAO;
 
   Pepper::OrthoCamera camera;
-  const float CAMERA_MOVE_SPEED = 0.01f;
-  const float CAMERA_ROTATION_SPEED = 2.5f;
+  const float CAMERA_MOVE_SPEED = 5.0f;
+  const float CAMERA_ROTATION_SPEED = 180.0f;
 };
 
 class ClientApp : public Pepper::Application

@@ -124,26 +124,25 @@ void ExampleLayer::OnImGuiRender()
   // ImGui::End();
 }
 
-void ExampleLayer::OnUpdate()
+void ExampleLayer::OnUpdate(Pepper::Timestep ts)
 {
-  float t = 1.0f / 0.75f;
-
+  // PP_TRACE("dT: {0}ms ({1}ms)", timestep.GetMilliSeconds(), timestep.GetSeconds());
   glm::vec3 pos = camera.GetPosition();
   if (Pepper::Input::IsKeyPressed(PP_KEY_W))
-    pos.y -= CAMERA_MOVE_SPEED * t;
+    pos.y -= CAMERA_MOVE_SPEED * ts;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
-    pos.x += CAMERA_MOVE_SPEED * t;
+    pos.x += CAMERA_MOVE_SPEED * ts;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
-    pos.y += CAMERA_MOVE_SPEED * t;
+    pos.y += CAMERA_MOVE_SPEED * ts;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
-    pos.x -= CAMERA_MOVE_SPEED * t;
+    pos.x -= CAMERA_MOVE_SPEED * ts;
   camera.SetPosition(pos);
 
   float rot_deg = camera.GetRotation();
   if (Pepper::Input::IsKeyPressed(PP_KEY_UP))
-    rot_deg += CAMERA_ROTATION_SPEED * t;
+    rot_deg += CAMERA_ROTATION_SPEED * ts;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
-    rot_deg -= CAMERA_ROTATION_SPEED * t;
+    rot_deg -= CAMERA_ROTATION_SPEED * ts;
   camera.SetRotationDeg(rot_deg);
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });

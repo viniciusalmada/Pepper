@@ -6,6 +6,8 @@
 
 #include "Pepper/Input.hpp"
 
+#include <GLFW/glfw3.h>
+
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 Pepper::Application* Pepper::Application::app_instance = nullptr;
@@ -20,6 +22,8 @@ Pepper::Application::Application()
 
   imGuiLayer = new ImGuiLayer();
   PushOverlay(imGuiLayer);
+
+  last_frame_time = 0;
 }
 
 void Pepper::Application::PushLayer(Layer* layer) { layer_stack.PushLayer(layer); }
@@ -44,8 +48,12 @@ void Pepper::Application::Run()
 {
   while (running)
   {
+    float time_sec = static_cast<float>(glfwGetTime()); // Platform::GetTime
+    Timestep timestep{ time_sec - last_frame_time };
+    last_frame_time = time_sec;
+
     for (Layer* layer : layer_stack)
-      layer->OnUpdate();
+      layer->OnUpdate(timestep);
 
     imGuiLayer->Begin();
     for (Layer* layer : layer_stack)

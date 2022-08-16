@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.hpp"
+#include "Core/Timestep.hpp"
 #include "Events/Event.hpp"
 #include "Events/WindowEvent.hpp"
 #include "ImGui/ImGuiLayer.hpp"
@@ -34,6 +35,7 @@ namespace Pepper
     ImGuiLayer* imGuiLayer;
     bool running = true;
     LayerStack layer_stack;
+    float last_frame_time;
 
   private:
     static Application* app_instance;
