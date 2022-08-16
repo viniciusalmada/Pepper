@@ -58,6 +58,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Platform/Windows/WinInput.cpp
   ${SOURCE_DIR}/Platform/Windows/WinWindow.cpp
   ${SOURCE_DIR}/Renderer/Buffer.cpp
+  ${SOURCE_DIR}/Renderer/OrthoCamera.cpp
   ${SOURCE_DIR}/Renderer/RenderCommand.cpp
   ${SOURCE_DIR}/Renderer/Renderer.cpp
   ${SOURCE_DIR}/Renderer/RendererAPI.cpp

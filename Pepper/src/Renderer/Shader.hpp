@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <string>
 
 namespace Pepper
@@ -13,6 +14,8 @@ namespace Pepper
     void Bind() const;
 
     void Unbind() const;
+
+    void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
   private:
     uint32_t renderer_id;
