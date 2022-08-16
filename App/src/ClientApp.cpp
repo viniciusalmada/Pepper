@@ -117,12 +117,7 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
   // camera.SetRotationDeg(45.0f);
 }
 
-void ExampleLayer::OnImGuiRender()
-{
-  // ImGui::Begin("Pepper");
-  // ImGui::Text("Hello, Pepper!");
-  // ImGui::End();
-}
+void ExampleLayer::OnImGuiRender() {}
 
 void ExampleLayer::OnUpdate(Pepper::Timestep ts)
 {
