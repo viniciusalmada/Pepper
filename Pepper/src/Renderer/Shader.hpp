@@ -18,6 +18,8 @@ namespace Pepper
     void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
   private:
+    bool CheckIsBound() const;
+
     uint32_t renderer_id;
   };
 }

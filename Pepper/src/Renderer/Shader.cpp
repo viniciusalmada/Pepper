@@ -89,8 +89,21 @@ void Pepper::Shader::Unbind() const { glUseProgram(0); }
 
 void Pepper::Shader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 {
-  // TODO: check current bound Program
+  bool is_bound = CheckIsBound();
+  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
+  if (!is_bound)
+    return;
 
   int location = glGetUniformLocation(renderer_id, name.c_str());
   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+bool Pepper::Shader::CheckIsBound() const
+{
+  uint32_t curr_program = 0;
+  glGetIntegerv(GL_CURRENT_PROGRAM, (int*)&curr_program);
+  if (curr_program == 0)
+    return false;
+
+  return curr_program == renderer_id;
 }
