@@ -111,6 +111,9 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
   }
   shader = std::make_shared<Pepper::Shader>(vertex_src, fragment_src);
   blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
+
+  camera.SetPosition({ 0.5f, 0.5f, 0.0f });
+  camera.SetRotationDeg(45.0f);
 }
 
 void ExampleLayer::OnImGuiRender()
@@ -122,14 +125,27 @@ void ExampleLayer::OnImGuiRender()
 
 void ExampleLayer::OnUpdate()
 {
-  // if (Pepper::Input::IsKeyPressed(PP_KEY_TAB))
-  // PP_INFO("Tab pressed");
+  glm::vec3 pos = camera.GetPosition();
+  if (Pepper::Input::IsKeyPressed(PP_KEY_W))
+  {
+    pos.y -= 0.01f;
+  }
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
+  {
+    pos.x += 0.01f;
+  }
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
+  {
+    pos.y += 0.01f;
+  }
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
+  {
+    pos.x -= 0.01f;
+  }
+  camera.SetPosition(pos);
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
-
-  camera.SetPosition({ 0.5f, 0.5f, 0.0f });
-  camera.SetRotationDeg(45.0f);
 
   Pepper::Renderer::BeginScene(camera);
   Pepper::Renderer::Submit(shader, triangle_VAO);
