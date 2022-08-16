@@ -4,7 +4,6 @@
 
 namespace Pepper
 {
-
   class OrthoCamera
   {
   public:
@@ -35,5 +34,4 @@ namespace Pepper
     glm::vec3 position;
     float rotation_deg;
   };
-
 }
