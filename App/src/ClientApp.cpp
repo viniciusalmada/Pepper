@@ -113,7 +113,7 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
   blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
 
   camera.SetPosition({ 0.5f, 0.5f, 0.0f });
-  camera.SetRotationDeg(45.0f);
+  // camera.SetRotationDeg(45.0f);
 }
 
 void ExampleLayer::OnImGuiRender()
@@ -127,22 +127,21 @@ void ExampleLayer::OnUpdate()
 {
   glm::vec3 pos = camera.GetPosition();
   if (Pepper::Input::IsKeyPressed(PP_KEY_W))
-  {
     pos.y -= 0.01f;
-  }
   else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
-  {
     pos.x += 0.01f;
-  }
   else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
-  {
     pos.y += 0.01f;
-  }
   else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
-  {
     pos.x -= 0.01f;
-  }
   camera.SetPosition(pos);
+
+  float rot_deg = camera.GetRotation();
+  if (Pepper::Input::IsKeyPressed(PP_KEY_UP))
+    rot_deg += 5;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
+    rot_deg -= 5;
+  camera.SetRotationDeg(rot_deg);
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
