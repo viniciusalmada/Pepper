@@ -16,7 +16,7 @@ namespace Pepper
 
     float GetRotation() const;
 
-    void SetRotation(float rotation);
+    void SetRotationDeg(float rotation);
 
     const glm::mat4& GetProjectionMatrix() const;
 
@@ -32,8 +32,8 @@ namespace Pepper
     glm::mat4 view_matrix;
     glm::mat4 view_proj_matrix;
 
-    glm::vec3 position = { 0.0f, 0.0f, 0.0f };
-    float rotation_deg = 0.0f;
+    glm::vec3 position;
+    float rotation_deg;
   };
 
 }

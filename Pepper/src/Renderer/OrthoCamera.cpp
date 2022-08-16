@@ -7,7 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Pepper::OrthoCamera::OrthoCamera(float left, float right, float bottom, float top)
-    : proj_matrix(glm::ortho(left, right, bottom, top)), view_matrix(1.0f)
+    : proj_matrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), view_matrix(1.0f), position({ 0.0f, 0.0f, 0.0f }),
+      rotation_deg(0.0f)
 {
   view_proj_matrix = proj_matrix * view_matrix;
 }
@@ -22,7 +23,7 @@ void Pepper::OrthoCamera::SetPosition(const glm::vec3& newPosition)
 
 float Pepper::OrthoCamera::GetRotation() const { return rotation_deg; }
 
-void Pepper::OrthoCamera::SetRotation(float rotation)
+void Pepper::OrthoCamera::SetRotationDeg(float rotation)
 {
   this->rotation_deg = rotation;
   RecalculateViewMatrix();
