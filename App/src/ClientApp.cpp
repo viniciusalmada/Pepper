@@ -10,11 +10,13 @@ const std::string vertex_src{ R"glsl(
   layout(location = 0) in vec3 in_position;
   layout(location = 1) in vec4 in_color;
 
+  uniform mat4 u_view_projection;
+
   out vec4 v_color;
 
   void main()
   {
-    gl_Position = vec4(in_position, 1.0);
+    gl_Position = u_view_projection * vec4(in_position, 1.0);
     v_color = in_color;
   }
 )glsl" };
@@ -36,9 +38,11 @@ const std::string blue_vertex_src{ R"glsl(
 
   layout(location = 0) in vec3 in_position;
 
+  uniform mat4 u_view_projection;
+
   void main()
   {
-    gl_Position = vec4(in_position, 1.0);
+    gl_Position = u_view_projection * vec4(in_position, 1.0);
   }
 )glsl" };
 
@@ -105,8 +109,8 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example")
     auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
   }
-  shader = std::make_unique<Pepper::Shader>(vertex_src, fragment_src);
-  blue_shader = std::make_unique<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
+  shader = std::make_shared<Pepper::Shader>(vertex_src, fragment_src);
+  blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
 }
 
 void ExampleLayer::OnImGuiRender()

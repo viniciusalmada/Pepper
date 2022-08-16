@@ -18,7 +18,7 @@ void Pepper::Renderer::EndScene() {}
 void Pepper::Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray)
 {
   shader->Bind();
-  shader->UploadUniformMat4()
+  shader->UploadUniformMat4("u_view_projection", scene_data->view_proj_matrix);
 
   vertexArray->Bind();
   RenderCommand::DrawIndexed(vertexArray);
