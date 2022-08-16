@@ -14,13 +14,14 @@ public:
   void OnEvent(Pepper::Event&) override;
 
 private:
-  std::unique_ptr<Pepper::Shader> shader;
-  std::unique_ptr<Pepper::Shader> blue_shader;
+  std::shared_ptr<Pepper::Shader> shader;
+  std::shared_ptr<Pepper::Shader> blue_shader;
 
   std::shared_ptr<Pepper::VertexArray> triangle_VAO;
   std::shared_ptr<Pepper::VertexArray> square_VAO;
-};
 
+  Pepper::OrthoCamera camera;
+};
 
 class ClientApp : public Pepper::Application
 {

@@ -10,6 +10,7 @@
 #include "Pepper/KeyCodes.hpp"
 #include "Pepper/MouseButtonCodes.hpp"
 
+#include "Renderer/OrthoCamera.hpp"
 #include "Renderer/RenderCommand.hpp"
 #include "Renderer/Renderer.hpp"
 #include "Renderer/Shader.hpp"
