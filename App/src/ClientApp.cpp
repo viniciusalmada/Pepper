@@ -10,11 +10,13 @@ const std::string vertex_src{ R"glsl(
   layout(location = 0) in vec3 in_position;
   layout(location = 1) in vec4 in_color;
 
+  uniform mat4 u_view_projection;
+
   out vec4 v_color;
 
   void main()
   {
-    gl_Position = vec4(in_position, 1.0);
+    gl_Position = u_view_projection * vec4(in_position, 1.0);
     v_color = in_color;
   }
 )glsl" };
@@ -36,9 +38,11 @@ const std::string blue_vertex_src{ R"glsl(
 
   layout(location = 0) in vec3 in_position;
 
+  uniform mat4 u_view_projection;
+
   void main()
   {
-    gl_Position = vec4(in_position, 1.0);
+    gl_Position = u_view_projection * vec4(in_position, 1.0);
   }
 )glsl" };
 
@@ -49,11 +53,11 @@ const std::string blue_fragment_src{ R"glsl(
 
   void main()
   {
-    out_color = vec4(0.1, 0.1, 0.8, 1.0);
+    out_color = vec4(0.2, 0.3, 0.8, 1.0);
   }
 )glsl" };
 
-ExampleLayer::ExampleLayer() : Pepper::Layer("Example")
+ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f })
 {
   triangle_VAO = Pepper::VertexArray::Create();
   triangle_VAO->Bind();
@@ -105,8 +109,12 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example")
     auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
   }
-  shader = std::make_unique<Pepper::Shader>(vertex_src, fragment_src);
-  blue_shader = std::make_unique<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
+
+  shader = std::make_shared<Pepper::Shader>(vertex_src, fragment_src);
+  blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
+
+  camera.SetPosition({ 0.5f, 0.5f, 0.0f });
+  // camera.SetRotationDeg(45.0f);
 }
 
 void ExampleLayer::OnImGuiRender()
@@ -118,20 +126,35 @@ void ExampleLayer::OnImGuiRender()
 
 void ExampleLayer::OnUpdate()
 {
-  // if (Pepper::Input::IsKeyPressed(PP_KEY_TAB))
-  // PP_INFO("Tab pressed");
+  float t = 1.0f / 0.75f;
+
+  glm::vec3 pos = camera.GetPosition();
+  if (Pepper::Input::IsKeyPressed(PP_KEY_W))
+    pos.y -= CAMERA_MOVE_SPEED * t;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
+    pos.x += CAMERA_MOVE_SPEED * t;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
+    pos.y += CAMERA_MOVE_SPEED * t;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
+    pos.x -= CAMERA_MOVE_SPEED * t;
+  camera.SetPosition(pos);
+
+  float rot_deg = camera.GetRotation();
+  if (Pepper::Input::IsKeyPressed(PP_KEY_UP))
+    rot_deg += CAMERA_ROTATION_SPEED * t;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
+    rot_deg -= CAMERA_ROTATION_SPEED * t;
+  camera.SetRotationDeg(rot_deg);
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
 
-  Pepper::Renderer::BeginScene();
+  Pepper::Renderer::BeginScene(camera);
+  Pepper::Renderer::Submit(shader, triangle_VAO);
+  Pepper::Renderer::EndScene();
 
-  shader->Bind();
-  Pepper::Renderer::Submit(triangle_VAO);
-
-  blue_shader->Bind();
-  Pepper::Renderer::Submit(square_VAO);
-
+  Pepper::Renderer::BeginScene(camera);
+  Pepper::Renderer::Submit(blue_shader, square_VAO);
   Pepper::Renderer::EndScene();
 }
 
