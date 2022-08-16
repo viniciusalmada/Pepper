@@ -4,7 +4,7 @@
 
 namespace Pepper
 {
-  // The timestep entity works as a representation of the 
+  // The timestep entity works as a representation of the
   // time used to render a single frame (in seconds).
   class Timestep
   {

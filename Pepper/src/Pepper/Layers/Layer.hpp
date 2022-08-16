@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core.hpp"
-#include "Core/Timestep.hpp"
-#include "Events/Event.hpp"
+#include "Pepper/Core.hpp"
+#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Events/Event.hpp"
 
 namespace Pepper
 {

@@ -4,8 +4,8 @@
 #include "Core/Timestep.hpp"
 #include "Events/Event.hpp"
 #include "Events/WindowEvent.hpp"
-#include "ImGui/ImGuiLayer.hpp"
-#include "LayerStack.hpp"
+#include "Layers/ImGui/ImGuiLayer.hpp"
+#include "Layers/LayerStack.hpp"
 #include "Window.hpp"
 
 namespace Pepper

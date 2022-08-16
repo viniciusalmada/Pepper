@@ -70,10 +70,7 @@ void Pepper::OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuff
   vertex_buffers.insert(buffer);
 }
 
-void Pepper::OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer)
-{
-  index_buffer = buffer;
-}
+void Pepper::OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer) { index_buffer = buffer; }
 
 const std::set<std::shared_ptr<Pepper::VertexBuffer>>& Pepper::OpenGLVertexArray::GetVertexBuffers() const
 {

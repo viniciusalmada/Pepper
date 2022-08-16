@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Event.hpp"
-#include "Pepper/MouseButtonCodes.hpp"
+#include "Pepper/Input/MouseButtonCodes.hpp"
 
 namespace Pepper
 {

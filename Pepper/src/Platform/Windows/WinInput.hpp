@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pepper/Input.hpp"
+#include "Pepper/Input/Input.hpp"
 
 #include <GLFW/glfw3.h>
 

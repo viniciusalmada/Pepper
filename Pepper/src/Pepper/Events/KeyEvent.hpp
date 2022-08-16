@@ -1,6 +1,6 @@
 #pragma once
-#include "Event.hpp"
-#include "Pepper/KeyCodes.hpp"
+#include "Pepper/Events/Event.hpp"
+#include "Pepper/Input/KeyCodes.hpp"
 
 #include <string>
 

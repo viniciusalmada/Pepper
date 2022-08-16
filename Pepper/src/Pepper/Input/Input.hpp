@@ -3,9 +3,9 @@
 #include "PepperPCH.hpp"
 // clang-format on
 
-#include "Core.hpp"
-#include "Pepper/KeyCodes.hpp"
-#include "Pepper/MouseButtonCodes.hpp"
+#include "Pepper/Core.hpp"
+#include "Pepper/Input/KeyCodes.hpp"
+#include "Pepper/Input/MouseButtonCodes.hpp"
 
 namespace Pepper
 {

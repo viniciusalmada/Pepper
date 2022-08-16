@@ -3,7 +3,7 @@
 #include "Pepper/Events/KeyEvent.hpp"
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
-#include "Pepper/Layer.hpp"
+#include "Pepper/Layers/Layer.hpp"
 
 namespace Pepper
 {
