@@ -53,7 +53,7 @@ const std::string blue_fragment_src{ R"glsl(
 
   void main()
   {
-    out_color = vec4(0.1, 0.1, 0.8, 1.0);
+    out_color = vec4(0.2, 0.3, 0.8, 1.0);
   }
 )glsl" };
 
