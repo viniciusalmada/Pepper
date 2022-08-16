@@ -57,7 +57,7 @@ const std::string blue_fragment_src{ R"glsl(
   }
 )glsl" };
 
-ExampleLayer::ExampleLayer() : Pepper::Layer("Example")
+ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f })
 {
   triangle_VAO = Pepper::VertexArray::Create();
   triangle_VAO->Bind();
@@ -128,14 +128,15 @@ void ExampleLayer::OnUpdate()
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
 
-  Pepper::Renderer::BeginScene();
+  camera.SetPosition({ 0.5f, 0.5f, 0.0f });
+  camera.SetRotationDeg(45.0f);
 
-  shader->Bind();
-  Pepper::Renderer::Submit(triangle_VAO);
+  Pepper::Renderer::BeginScene(camera);
+  Pepper::Renderer::Submit(shader, triangle_VAO);
+  Pepper::Renderer::EndScene();
 
-  blue_shader->Bind();
-  Pepper::Renderer::Submit(square_VAO);
-
+  Pepper::Renderer::BeginScene(camera);
+  Pepper::Renderer::Submit(blue_shader, square_VAO);
   Pepper::Renderer::EndScene();
 }
 

@@ -19,8 +19,9 @@ private:
 
   std::shared_ptr<Pepper::VertexArray> triangle_VAO;
   std::shared_ptr<Pepper::VertexArray> square_VAO;
-};
 
+  Pepper::OrthoCamera camera;
+};
 
 class ClientApp : public Pepper::Application
 {
