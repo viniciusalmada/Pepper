@@ -127,20 +127,20 @@ void ExampleLayer::OnUpdate()
 {
   glm::vec3 pos = camera.GetPosition();
   if (Pepper::Input::IsKeyPressed(PP_KEY_W))
-    pos.y -= 0.01f;
+    pos.y -= CAMERA_MOVE_SPEED;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
-    pos.x += 0.01f;
+    pos.x += CAMERA_MOVE_SPEED;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
-    pos.y += 0.01f;
+    pos.y += CAMERA_MOVE_SPEED;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
-    pos.x -= 0.01f;
+    pos.x -= CAMERA_MOVE_SPEED;
   camera.SetPosition(pos);
 
   float rot_deg = camera.GetRotation();
   if (Pepper::Input::IsKeyPressed(PP_KEY_UP))
-    rot_deg += 5;
+    rot_deg += CAMERA_ROTATION_SPEED;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
-    rot_deg -= 5;
+    rot_deg -= CAMERA_ROTATION_SPEED;
   camera.SetRotationDeg(rot_deg);
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
