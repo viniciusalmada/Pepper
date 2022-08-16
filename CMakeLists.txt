@@ -19,6 +19,18 @@ if(WIN32)
 endif(WIN32)
 
 # #############################################################################
+# glm library
+add_subdirectory(${VENDOR_DIR}/glm)
+
+if(WIN32)
+  # disable warning C4201: nonstandard extension used: nameless struct/union
+  target_compile_options(glm INTERFACE /wd4201)
+
+  set_property(TARGET glm PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
+
+# #############################################################################
 # GLAD library
 add_subdirectory(${VENDOR_DIR}/GLAD)
 
@@ -100,6 +112,7 @@ target_link_libraries(Pepper
   PRIVATE GLAD
   PRIVATE glfw
   PRIVATE ImGui
+  PRIVATE glm
 )
 
 if(WIN32)
