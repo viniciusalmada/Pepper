@@ -109,6 +109,7 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
     auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
   }
+
   shader = std::make_shared<Pepper::Shader>(vertex_src, fragment_src);
   blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
 
@@ -125,22 +126,24 @@ void ExampleLayer::OnImGuiRender()
 
 void ExampleLayer::OnUpdate()
 {
+  float t = 1.0f / 0.75f;
+
   glm::vec3 pos = camera.GetPosition();
   if (Pepper::Input::IsKeyPressed(PP_KEY_W))
-    pos.y -= CAMERA_MOVE_SPEED;
+    pos.y -= CAMERA_MOVE_SPEED * t;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
-    pos.x += CAMERA_MOVE_SPEED;
+    pos.x += CAMERA_MOVE_SPEED * t;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
-    pos.y += CAMERA_MOVE_SPEED;
+    pos.y += CAMERA_MOVE_SPEED * t;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
-    pos.x -= CAMERA_MOVE_SPEED;
+    pos.x -= CAMERA_MOVE_SPEED * t;
   camera.SetPosition(pos);
 
   float rot_deg = camera.GetRotation();
   if (Pepper::Input::IsKeyPressed(PP_KEY_UP))
-    rot_deg += CAMERA_ROTATION_SPEED;
+    rot_deg += CAMERA_ROTATION_SPEED * t;
   else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
-    rot_deg -= CAMERA_ROTATION_SPEED;
+    rot_deg -= CAMERA_ROTATION_SPEED * t;
   camera.SetRotationDeg(rot_deg);
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
