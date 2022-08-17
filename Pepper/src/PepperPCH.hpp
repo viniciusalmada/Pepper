@@ -14,7 +14,7 @@
 #include <utility>
 #include <vector>
 
-#include "Pepper/Log.hpp"
+#include "Pepper/Core/Log.hpp"
 
 #ifdef PP_PLATFORM_WINDOWS
   #include <Windows.h>

@@ -3,8 +3,8 @@
 // clang-format on
 #include "ImGuiLayer.hpp"
 
-#include "Pepper/Application.hpp"
-#include "Pepper/Core.hpp"
+#include "Pepper/Core/Application.hpp"
+#include "Pepper/Core/Core.hpp"
 
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>

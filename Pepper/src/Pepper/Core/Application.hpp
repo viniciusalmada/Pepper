@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core.hpp"
-#include "Core/Timestep.hpp"
-#include "Events/Event.hpp"
-#include "Events/WindowEvent.hpp"
-#include "Layers/ImGui/ImGuiLayer.hpp"
-#include "Layers/LayerStack.hpp"
+#include "Pepper/Core/Core.hpp"
+#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Events/Event.hpp"
+#include "Pepper/Events/WindowEvent.hpp"
+#include "Pepper/Layers/ImGui/ImGuiLayer.hpp"
+#include "Pepper/Layers/LayerStack.hpp"
 #include "Window.hpp"
 
 namespace Pepper

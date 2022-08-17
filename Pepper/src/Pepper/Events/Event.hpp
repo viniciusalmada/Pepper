@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pepper/Core.hpp"
+#include "Pepper/Core/Core.hpp"
 
 #include <functional>
 #include <string>

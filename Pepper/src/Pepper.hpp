@@ -2,9 +2,9 @@
 // clang-format off
 // For use by Pepper clients
 
-#include "Pepper/Application.hpp"
+#include "Pepper/Core/Application.hpp"
 #include "Pepper/Layers/Layer.hpp"
-#include "Pepper/Log.hpp"
+#include "Pepper/Core//Log.hpp"
 
 #include "Pepper/Core/Timestep.hpp"
 
@@ -22,6 +22,6 @@
 // -------------------------------------
 
 // --Entry Point------------------------
-#include "Pepper/EntryPoint.hpp"
+#include "Pepper/Core/EntryPoint.hpp"
 // -------------------------------------
 // clang-format on

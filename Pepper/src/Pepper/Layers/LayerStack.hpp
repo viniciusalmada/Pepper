@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Layer.hpp"
-#include "Pepper/Core.hpp"
+#include "Pepper/Core/Core.hpp"
 
 #include <PepperPCH.hpp>
 

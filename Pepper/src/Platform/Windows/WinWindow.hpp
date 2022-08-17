@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pepper/Window.hpp"
+#include "Pepper/Core/Window.hpp"
 #include "Renderer/GraphicsContext.hpp"
 
 #include <GLFW/glfw3.h>

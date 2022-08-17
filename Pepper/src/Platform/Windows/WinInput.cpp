@@ -3,7 +3,7 @@
 // clang-format on
 #include "WinInput.hpp"
 
-#include "Pepper/Application.hpp"
+#include "Pepper/Core/Application.hpp"
 
 #include <GLFW/glfw3.h>
 

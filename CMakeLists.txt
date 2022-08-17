@@ -56,13 +56,13 @@ target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 # #############################################################################
 # The engine itself is a static library
 add_library(Pepper STATIC
-  ${SOURCE_DIR}/Pepper/Application.cpp
+  ${SOURCE_DIR}/Pepper/Core/Application.cpp
+  ${SOURCE_DIR}/Pepper/Core/Log.cpp
   ${SOURCE_DIR}/Pepper/Events/Event.cpp
   ${SOURCE_DIR}/Pepper/Input/Input.cpp
   ${SOURCE_DIR}/Pepper/Layers/ImGui/ImGuiLayer.cpp
   ${SOURCE_DIR}/Pepper/Layers/Layer.cpp
   ${SOURCE_DIR}/Pepper/Layers/LayerStack.cpp
-  ${SOURCE_DIR}/Pepper/Log.cpp
   ${SOURCE_DIR}/Platform/OpenGL/OpenGLBuffer.cpp
   ${SOURCE_DIR}/Platform/OpenGL/OpenGLContext.cpp
   ${SOURCE_DIR}/Platform/OpenGL/OpenGLRendererAPI.cpp

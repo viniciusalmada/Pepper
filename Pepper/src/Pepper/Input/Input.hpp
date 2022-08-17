@@ -3,7 +3,7 @@
 #include "PepperPCH.hpp"
 // clang-format on
 
-#include "Pepper/Core.hpp"
+#include "Pepper/Core/Core.hpp"
 #include "Pepper/Input/KeyCodes.hpp"
 #include "Pepper/Input/MouseButtonCodes.hpp"
 

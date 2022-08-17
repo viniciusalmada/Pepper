@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pepper/Core.hpp"
+#include "Pepper/Core/Core.hpp"
 #include "Pepper/Core/Timestep.hpp"
 #include "Pepper/Events/Event.hpp"
 
