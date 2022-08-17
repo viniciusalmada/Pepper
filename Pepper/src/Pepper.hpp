@@ -15,10 +15,10 @@
 // -------------------------------------
 
 // --Renderer------------------------
-#include "Renderer/OrthoCamera.hpp"
-#include "Renderer/RenderCommand.hpp"
-#include "Renderer/Renderer.hpp"
-#include "Renderer/Shader.hpp"
+#include "Pepper/Renderer/OrthoCamera.hpp"
+#include "Pepper/Renderer/RenderCommand.hpp"
+#include "Pepper/Renderer/Renderer.hpp"
+#include "Pepper/Renderer/Shader.hpp"
 // -------------------------------------
 
 // --Entry Point------------------------

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/VertexArray.hpp"
+#include "Pepper/Renderer/VertexArray.hpp"
 
 #include <cstdint>
 #include <memory>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/GraphicsContext.hpp"
+#include "Pepper/Renderer/GraphicsContext.hpp"
 
 struct GLFWwindow;
 

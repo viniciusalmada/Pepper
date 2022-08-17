@@ -4,7 +4,7 @@
 
 #include "Buffer.hpp"
 
-#include "Platform/OpenGL/OpenGLBuffer.hpp"
+#include "Pepper/Platform/OpenGL/OpenGLBuffer.hpp"
 #include "Renderer.hpp"
 
 std::shared_ptr<Pepper::VertexBuffer> Pepper::VertexBuffer::Create(float* vertices, uint32_t size, uint32_t parent)

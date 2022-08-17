@@ -3,7 +3,7 @@
 #include "Pepper/Events/KeyEvent.hpp"
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
-#include "Platform/OpenGL/OpenGLContext.hpp"
+#include "Pepper/Platform/OpenGL/OpenGLContext.hpp"
 
 static bool s_glfw_initialized = false;
 

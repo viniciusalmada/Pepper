@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pepper/Core/Window.hpp"
-#include "Renderer/GraphicsContext.hpp"
+#include "Pepper/Renderer/GraphicsContext.hpp"
 
 #include <GLFW/glfw3.h>
 

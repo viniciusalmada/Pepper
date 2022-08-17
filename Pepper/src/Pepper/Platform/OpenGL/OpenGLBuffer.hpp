@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Buffer.hpp"
+#include "Pepper/Renderer/Buffer.hpp"
 
 #include <cstdint>
 

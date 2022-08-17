@@ -4,6 +4,6 @@
 
 #include "RenderCommand.hpp"
 
-#include "Platform/OpenGL/OpenGLRendererAPI.hpp"
+#include "Pepper/Platform/OpenGL/OpenGLRendererAPI.hpp"
 
 Pepper::RendererAPI* Pepper::RenderCommand::renderer_api = new OpenGLRendererAPI();

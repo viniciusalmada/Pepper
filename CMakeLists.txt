@@ -64,19 +64,19 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Layers/ImGui/ImGuiLayer.cpp
   ${SOURCE_DIR}/Pepper/Layers/Layer.cpp
   ${SOURCE_DIR}/Pepper/Layers/LayerStack.cpp
-  ${SOURCE_DIR}/Platform/OpenGL/OpenGLBuffer.cpp
-  ${SOURCE_DIR}/Platform/OpenGL/OpenGLContext.cpp
-  ${SOURCE_DIR}/Platform/OpenGL/OpenGLRendererAPI.cpp
-  ${SOURCE_DIR}/Platform/OpenGL/OpenGLVertexArray.cpp
-  ${SOURCE_DIR}/Platform/Windows/WinInput.cpp
-  ${SOURCE_DIR}/Platform/Windows/WinWindow.cpp
-  ${SOURCE_DIR}/Renderer/Buffer.cpp
-  ${SOURCE_DIR}/Renderer/OrthoCamera.cpp
-  ${SOURCE_DIR}/Renderer/RenderCommand.cpp
-  ${SOURCE_DIR}/Renderer/Renderer.cpp
-  ${SOURCE_DIR}/Renderer/RendererAPI.cpp
-  ${SOURCE_DIR}/Renderer/Shader.cpp
-  ${SOURCE_DIR}/Renderer/VertexArray.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLBuffer.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLContext.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLRendererAPI.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLVertexArray.cpp
+  ${SOURCE_DIR}/Pepper/Platform/Windows/WinInput.cpp
+  ${SOURCE_DIR}/Pepper/Platform/Windows/WinWindow.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/Buffer.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/OrthoCamera.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/RenderCommand.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/Renderer.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/RendererAPI.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/Shader.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/VertexArray.cpp
 )
 
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})

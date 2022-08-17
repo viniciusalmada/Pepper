@@ -4,7 +4,7 @@
 
 #include "VertexArray.hpp"
 
-#include "Platform/OpenGL/OpenGLVertexArray.hpp"
+#include "Pepper/Platform/OpenGL/OpenGLVertexArray.hpp"
 #include "Renderer.hpp"
 
 std::shared_ptr<Pepper::VertexArray> Pepper::VertexArray::Create()
