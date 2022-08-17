@@ -4,6 +4,8 @@
 
 #include "ClientApp.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 const std::string vertex_src{ R"glsl(
   #version 330 core
 
@@ -11,12 +13,13 @@ const std::string vertex_src{ R"glsl(
   layout(location = 1) in vec4 in_color;
 
   uniform mat4 u_view_projection;
+  uniform mat4 u_transform;
 
   out vec4 v_color;
 
   void main()
   {
-    gl_Position = u_view_projection * vec4(in_position, 1.0);
+    gl_Position = u_view_projection * u_transform *  vec4(in_position, 1.0);
     v_color = in_color;
   }
 )glsl" };
@@ -39,10 +42,11 @@ const std::string blue_vertex_src{ R"glsl(
   layout(location = 0) in vec3 in_position;
 
   uniform mat4 u_view_projection;
+  uniform mat4 u_transform ;
 
   void main()
   {
-    gl_Position = u_view_projection * vec4(in_position, 1.0);
+    gl_Position = u_view_projection * u_transform * vec4(in_position, 1.0);
   }
 )glsl" };
 
@@ -57,7 +61,7 @@ const std::string blue_fragment_src{ R"glsl(
   }
 )glsl" };
 
-ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f })
+ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f)
 {
   triangle_VAO = Pepper::VertexArray::Create();
   triangle_VAO->Bind();
@@ -93,10 +97,10 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
     // clang-format off
       float vertices[] = {
         //  x,     y,     z
-        +0.5f, +0.5f, +0.0f,
-        +0.9f, +0.5f, +0.0f,
-        +0.9f, +0.9f, +0.0f,
-        +0.5f, +0.9f, +0.0f,
+        -1.6f, -0.9f, +0.0f,
+        -1.1f, -0.9f, +0.0f,
+        -1.1f, -0.4f, +0.0f,
+        -1.6f, -0.4f, +0.0f,
       };
     // clang-format on
 
@@ -113,7 +117,7 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
   shader = std::make_shared<Pepper::Shader>(vertex_src, fragment_src);
   blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
 
-  camera.SetPosition({ 0.5f, 0.5f, 0.0f });
+  camera.SetPosition({ 0.0f, 0.0f, 0.0f });
   // camera.SetRotationDeg(45.0f);
 }
 
@@ -140,6 +144,15 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
     rot_deg -= CAMERA_ROTATION_SPEED * ts;
   camera.SetRotationDeg(rot_deg);
 
+  if (Pepper::Input::IsKeyPressed(PP_KEY_H))
+    square_position.x -= SQUARE_MOVE_SPEED * ts;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_J))
+    square_position.y -= SQUARE_MOVE_SPEED * ts;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_K))
+    square_position.y += SQUARE_MOVE_SPEED * ts;
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_L))
+    square_position.x += SQUARE_MOVE_SPEED * ts;
+
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
 
@@ -148,7 +161,16 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   Pepper::Renderer::EndScene();
 
   Pepper::Renderer::BeginScene(camera);
-  Pepper::Renderer::Submit(blue_shader, square_VAO);
+  glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+  for (int i = 0; i < 30; i++)
+  {
+    for (int j = 0; j < 20; j++)
+    {
+      glm::vec3 new_pos(i * 0.11f + (-1.44), j * 0.110f + (-0.81), 0.0f);
+      glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, new_pos) * scale;
+      Pepper::Renderer::Submit(blue_shader, square_VAO, transform);
+    }
+  }
   Pepper::Renderer::EndScene();
 }
 
