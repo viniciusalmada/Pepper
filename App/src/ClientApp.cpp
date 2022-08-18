@@ -4,6 +4,7 @@
 
 #include "ClientApp.hpp"
 
+#include <Pepper/Platform/OpenGL/OpenGLShader.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 const std::string vertex_src{ R"glsl(
@@ -55,13 +56,17 @@ const std::string blue_fragment_src{ R"glsl(
 
   out vec4 out_color;
 
+  uniform vec3 u_color;
+
   void main()
   {
-    out_color = vec4(0.2, 0.3, 0.8, 1.0);
+    out_color = vec4(u_color, 1.0);
   }
 )glsl" };
 
-ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f)
+ExampleLayer::ExampleLayer()
+    : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f),
+      square_color({ 0.2, 0.4, 0.7 })
 {
   triangle_VAO = Pepper::VertexArray::Create();
   triangle_VAO->Bind();
@@ -114,8 +119,8 @@ ExampleLayer::ExampleLayer() : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -
     square_VAO->SetIndexBuffer(ibo);
   }
 
-  shader = std::make_shared<Pepper::Shader>(vertex_src, fragment_src);
-  blue_shader = std::make_shared<Pepper::Shader>(blue_vertex_src, blue_fragment_src);
+  shader = Pepper::Shader::Create(vertex_src, fragment_src);
+  blue_shader = Pepper::Shader::Create(blue_vertex_src, blue_fragment_src);
 
   camera.SetPosition({ 0.0f, 0.0f, 0.0f });
   // camera.SetRotationDeg(45.0f);
@@ -160,8 +165,15 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   Pepper::Renderer::Submit(shader, triangle_VAO);
   Pepper::Renderer::EndScene();
 
+  // Pepper::Material* material = new Pepper::Material(shader);
+  // material->Set("u_Color", redColor);
+  // squareMesh->SetMaterial(material)
+
   Pepper::Renderer::BeginScene(camera);
   glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(blue_shader)->Bind();
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(blue_shader)->UploadUniformFloat3("u_color", square_color);
   for (int i = 0; i < 30; i++)
   {
     for (int j = 0; j < 20; j++)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <memory>
 #include <string>
 
 namespace Pepper
@@ -8,18 +8,12 @@ namespace Pepper
   class Shader
   {
   public:
-    Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
-    ~Shader();
+    virtual ~Shader() = default;
 
-    void Bind() const;
+    virtual void Bind() const = 0;
 
-    void Unbind() const;
+    virtual void Unbind() const = 0;
 
-    void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
-
-  private:
-    bool CheckIsBound() const;
-
-    uint32_t renderer_id;
+    static std::shared_ptr<Shader> Create(const std::string& vertexSrc, const std::string& fragmentSrc);
   };
 }
