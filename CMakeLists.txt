@@ -6,6 +6,8 @@ project(PepperEngine VERSION 0.1)
 set(VENDOR_DIR Pepper/vendor)
 set(SOURCE_DIR Pepper/src)
 
+set(CXX_STANDARD cxx_std_20)
+
 # #############################################################################
 # GLFW library
 add_subdirectory(${VENDOR_DIR}/GLFW)
@@ -42,7 +44,7 @@ add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
   ${VENDOR_DIR}/imgui/backends/imgui_impl_glfw.cpp
 )
 
-target_compile_features(ImGui PRIVATE cxx_std_17)
+target_compile_features(ImGui PRIVATE ${CXX_STANDARD})
 
 if(WIN32)
   set_property(TARGET ImGui PROPERTY
@@ -77,7 +79,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Renderer/VertexArray.cpp
 )
 
-target_compile_features(Pepper PRIVATE cxx_std_17)
+target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
 
 if(WIN32)
   target_compile_options(Pepper PRIVATE /W4 $<$<CONFIG:Debug>:/WX>)
@@ -130,7 +132,7 @@ add_executable(App
   App/src/ClientApp.cpp
 )
 
-target_compile_features(App PRIVATE cxx_std_17)
+target_compile_features(App PRIVATE ${CXX_STANDARD})
 
 target_include_directories(App PRIVATE App/src)
 target_include_directories(App PRIVATE ${SOURCE_DIR})
