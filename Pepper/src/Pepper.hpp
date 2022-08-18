@@ -4,7 +4,7 @@
 
 #include "Pepper/Core/Application.hpp"
 #include "Pepper/Layers/Layer.hpp"
-#include "Pepper/Core//Log.hpp"
+#include "Pepper/Core/Log.hpp"
 
 #include "Pepper/Core/Timestep.hpp"
 
