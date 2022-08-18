@@ -2,10 +2,16 @@
 
 #include "Core.hpp"
 
+#ifdef PP_PLATFORM_WINDOWS
+  #pragma warning(disable : 4189)
+#endif
 // clang-format off
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 // clang-format on
+#ifdef PP_PLATFORM_WINDOWS
+  #pragma warning(default : 4189)
+#endif
 
 namespace Pepper
 {
