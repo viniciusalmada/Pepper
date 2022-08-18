@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.15.0)
 project(PepperEngine VERSION 0.1)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
-
 # #############################################################################
 # Global constants
 set(VENDOR_DIR Pepper/vendor)
@@ -45,6 +42,8 @@ add_library(ImGui STATIC ${VENDOR_DIR}/imgui/imgui_demo.cpp
   ${VENDOR_DIR}/imgui/backends/imgui_impl_glfw.cpp
 )
 
+target_compile_features(ImGui PRIVATE cxx_std_17)
+
 if(WIN32)
   set_property(TARGET ImGui PROPERTY
     MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
@@ -77,6 +76,8 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Renderer/Shader.cpp
   ${SOURCE_DIR}/Renderer/VertexArray.cpp
 )
+
+target_compile_features(Pepper PRIVATE cxx_std_17)
 
 if(WIN32)
   target_compile_options(Pepper PRIVATE /W4 $<$<CONFIG:Debug>:/WX>)
@@ -128,6 +129,8 @@ target_precompile_headers(Pepper PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
 add_executable(App
   App/src/ClientApp.cpp
 )
+
+target_compile_features(App PRIVATE cxx_std_17)
 
 target_include_directories(App PRIVATE App/src)
 target_include_directories(App PRIVATE ${SOURCE_DIR})

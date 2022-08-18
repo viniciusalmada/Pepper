@@ -3,7 +3,9 @@ project(GLAD)
 
 add_library(GLAD STATIC src/glad.c)
 
-set_property(TARGET GLAD PROPERTY
-  MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+if(WIN32)
+  set_property(TARGET GLAD PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
 
 target_include_directories(GLAD PRIVATE include)
