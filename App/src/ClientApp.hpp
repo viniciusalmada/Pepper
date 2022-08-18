@@ -26,6 +26,7 @@ private:
   const float SQUARE_MOVE_SPEED = 1.0f;
 
   glm::vec3 square_position;
+  glm::vec3 square_color;
 };
 
 class ClientApp : public Pepper::Application
