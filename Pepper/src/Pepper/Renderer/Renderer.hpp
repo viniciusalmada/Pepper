@@ -11,7 +11,7 @@ namespace Pepper
   public:
     static void BeginScene(OrthoCamera& camera);
 
-    static void EndScene(); // TODO
+    static void EndScene();
 
     static void Submit(const std::shared_ptr<Shader>& shader,
                        const std::shared_ptr<VertexArray>& vertexArray,
