@@ -19,19 +19,19 @@ namespace Pepper
 
     void Unbind() const override;
 
-    void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer) override;
+    void AddVertexBuffer(const Ref<VertexBuffer>& buffer) override;
 
-    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer) override;
+    void SetIndexBuffer(const Ref<IndexBuffer>& buffer) override;
 
-    const std::set<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const override;
+    const std::set<Ref<VertexBuffer>>& GetVertexBuffers() const override;
 
-    const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override;
+    const Ref<IndexBuffer>& GetIndexBuffer() const override;
 
     uint32_t GetRendererID() const override { return renderer_id; };
 
   private:
     uint32_t renderer_id;
-    std::set<std::shared_ptr<VertexBuffer>> vertex_buffers;
-    std::shared_ptr<IndexBuffer> index_buffer;
+    std::set<Ref<VertexBuffer>> vertex_buffers;
+    Ref<IndexBuffer> index_buffer;
   };
 }

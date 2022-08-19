@@ -16,16 +16,16 @@ namespace Pepper
 
     virtual void Unbind() const = 0;
 
-    virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer) = 0;
+    virtual void AddVertexBuffer(const Ref<VertexBuffer>& buffer) = 0;
 
-    virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer) = 0;
+    virtual void SetIndexBuffer(const Ref<IndexBuffer>& buffer) = 0;
 
-    virtual const std::set<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const = 0;
+    virtual const std::set<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
 
-    virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const = 0;
+    virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
 
     virtual uint32_t GetRendererID() const = 0;
 
-    static std::shared_ptr<VertexArray> Create();
+    static VertexArray* Create();
   };
 }

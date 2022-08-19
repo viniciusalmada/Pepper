@@ -16,8 +16,8 @@ void Pepper::Renderer::BeginScene(OrthoCamera& camera)
 
 void Pepper::Renderer::EndScene() {}
 
-void Pepper::Renderer::Submit(const std::shared_ptr<Shader>& shader,
-                              const std::shared_ptr<VertexArray>& vertexArray,
+void Pepper::Renderer::Submit(const Ref<Shader>& shader,
+                              const Ref<VertexArray>& vertexArray,
                               const glm::mat4& transform)
 {
   shader->Bind();

@@ -16,7 +16,7 @@ namespace Pepper
 
     virtual void Clear() const = 0;
 
-    virtual void DrawIndexed(const std::shared_ptr<VertexArray>&) const = 0;
+    virtual void DrawIndexed(const Ref<VertexArray>&) const = 0;
 
     static API GetAPI() { return api; }
 

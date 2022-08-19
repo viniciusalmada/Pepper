@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <memory>
 
 namespace Pepper
 {
@@ -134,7 +133,7 @@ namespace Pepper
 
     virtual void SetLayout(const BufferLayout& layout) = 0;
 
-    static std::shared_ptr<VertexBuffer> Create(float* vertices, uint32_t size, uint32_t parent);
+    static VertexBuffer* Create(float* vertices, uint32_t size, uint32_t parent);
   };
 
   class IndexBuffer : public Buffer
@@ -142,6 +141,6 @@ namespace Pepper
   public:
     virtual uint32_t GetCount() const = 0;
 
-    static std::shared_ptr<IndexBuffer> Create(uint32_t* indices, uint32_t count, uint32_t parent);
+    static IndexBuffer* Create(uint32_t* indices, uint32_t count, uint32_t parent);
   };
 }

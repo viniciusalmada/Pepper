@@ -48,7 +48,7 @@ void Pepper::OpenGLVertexArray::Bind() const
 
 void Pepper::OpenGLVertexArray::Unbind() const { glBindVertexArray(0); }
 
-void Pepper::OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer)
+void Pepper::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buffer)
 {
   const auto& layout = buffer->GetLayout();
   PP_CORE_ASSERT(!layout.IsEmpty(), "Layout is empty!");
@@ -70,14 +70,14 @@ void Pepper::OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuff
   vertex_buffers.insert(buffer);
 }
 
-void Pepper::OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer) { index_buffer = buffer; }
+void Pepper::OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buffer) { index_buffer = buffer; }
 
-const std::set<std::shared_ptr<Pepper::VertexBuffer>>& Pepper::OpenGLVertexArray::GetVertexBuffers() const
+const std::set<Pepper::Ref<Pepper::VertexBuffer>>& Pepper::OpenGLVertexArray::GetVertexBuffers() const
 {
   return this->vertex_buffers;
 }
 
-const std::shared_ptr<Pepper::IndexBuffer>& Pepper::OpenGLVertexArray::GetIndexBuffer() const
+const Pepper::Ref<Pepper::IndexBuffer>& Pepper::OpenGLVertexArray::GetIndexBuffer() const
 {
   return this->index_buffer;
 }

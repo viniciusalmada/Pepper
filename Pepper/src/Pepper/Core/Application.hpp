@@ -31,7 +31,7 @@ namespace Pepper
   private:
     bool OnWindowClose(WindowCloseEvent& e);
 
-    std::unique_ptr<Window> window;
+    Scope<Window> window;
     ImGuiLayer* imGuiLayer;
     bool running = true;
     LayerStack layer_stack;

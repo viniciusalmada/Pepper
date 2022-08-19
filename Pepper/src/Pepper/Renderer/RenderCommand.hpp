@@ -11,7 +11,7 @@ namespace Pepper
 
     static void Clear() { renderer_api->Clear(); };
 
-    static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) { renderer_api->DrawIndexed(vertexArray); }
+    static void DrawIndexed(const Ref<VertexArray>& vertexArray) { renderer_api->DrawIndexed(vertexArray); }
 
   private:
     static RendererAPI* renderer_api;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef PP_PLATFORM_WINDOWS
   #define DEBUG_BREAK __debugbreak();
 #else
@@ -31,3 +33,11 @@
 #define FIND(cont, x) std::find(cont.begin(), cont.end(), x)
 
 #define PP_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace Pepper {
+  template<typename T>
+  using Scope = std::unique_ptr<T>;
+  
+  template<typename T>
+  using Ref = std::shared_ptr<T>;
+}

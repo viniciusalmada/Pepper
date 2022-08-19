@@ -7,12 +7,12 @@
 #include "Pepper/Platform/OpenGL/OpenGLVertexArray.hpp"
 #include "Renderer.hpp"
 
-std::shared_ptr<Pepper::VertexArray> Pepper::VertexArray::Create()
+Pepper::VertexArray* Pepper::VertexArray::Create()
 {
   switch (Renderer::GetAPI())
   {
   case RendererAPI::API::OPEN_GL:
-    return std::make_shared<OpenGLVertexArray>();
+    return new OpenGLVertexArray{};
   default:
     PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
     return nullptr;

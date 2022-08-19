@@ -11,6 +11,6 @@ namespace Pepper
 
     void Clear() const override;
 
-    void DrawIndexed(const std::shared_ptr<VertexArray>&) const override;
+    void DrawIndexed(const Ref<VertexArray>&) const override;
   };
 }
