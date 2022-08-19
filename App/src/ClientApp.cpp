@@ -37,7 +37,7 @@ const std::string fragment_src{ R"glsl(
   }
 )glsl" };
 
-const std::string blue_vertex_src{ R"glsl(
+const std::string flat_color_vertex_src{ R"glsl(
   #version 330 core
 
   layout(location = 0) in vec3 in_position;
@@ -51,7 +51,7 @@ const std::string blue_vertex_src{ R"glsl(
   }
 )glsl" };
 
-const std::string blue_fragment_src{ R"glsl(
+const std::string flat_color_fragment_src{ R"glsl(
   #version 330 core
 
   out vec4 out_color;
@@ -120,7 +120,7 @@ ExampleLayer::ExampleLayer()
   }
 
   shader = Pepper::Shader::Create(vertex_src, fragment_src);
-  blue_shader = Pepper::Shader::Create(blue_vertex_src, blue_fragment_src);
+  flat_color_shader = Pepper::Shader::Create(flat_color_vertex_src, flat_color_fragment_src);
 
   camera.SetPosition({ 0.0f, 0.0f, 0.0f });
   // camera.SetRotationDeg(45.0f);
@@ -172,15 +172,25 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   Pepper::Renderer::BeginScene(camera);
   glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(blue_shader)->Bind();
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(blue_shader)->UploadUniformFloat3("u_color", square_color);
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->Bind();
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->UploadUniformFloat3("u_color", square_color);
   for (int i = 0; i < 30; i++)
   {
     for (int j = 0; j < 20; j++)
     {
       glm::vec3 new_pos(i * 0.11f + (-1.44), j * 0.110f + (-0.81), 0.0f);
       glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, new_pos) * scale;
-      Pepper::Renderer::Submit(blue_shader, square_VAO, transform);
+      if (j % 2 == 0)
+      {
+        std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)
+          ->UploadUniformFloat3("u_color", { 0.8f, 0.1f, 0.2f });
+      }
+      else
+      {
+        std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)
+          ->UploadUniformFloat3("u_color", { 0.2f, 0.1f, 0.8f });
+      }
+      Pepper::Renderer::Submit(flat_color_shader, square_VAO, transform);
     }
   }
   Pepper::Renderer::EndScene();

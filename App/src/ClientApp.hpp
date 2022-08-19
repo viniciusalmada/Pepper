@@ -15,7 +15,7 @@ public:
 
 private:
   std::shared_ptr<Pepper::Shader> shader;
-  std::shared_ptr<Pepper::Shader> blue_shader;
+  std::shared_ptr<Pepper::Shader> flat_color_shader;
 
   std::shared_ptr<Pepper::VertexArray> triangle_VAO;
   std::shared_ptr<Pepper::VertexArray> square_VAO;

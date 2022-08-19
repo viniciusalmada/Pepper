@@ -98,6 +98,17 @@ void Pepper::OpenGLShader::UploadUniformMat4(const std::string& name, const glm:
   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Pepper::OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
+{
+  bool is_bound = CheckIsBound();
+  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
+  if (!is_bound)
+    return;
+
+  int location = glGetUniformLocation(renderer_id, name.c_str());
+  glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
 void Pepper::OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& vec)
 {
   bool is_bound = CheckIsBound();
@@ -118,6 +129,28 @@ void Pepper::OpenGLShader::UploadUniformFloat3(const std::string& name, const gl
 
   int location = glGetUniformLocation(renderer_id, name.c_str());
   glUniform3f(location, vec.x, vec.y, vec.z);
+}
+
+void Pepper::OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value)
+{
+  bool is_bound = CheckIsBound();
+  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
+  if (!is_bound)
+    return;
+
+  int location = glGetUniformLocation(renderer_id, name.c_str());
+  glUniform2f(location, value.x, value.y);
+}
+
+void Pepper::OpenGLShader::UploadUniformFloat(const std::string& name, const float& value)
+{
+  bool is_bound = CheckIsBound();
+  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
+  if (!is_bound)
+    return;
+
+  int location = glGetUniformLocation(renderer_id, name.c_str());
+  glUniform1f(location, value);
 }
 
 bool Pepper::OpenGLShader::CheckIsBound() const
