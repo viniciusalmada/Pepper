@@ -6,6 +6,8 @@
 
 #include <Pepper/Platform/OpenGL/OpenGLShader.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
 
 const std::string vertex_src{ R"glsl(
   #version 330 core
@@ -126,7 +128,12 @@ ExampleLayer::ExampleLayer()
   // camera.SetRotationDeg(45.0f);
 }
 
-void ExampleLayer::OnImGuiRender() {}
+void ExampleLayer::OnImGuiRender()
+{
+  ImGui::Begin("Settings");
+  ImGui::ColorEdit3("Square Color", glm::value_ptr(square_color));
+  ImGui::End();
+}
 
 void ExampleLayer::OnUpdate(Pepper::Timestep ts)
 {
@@ -180,16 +187,6 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
     {
       glm::vec3 new_pos(i * 0.11f + (-1.44), j * 0.110f + (-0.81), 0.0f);
       glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, new_pos) * scale;
-      if (j % 2 == 0)
-      {
-        std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)
-          ->UploadUniformFloat3("u_color", { 0.8f, 0.1f, 0.2f });
-      }
-      else
-      {
-        std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)
-          ->UploadUniformFloat3("u_color", { 0.2f, 0.1f, 0.8f });
-      }
       Pepper::Renderer::Submit(flat_color_shader, square_VAO, transform);
     }
   }
