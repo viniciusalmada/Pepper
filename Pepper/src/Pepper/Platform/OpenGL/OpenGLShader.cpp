@@ -153,6 +153,17 @@ void Pepper::OpenGLShader::UploadUniformFloat(const std::string& name, const flo
   glUniform1f(location, value);
 }
 
+void Pepper::OpenGLShader::UploadUniformInt(const std::string& name, const int& value)
+{
+  bool is_bound = CheckIsBound();
+  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
+  if (!is_bound)
+    return;
+
+  int location = glGetUniformLocation(renderer_id, name.c_str());
+  glUniform1i(location, value);
+}
+
 bool Pepper::OpenGLShader::CheckIsBound() const
 {
   uint32_t curr_program = 0;
