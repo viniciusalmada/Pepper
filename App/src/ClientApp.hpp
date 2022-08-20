@@ -16,9 +16,12 @@ public:
 private:
   Pepper::Ref<Pepper::Shader> shader;
   Pepper::Ref<Pepper::Shader> flat_color_shader;
+  Pepper::Ref<Pepper::Shader> texture_shader;
 
   Pepper::Ref<Pepper::VertexArray> triangle_VAO;
   Pepper::Ref<Pepper::VertexArray> square_VAO;
+
+  Pepper::Ref<Pepper::Texture2D> texture;
 
   Pepper::OrthoCamera camera;
   const float CAMERA_MOVE_SPEED = 5.0f;
