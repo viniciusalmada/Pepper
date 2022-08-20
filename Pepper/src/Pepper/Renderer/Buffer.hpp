@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "Pepper/Core/Core.hpp"
+
+#include <cstdint>
 
 namespace Pepper
 {
