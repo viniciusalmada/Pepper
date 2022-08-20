@@ -117,7 +117,7 @@ ExampleLayer::ExampleLayer()
       };
     // clang-format on
 
-    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID();
+    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID());
     Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
                                     { Pepper::ShaderDataType::Float4, "in_color" } };
 
