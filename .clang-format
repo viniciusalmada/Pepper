@@ -29,7 +29,7 @@ NamespaceIndentation: All
 FixNamespaceComments: false
 Cpp11BracedListStyle: false
 PointerAlignment: Left
-Standard: c++14
+Standard: c++20
 AlignAfterOpenBracket: Align
 AlignOperands: Align
 AllowShortLambdasOnASingleLine: Empty
