@@ -9,6 +9,8 @@
 
 Pepper::Renderer::SceneData* Pepper::Renderer::scene_data = new Pepper::Renderer::SceneData{};
 
+void Pepper::Renderer::Init() { RenderCommand::Init(); }
+
 void Pepper::Renderer::BeginScene(OrthoCamera& camera)
 {
   scene_data->view_proj_matrix = camera.GetViewProjectionMatrix();

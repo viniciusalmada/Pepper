@@ -12,6 +12,8 @@ namespace Pepper
     enum class API : unsigned int { NONE = 0, OPEN_GL = 1 };
 
   public:
+    virtual void Init() = 0;
+
     virtual void SetClearColor(const glm::vec4& color) const = 0;
 
     virtual void Clear() const = 0;

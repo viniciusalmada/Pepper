@@ -5,6 +5,7 @@
 #include "Application.hpp"
 
 #include "Pepper/Input/Input.hpp"
+#include "Pepper/Renderer/Renderer.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -19,6 +20,8 @@ Pepper::Application::Application()
 
   window = std::unique_ptr<Window>(Window::Create());
   window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+  Renderer::Init();
 
   imGuiLayer = new ImGuiLayer();
   PushOverlay(imGuiLayer);
