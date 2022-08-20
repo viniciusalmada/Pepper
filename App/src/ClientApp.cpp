@@ -101,8 +101,8 @@ const std::string texture_fragment_src{ R"glsl(
 
 ExampleLayer::ExampleLayer()
     : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f),
-      square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::Ref<Pepper::VertexArray>{ Pepper::VertexArray::Create() }),
-      square_VAO(Pepper::Ref<Pepper::VertexArray>{ Pepper::VertexArray::Create() })
+      square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::VertexArray::Create()),
+      square_VAO(Pepper::VertexArray::Create())
 {
   triangle_VAO->Bind();
   {
@@ -117,9 +117,7 @@ ExampleLayer::ExampleLayer()
       };
     // clang-format on
 
-    auto vbo = Pepper::Ref<Pepper::VertexBuffer>{
-      Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID())
-    };
+    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID();
     Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
                                     { Pepper::ShaderDataType::Float4, "in_color" } };
 
@@ -127,9 +125,7 @@ ExampleLayer::ExampleLayer()
     triangle_VAO->AddVertexBuffer(vbo);
 
     uint32_t indices[] = { 0, 1, 2 };
-    auto ibo = Pepper::Ref<Pepper::IndexBuffer>{
-      Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), triangle_VAO->GetRendererID())
-    };
+    auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), triangle_VAO->GetRendererID());
     triangle_VAO->SetIndexBuffer(ibo);
   }
 
@@ -147,25 +143,20 @@ ExampleLayer::ExampleLayer()
       };
     // clang-format on
 
-    auto vbo = Pepper::Ref<Pepper::VertexBuffer>{
-      Pepper::VertexBuffer::Create(vertices, sizeof(vertices), square_VAO->GetRendererID())
-    };
+    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), square_VAO->GetRendererID());
     Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
                                     { Pepper::ShaderDataType::Float2, "in_tex_coord" } };
     vbo->SetLayout(layout);
     square_VAO->AddVertexBuffer(vbo);
 
     uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
-    auto ibo = Pepper::Ref<Pepper::IndexBuffer>{
-      Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID())
-    };
+    auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
   }
 
-  shader = Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(vertex_src, fragment_src) };
-  flat_color_shader =
-    Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(flat_color_vertex_src, flat_color_fragment_src) };
-  texture_shader = Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(texture_vertex_src, texture_fragment_src) };
+  shader = Pepper::Shader::Create(vertex_src, fragment_src);
+  flat_color_shader = Pepper::Shader::Create(flat_color_vertex_src, flat_color_fragment_src);
+  texture_shader = Pepper::Shader::Create(texture_vertex_src, texture_fragment_src);
 
   // std::filesystem::current_path(std::filesystem::current_path().parent_path() / "App");
   texture = Pepper::Texture2D::Create("assets/checkerboard.png");
