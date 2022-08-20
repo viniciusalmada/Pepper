@@ -2,6 +2,7 @@
 #include <PepperPCH.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_NO_SIMD
 #include <stb_image.h>
 // clang-format on
 
@@ -20,13 +21,29 @@ Pepper::OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : path(path)
   this->width = w;
   this->height = h;
 
+  uint32_t internal_format = 0;
+  uint32_t format = 0;
+  if (channels == 4)
+  {
+    internal_format = GL_RGBA8;
+    format = GL_RGBA;
+  }
+  else if (channels)
+  {
+    internal_format = GL_RGB8;
+    format = GL_RGB;
+  }
+
+  PP_CORE_ASSERT(internal_format != 0, "Incorrect number of texture channels");
+  PP_CORE_ASSERT(format != 0, "Incorrect number of texture channels");
+
   glCreateTextures(GL_TEXTURE_2D, 1, &renderer_ID);
-  glTextureStorage2D(renderer_ID, 1, GL_RGB8, width, height);
+  glTextureStorage2D(renderer_ID, 1, internal_format, width, height);
 
   glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glTextureSubImage2D(renderer_ID, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+  glTextureSubImage2D(renderer_ID, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
 
   stbi_image_free(data);
 }

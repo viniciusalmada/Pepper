@@ -22,6 +22,7 @@ private:
   Pepper::Ref<Pepper::VertexArray> square_VAO;
 
   Pepper::Ref<Pepper::Texture2D> texture;
+  Pepper::Ref<Pepper::Texture2D> pepper_texture;
 
   Pepper::OrthoCamera camera;
   const float CAMERA_MOVE_SPEED = 5.0f;

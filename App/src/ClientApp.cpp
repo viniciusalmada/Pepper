@@ -167,10 +167,9 @@ ExampleLayer::ExampleLayer()
     Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(flat_color_vertex_src, flat_color_fragment_src) };
   texture_shader = Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(texture_vertex_src, texture_fragment_src) };
 
-  
-  std::filesystem::current_path(std::filesystem::current_path().parent_path() / "App");
+  // std::filesystem::current_path(std::filesystem::current_path().parent_path() / "App");
   texture = Pepper::Texture2D::Create("assets/checkerboard.png");
-  texture->Bind();
+  pepper_texture = Pepper::Texture2D::Create("assets/black-pepper.png");
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->UploadUniformInt("u_texture", 0);
@@ -246,6 +245,9 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   glm::mat4 new_scale = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
   glm::vec3 center_pos(1.6 * 2.5, 0.9 * 2.2, 0.0);
   glm::mat4 new_transf = glm::translate(glm::mat4{ 1.0f }, center_pos) * new_scale;
+  texture->Bind();
+  Pepper::Renderer::Submit(texture_shader, square_VAO, new_transf);
+  pepper_texture->Bind();
   Pepper::Renderer::Submit(texture_shader, square_VAO, new_transf);
   Pepper::Renderer::EndScene();
 }
