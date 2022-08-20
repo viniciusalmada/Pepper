@@ -19,6 +19,7 @@
 #include "Pepper/Renderer/RenderCommand.hpp"
 #include "Pepper/Renderer/Renderer.hpp"
 #include "Pepper/Renderer/Shader.hpp"
+#include "Pepper/Renderer/Texture.hpp"
 // -------------------------------------
 
 // --Entry Point------------------------
