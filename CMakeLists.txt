@@ -99,6 +99,7 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/stb/)
 
 target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 
