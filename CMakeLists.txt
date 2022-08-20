@@ -66,6 +66,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Layers/LayerStack.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLBuffer.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLContext.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLDebugger.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLRendererAPI.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLShader.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLTexture.cpp
