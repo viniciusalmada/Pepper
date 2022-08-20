@@ -68,6 +68,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLContext.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLRendererAPI.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLShader.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLTexture.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLVertexArray.cpp
   ${SOURCE_DIR}/Pepper/Platform/Windows/WinInput.cpp
   ${SOURCE_DIR}/Pepper/Platform/Windows/WinWindow.cpp
