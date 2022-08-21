@@ -26,9 +26,9 @@ void Pepper::LayerStack::PopLayer(Layer* layer)
   auto iter = FIND(layers, layer);
   if (iter != layers.end())
   {
+    layer->OnDetach();
     layers.erase(iter);
     layer_index--;
-    layer->OnDetach();
   }
 }
 
@@ -37,7 +37,7 @@ void Pepper::LayerStack::PopOverlay(Layer* overlay)
   auto iter = FIND(layers, overlay);
   if (iter != layers.end())
   {
-    layers.erase(iter);
     overlay->OnDetach();
+    layers.erase(iter);
   }
 }
