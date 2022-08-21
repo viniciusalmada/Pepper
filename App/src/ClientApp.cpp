@@ -9,96 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
-const std::string vertex_src{ R"glsl(
-  #version 330 core
-
-  layout(location = 0) in vec3 in_position;
-  layout(location = 1) in vec4 in_color;
-
-  uniform mat4 u_view_projection;
-  uniform mat4 u_transform;
-
-  out vec4 v_color;
-
-  void main()
-  {
-    gl_Position = u_view_projection * u_transform *  vec4(in_position, 1.0);
-    v_color = in_color;
-  }
-)glsl" };
-
-const std::string fragment_src{ R"glsl(
-  #version 330 core
-
-  in vec4 v_color;
-  out vec4 out_color;
-
-  void main()
-  {
-    out_color = v_color;
-  }
-)glsl" };
-
-const std::string flat_color_vertex_src{ R"glsl(
-  #version 330 core
-
-  layout(location = 0) in vec3 in_position;
-
-  uniform mat4 u_view_projection;
-  uniform mat4 u_transform ;
-
-  void main()
-  {
-    gl_Position = u_view_projection * u_transform * vec4(in_position, 1.0);
-  }
-)glsl" };
-
-const std::string flat_color_fragment_src{ R"glsl(
-  #version 330 core
-
-  out vec4 out_color;
-
-  uniform vec3 u_color;
-
-  void main()
-  {
-    out_color = vec4(u_color, 1.0);
-  }
-)glsl" };
-
-const std::string texture_vertex_src{ R"glsl(
-  #version 330 core
-
-  layout(location = 0) in vec3 in_position;
-  layout(location = 1) in vec2 in_tex_coords;
-
-  uniform mat4 u_view_projection;
-  uniform mat4 u_transform ;
-
-  out vec2 v_tex_coords;
-
-  void main()
-  {
-    gl_Position = u_view_projection * u_transform * vec4(in_position, 1.0);
-    v_tex_coords = in_tex_coords;
-  }
-)glsl" };
-
-const std::string texture_fragment_src{ R"glsl(
-  #version 330 core
-
-  in vec2 v_tex_coords;
-
-  out vec4 out_color;
-
-  uniform sampler2D u_texture;
-
-  void main()
-  {
-    out_color = texture(u_texture, v_tex_coords);
-  }
-)glsl" };
-
 ExampleLayer::ExampleLayer()
     : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f),
       square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::VertexArray::Create()),
@@ -154,13 +64,12 @@ ExampleLayer::ExampleLayer()
     square_VAO->SetIndexBuffer(ibo);
   }
 
-  shader = Pepper::Shader::Create(vertex_src, fragment_src);
-  flat_color_shader = Pepper::Shader::Create(flat_color_vertex_src, flat_color_fragment_src);
-  texture_shader = Pepper::Shader::Create(texture_vertex_src, texture_fragment_src);
+  shader = Pepper::Shader::Create("assets/shaders/Simple.glsl");
+  flat_color_shader = Pepper::Shader::Create("assets/shaders/FlatColor.glsl");
+  texture_shader = Pepper::Shader::Create("assets/shaders/Texture.glsl");
 
-  // std::filesystem::current_path(std::filesystem::current_path().parent_path() / "App");
-  texture = Pepper::Texture2D::Create("assets/checkerboard.png");
-  pepper_texture = Pepper::Texture2D::Create("assets/black-pepper.png");
+  texture = Pepper::Texture2D::Create("assets/textures/checkerboard.png");
+  pepper_texture = Pepper::Texture2D::Create("assets/textures/black-pepper.png");
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->UploadUniformInt("u_texture", 0);
