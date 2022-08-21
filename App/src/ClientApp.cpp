@@ -62,14 +62,14 @@ ExampleLayer::ExampleLayer()
     uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
     auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
-  }
+  };
 
-  shader = Pepper::Shader::Create("assets/shaders/Simple.glsl");
-  flat_color_shader = Pepper::Shader::Create("assets/shaders/FlatColor.glsl");
-  texture_shader = Pepper::Shader::Create("assets/shaders/Texture.glsl");
+  shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/Simple.glsl");
+  flat_color_shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/FlatColor.glsl");
+  texture_shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/Texture.glsl");
 
-  texture = Pepper::Texture2D::Create("assets/textures/checkerboard.png");
-  pepper_texture = Pepper::Texture2D::Create("assets/textures/black-pepper.png");
+  texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/checkerboard.png");
+  pepper_texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/black-pepper.png");
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->UploadUniformInt("u_texture", 0);
@@ -157,5 +157,18 @@ void ExampleLayer::OnEvent(Pepper::Event&) {}
 ClientApp::ClientApp() { PushLayer(new ExampleLayer{}); }
 
 ClientApp::~ClientApp() {}
+
+std::filesystem::path ClientApp::GetAssets()
+{
+  std::filesystem::path assets_path;
+#if defined APP_WORKING_DIR
+  const std::string working_dir = APP_WORKING_DIR;
+  assets_path = std::filesystem::path{ working_dir } / "App" / "assets";
+#else
+  assets_path = std::filesystem::current_path().parent_path() / "App" / "assets";
+#endif
+
+  return assets_path;
+}
 
 Pepper::Application* Pepper::CreateApplication() { return new ClientApp(); }

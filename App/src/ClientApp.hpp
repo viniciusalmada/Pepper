@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Pepper.hpp>
+#include <filesystem>
 
 class ExampleLayer : public Pepper::Layer
 {
@@ -38,4 +39,6 @@ class ClientApp : public Pepper::Application
 public:
   ClientApp();
   ~ClientApp();
+
+  static std::filesystem::path GetAssets();
 };

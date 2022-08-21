@@ -151,6 +151,7 @@ if(WIN32)
 endif(WIN32)
 
 # Configurations flags
+target_compile_definitions(App PUBLIC APP_WORKING_DIR="${PROJECT_SOURCE_DIR}")
 target_compile_definitions(App PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>)
 
 if(WIN32)
