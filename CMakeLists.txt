@@ -59,6 +59,7 @@ target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Core/Application.cpp
   ${SOURCE_DIR}/Pepper/Core/Log.cpp
+  ${SOURCE_DIR}/Pepper/Core/Utils.cpp
   ${SOURCE_DIR}/Pepper/Events/Event.cpp
   ${SOURCE_DIR}/Pepper/Input/Input.cpp
   ${SOURCE_DIR}/Pepper/Layers/ImGui/ImGuiLayer.cpp
