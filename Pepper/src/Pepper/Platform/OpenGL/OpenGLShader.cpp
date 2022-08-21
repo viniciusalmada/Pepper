@@ -161,11 +161,8 @@ std::string Pepper::OpenGLShader::GetGLShaderName(Pepper::ShaderType type)
 std::string Pepper::OpenGLShader::ReadFile(const std::string& filepath)
 {
   std::ifstream in{ filepath, std::ios::in | std::ios::binary };
-  if (!in)
-  {
-    PP_CORE_WARN("Could not open shader file {0}", filepath);
-    return {};
-  }
+  PP_CORE_ASSERT(in, "Could not open shader file {0}", filepath);
+  
   std::string shader_raw_src;
 
   in.seekg(0, std::ios::end);
@@ -173,6 +170,8 @@ std::string Pepper::OpenGLShader::ReadFile(const std::string& filepath)
   in.seekg(0, std::ios::beg);
   in.read(shader_raw_src.data(), shader_raw_src.size());
   in.close();
+
+  PP_CORE_ASSERT(!shader_raw_src.empty(), "Shader raw source is empty!")
 
   return shader_raw_src;
 }
