@@ -12,7 +12,7 @@ namespace Pepper
   class OpenGLShader : public Shader
   {
   public:
-    OpenGLShader(const std::string& filepath);
+    OpenGLShader(const std::filesystem::path& filepath);
     OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
     ~OpenGLShader();
 
@@ -36,7 +36,7 @@ namespace Pepper
 
     static std::string GetGLShaderName(ShaderType type);
 
-    static std::string ReadFile(const std::string& filepath);
+    static std::string ReadFile(const std::filesystem::path& filepath);
 
     static std::unordered_map<ShaderType, std::string> SplitShaderSrc(const std::string& rawSrc);
 

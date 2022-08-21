@@ -7,7 +7,7 @@
 #include "Pepper/Platform/OpenGL/OpenGLTexture.hpp"
 #include "RendererAPI.hpp"
 
-Pepper::Ref<Pepper::Texture2D> Pepper::Texture2D::Create(const std::string& path)
+Pepper::Ref<Pepper::Texture2D> Pepper::Texture2D::Create(const std::filesystem::path& path)
 {
   switch (RendererAPI::GetAPI())
   {

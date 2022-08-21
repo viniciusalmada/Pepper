@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 namespace Pepper
@@ -13,9 +14,8 @@ namespace Pepper
 
     virtual void Unbind() const = 0;
 
-    static Ref<Shader> Create(const std::string& filepath);
+    static Ref<Shader> Create(const std::filesystem::path& filepath);
 
-    [[deprecated("Use files instead in-memory source")]] static Ref<Shader> Create(const std::string& vertexSrc,
-                                                                                   const std::string& fragmentSrc);
+    [[deprecated]] static Ref<Shader> Create(const std::string& vertexSrc, const std::string& fragmentSrc);
   };
 }

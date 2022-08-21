@@ -7,7 +7,7 @@
 #include "Pepper/Platform/OpenGL/OpenGLShader.hpp"
 #include "Renderer.hpp"
 
-Pepper::Ref<Pepper::Shader> Pepper::Shader::Create(const std::string& filepath)
+Pepper::Ref<Pepper::Shader> Pepper::Shader::Create(const std::filesystem::path& filepath)
 {
   switch (Renderer::GetAPI())
   {

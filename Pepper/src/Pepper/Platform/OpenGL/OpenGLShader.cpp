@@ -4,10 +4,12 @@
 
 #include "OpenGLShader.hpp"
 
+#include "Pepper/Core/Utils.hpp"
+
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-Pepper::OpenGLShader::OpenGLShader(const std::string& filepath)
+Pepper::OpenGLShader::OpenGLShader(const std::filesystem::path& filepath)
 {
   std::string shader_raw_src = std::move(ReadFile(filepath));
   auto shaders_src = SplitShaderSrc(shader_raw_src);
@@ -158,11 +160,11 @@ std::string Pepper::OpenGLShader::GetGLShaderName(Pepper::ShaderType type)
   return {};
 }
 
-std::string Pepper::OpenGLShader::ReadFile(const std::string& filepath)
+std::string Pepper::OpenGLShader::ReadFile(const std::filesystem::path& filepath)
 {
   std::ifstream in{ filepath, std::ios::in | std::ios::binary };
   PP_CORE_ASSERT(in, "Could not open shader file {0}", filepath);
-  
+
   std::string shader_raw_src;
 
   in.seekg(0, std::ios::end);
@@ -180,23 +182,28 @@ std::unordered_map<Pepper::ShaderType, std::string> Pepper::OpenGLShader::SplitS
 {
   std::unordered_map<std::string, std::string> shaders_src;
   const std::string TOKEN{ "//##" };
+  const std::string NEW_LINE = Pepper::Utils::GetNewLine();
 
-  uint32_t curr_position = 0;
+  uint64_t curr_position = 0;
   while (curr_position < rawSrc.size())
   {
-    uint32_t first_token_pos = rawSrc.find(TOKEN, curr_position);
-    uint32_t second_token_pos = rawSrc.find(TOKEN, first_token_pos + TOKEN.size());
+    uint64_t first_token_pos = rawSrc.find(TOKEN, curr_position);
+    uint64_t second_token_pos = rawSrc.find(TOKEN, first_token_pos + TOKEN.size());
     if (second_token_pos == std::string::npos)
       second_token_pos = rawSrc.size();
 
-    uint32_t token_type_start = first_token_pos + TOKEN.size();
-    uint32_t token_type_end = rawSrc.find("\n", first_token_pos);
-    uint32_t token_type_len = token_type_end - token_type_start;
+    uint64_t token_type_start = first_token_pos + TOKEN.size();
+    uint64_t token_type_end = rawSrc.find(NEW_LINE, first_token_pos);
+    uint64_t token_type_len = token_type_end - token_type_start;
     std::string token_type = rawSrc.substr(token_type_start, token_type_len);
 
-    uint32_t code_start = token_type_end + 1;
-    uint32_t code_end = second_token_pos - 1;
-    uint32_t code_len = code_end - code_start;
+    uint64_t code_start = token_type_end + NEW_LINE.size();
+    uint64_t code_end;
+    if (second_token_pos == rawSrc.size()) // last shader code
+      code_end = second_token_pos;
+    else
+      code_end = second_token_pos - NEW_LINE.size();
+    uint64_t code_len = code_end - code_start;
     shaders_src[token_type] = rawSrc.substr(code_start, code_len);
     curr_position = second_token_pos;
   }

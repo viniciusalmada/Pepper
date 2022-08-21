@@ -7,7 +7,7 @@ namespace Pepper
   class OpenGLTexture2D : public Texture2D
   {
   public:
-    OpenGLTexture2D(const std::string& path);
+    OpenGLTexture2D(const std::filesystem::path& path);
 
     ~OpenGLTexture2D();
 
@@ -18,7 +18,7 @@ namespace Pepper
     void Bind(uint32_t slot) const override;
 
   private:
-    std::string path;
+    std::filesystem::path path;
     uint32_t width;
     uint32_t height;
     uint32_t renderer_ID;

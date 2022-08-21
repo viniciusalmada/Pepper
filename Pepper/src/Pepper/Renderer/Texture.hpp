@@ -3,6 +3,7 @@
 #include "Pepper/Core/Core.hpp"
 
 #include <cstdint>
+#include <filesystem>
 #include <string>
 
 namespace Pepper
@@ -22,6 +23,6 @@ namespace Pepper
   class Texture2D : public Texture
   {
   public:
-    static Ref<Texture2D> Create(const std::string& path);
+    static Ref<Texture2D> Create(const std::filesystem::path& path);
   };
 }
