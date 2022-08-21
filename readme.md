@@ -1,32 +1,3 @@
-## Game Engine
-* Entry point
-* Application layer
-* Window layer
-  - Inputs
-  - Events
-* Renderer
-* Render API abstraction
-* Debugging support
-* Scripting
-* Memory system
-* Entity-component system (ECS)
-* Physics
-* File I/O, Virtual File System
-* Build system
+# Pepper C++ Graphics Engine
 
-### Event system
-
-```
-+-----------+      +------+
-|Application+----->|Window|
-+-----------+      +--+---+
-                      |
- +OnEvent <-----------+
-
- +-----------------+
- |Event            |
- | Mouse(x,y,bt)   |
- |  MousePressEvent|
- |  ...            |
- +-----------------+
-```
+This a static library of a graphics engine that can (will) be used to game development and graphics renderer in general purpose.

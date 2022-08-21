@@ -3,17 +3,20 @@
 #include "Pepper/Renderer/Shader.hpp"
 
 #include <glm/glm.hpp>
+#include <unordered_map>
 
 namespace Pepper
 {
+  enum class ShaderType { VERTEX, FRAGMENT };
+
   class OpenGLShader : public Shader
   {
   public:
+    OpenGLShader(const std::string& filepath);
     OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
     ~OpenGLShader();
 
     void Bind() const override;
-
     void Unbind() const override;
 
     void UploadUniformInt(const std::string& name, const int& value);
@@ -27,8 +30,21 @@ namespace Pepper
     void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
   private:
+    static std::tuple<uint32_t, bool> Compile(const std::string& src, ShaderType type);
+
+    static uint32_t GetGLShaderType(ShaderType type);
+
+    static std::string GetGLShaderName(ShaderType type);
+
+    static std::string ReadFile(const std::string& filepath);
+
+    static std::unordered_map<ShaderType, std::string> SplitShaderSrc(const std::string& rawSrc);
+
+    void CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc);
+
     bool CheckIsBound() const;
 
+  private:
     uint32_t renderer_id;
   };
 }

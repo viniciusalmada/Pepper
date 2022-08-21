@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Pepper.hpp>
+#include <filesystem>
 
 class ExampleLayer : public Pepper::Layer
 {
@@ -16,9 +17,13 @@ public:
 private:
   Pepper::Ref<Pepper::Shader> shader;
   Pepper::Ref<Pepper::Shader> flat_color_shader;
+  Pepper::Ref<Pepper::Shader> texture_shader;
 
   Pepper::Ref<Pepper::VertexArray> triangle_VAO;
   Pepper::Ref<Pepper::VertexArray> square_VAO;
+
+  Pepper::Ref<Pepper::Texture2D> texture;
+  Pepper::Ref<Pepper::Texture2D> pepper_texture;
 
   Pepper::OrthoCamera camera;
   const float CAMERA_MOVE_SPEED = 5.0f;
@@ -34,4 +39,6 @@ class ClientApp : public Pepper::Application
 public:
   ClientApp();
   ~ClientApp();
+
+  static std::filesystem::path GetAssets();
 };

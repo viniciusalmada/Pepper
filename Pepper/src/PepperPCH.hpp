@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <fstream>
 #include <functional>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <sstream>

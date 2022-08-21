@@ -7,6 +7,8 @@ namespace Pepper
   class OpenGLRendererAPI : public RendererAPI
   {
   public:
+    void Init() override;
+
     void SetClearColor(const glm::vec4& color) const override;
 
     void Clear() const override;

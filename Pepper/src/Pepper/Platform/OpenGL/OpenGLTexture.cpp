@@ -1,0 +1,53 @@
+// clang-format off
+#include <PepperPCH.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_NO_SIMD
+#include <stb_image.h>
+// clang-format on
+
+#include "OpenGLTexture.hpp"
+
+#include <glad/glad.h>
+
+Pepper::OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : path(path)
+{
+  int w{}, h{};
+  int channels{};
+  stbi_set_flip_vertically_on_load(1);
+  stbi_uc* data = stbi_load(path.c_str(), &w, &h, &channels, 0);
+  PP_CORE_ASSERT(data, "Failed to load image!");
+
+  this->width = w;
+  this->height = h;
+
+  uint32_t internal_format = 0;
+  uint32_t format = 0;
+  if (channels == 4)
+  {
+    internal_format = GL_RGBA8;
+    format = GL_RGBA;
+  }
+  else if (channels)
+  {
+    internal_format = GL_RGB8;
+    format = GL_RGB;
+  }
+
+  PP_CORE_ASSERT(internal_format != 0, "Incorrect number of texture channels");
+  PP_CORE_ASSERT(format != 0, "Incorrect number of texture channels");
+
+  glCreateTextures(GL_TEXTURE_2D, 1, &renderer_ID);
+  glTextureStorage2D(renderer_ID, 1, internal_format, width, height);
+
+  glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  glTextureSubImage2D(renderer_ID, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+
+  stbi_image_free(data);
+}
+
+Pepper::OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &renderer_ID); }
+
+void Pepper::OpenGLTexture2D::Bind(uint32_t slot) const { glBindTextureUnit(slot, renderer_ID); }

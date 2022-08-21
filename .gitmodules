@@ -11,3 +11,6 @@
 [submodule "Pepper/vendor/glm"]
 	path = Pepper/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "Pepper/vendor/stb"]
+	path = Pepper/vendor/stb
+	url = https://github.com/nothings/stb.git

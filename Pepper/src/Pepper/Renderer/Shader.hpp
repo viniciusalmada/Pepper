@@ -13,6 +13,9 @@ namespace Pepper
 
     virtual void Unbind() const = 0;
 
-    static Shader* Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+    static Ref<Shader> Create(const std::string& filepath);
+
+    [[deprecated("Use files instead in-memory source")]] static Ref<Shader> Create(const std::string& vertexSrc,
+                                                                                   const std::string& fragmentSrc);
   };
 }

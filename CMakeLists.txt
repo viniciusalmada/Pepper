@@ -66,8 +66,10 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Layers/LayerStack.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLBuffer.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLContext.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLDebugger.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLRendererAPI.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLShader.cpp
+  ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLTexture.cpp
   ${SOURCE_DIR}/Pepper/Platform/OpenGL/OpenGLVertexArray.cpp
   ${SOURCE_DIR}/Pepper/Platform/Windows/WinInput.cpp
   ${SOURCE_DIR}/Pepper/Platform/Windows/WinWindow.cpp
@@ -77,6 +79,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Renderer/Renderer.cpp
   ${SOURCE_DIR}/Pepper/Renderer/RendererAPI.cpp
   ${SOURCE_DIR}/Pepper/Renderer/Shader.cpp
+  ${SOURCE_DIR}/Pepper/Renderer/Texture.cpp
   ${SOURCE_DIR}/Pepper/Renderer/VertexArray.cpp
 )
 
@@ -99,6 +102,7 @@ target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLFW/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/GLAD/include)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/glm/)
+target_include_directories(Pepper PRIVATE ${VENDOR_DIR}/stb/)
 
 target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 
@@ -147,6 +151,7 @@ if(WIN32)
 endif(WIN32)
 
 # Configurations flags
+target_compile_definitions(App PUBLIC APP_WORKING_DIR="${PROJECT_SOURCE_DIR}")
 target_compile_definitions(App PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>)
 
 if(WIN32)

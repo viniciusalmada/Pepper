@@ -4,72 +4,15 @@
 
 #include "ClientApp.hpp"
 
-#include <Pepper/Platform/OpenGL/OpenGLShader.hpp>
+#include <Pepper/Platform/OpenGL/OpenGLShader.hpp> // TODO: Remove
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
-const std::string vertex_src{ R"glsl(
-  #version 330 core
-
-  layout(location = 0) in vec3 in_position;
-  layout(location = 1) in vec4 in_color;
-
-  uniform mat4 u_view_projection;
-  uniform mat4 u_transform;
-
-  out vec4 v_color;
-
-  void main()
-  {
-    gl_Position = u_view_projection * u_transform *  vec4(in_position, 1.0);
-    v_color = in_color;
-  }
-)glsl" };
-
-const std::string fragment_src{ R"glsl(
-  #version 330 core
-
-  in vec4 v_color;
-  out vec4 out_color;
-
-  void main()
-  {
-    out_color = v_color;
-  }
-)glsl" };
-
-const std::string flat_color_vertex_src{ R"glsl(
-  #version 330 core
-
-  layout(location = 0) in vec3 in_position;
-
-  uniform mat4 u_view_projection;
-  uniform mat4 u_transform ;
-
-  void main()
-  {
-    gl_Position = u_view_projection * u_transform * vec4(in_position, 1.0);
-  }
-)glsl" };
-
-const std::string flat_color_fragment_src{ R"glsl(
-  #version 330 core
-
-  out vec4 out_color;
-
-  uniform vec3 u_color;
-
-  void main()
-  {
-    out_color = vec4(u_color, 1.0);
-  }
-)glsl" };
-
 ExampleLayer::ExampleLayer()
     : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f),
-      square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::Ref<Pepper::VertexArray>{ Pepper::VertexArray::Create() }),
-      square_VAO(Pepper::Ref<Pepper::VertexArray>{ Pepper::VertexArray::Create() })
+      square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::VertexArray::Create()),
+      square_VAO(Pepper::VertexArray::Create())
 {
   triangle_VAO->Bind();
   {
@@ -84,9 +27,7 @@ ExampleLayer::ExampleLayer()
       };
     // clang-format on
 
-    auto vbo = Pepper::Ref<Pepper::VertexBuffer>{
-      Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID())
-    };
+    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID());
     Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
                                     { Pepper::ShaderDataType::Float4, "in_color" } };
 
@@ -94,9 +35,7 @@ ExampleLayer::ExampleLayer()
     triangle_VAO->AddVertexBuffer(vbo);
 
     uint32_t indices[] = { 0, 1, 2 };
-    auto ibo = Pepper::Ref<Pepper::IndexBuffer>{
-      Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), triangle_VAO->GetRendererID())
-    };
+    auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), triangle_VAO->GetRendererID());
     triangle_VAO->SetIndexBuffer(ibo);
   }
 
@@ -106,31 +45,34 @@ ExampleLayer::ExampleLayer()
     // -1.0 < y < 1.0
     // clang-format off
       float vertices[] = {
-        //  x,     y,     z
-        -1.6f, -0.9f, +0.0f,
-        -1.1f, -0.9f, +0.0f,
-        -1.1f, -0.4f, +0.0f,
-        -1.6f, -0.4f, +0.0f,
+        //  x,     y,     z,    s,    t
+        -1.6f, -0.9f, +0.0f, 0.0f, 0.0f, // bot-left
+        -1.1f, -0.9f, +0.0f, 1.0f, 0.0f, // bot-right
+        -1.1f, -0.4f, +0.0f, 1.0f, 1.0f, // top-right
+        -1.6f, -0.4f, +0.0f, 0.0f, 1.0f, // top-left
       };
     // clang-format on
 
-    auto vbo = Pepper::Ref<Pepper::VertexBuffer>{
-      Pepper::VertexBuffer::Create(vertices, sizeof(vertices), square_VAO->GetRendererID())
-    };
-    Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" } };
+    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), square_VAO->GetRendererID());
+    Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
+                                    { Pepper::ShaderDataType::Float2, "in_tex_coord" } };
     vbo->SetLayout(layout);
     square_VAO->AddVertexBuffer(vbo);
 
     uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
-    auto ibo = Pepper::Ref<Pepper::IndexBuffer>{
-      Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID())
-    };
+    auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
-  }
+  };
 
-  shader = Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(vertex_src, fragment_src) };
-  flat_color_shader =
-    Pepper::Ref<Pepper::Shader>{ Pepper::Shader::Create(flat_color_vertex_src, flat_color_fragment_src) };
+  shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/Simple.glsl");
+  flat_color_shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/FlatColor.glsl");
+  texture_shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/Texture.glsl");
+
+  texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/checkerboard.png");
+  pepper_texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/black-pepper.png");
+
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->Bind();
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->UploadUniformInt("u_texture", 0);
 
   camera.SetPosition({ 0.0f, 0.0f, 0.0f });
   // camera.SetRotationDeg(45.0f);
@@ -176,9 +118,10 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
 
-  Pepper::Renderer::BeginScene(camera);
-  Pepper::Renderer::Submit(shader, triangle_VAO);
-  Pepper::Renderer::EndScene();
+  // TRIANGLE
+  // Pepper::Renderer::BeginScene(camera);
+  // Pepper::Renderer::Submit(shader, triangle_VAO);
+  // Pepper::Renderer::EndScene();
 
   // Pepper::Material* material = new Pepper::Material(shader);
   // material->Set("u_Color", redColor);
@@ -198,6 +141,14 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
       Pepper::Renderer::Submit(flat_color_shader, square_VAO, transform);
     }
   }
+
+  glm::mat4 new_scale = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
+  glm::vec3 center_pos(1.6 * 2.5, 0.9 * 2.2, 0.0);
+  glm::mat4 new_transf = glm::translate(glm::mat4{ 1.0f }, center_pos) * new_scale;
+  texture->Bind();
+  Pepper::Renderer::Submit(texture_shader, square_VAO, new_transf);
+  pepper_texture->Bind();
+  Pepper::Renderer::Submit(texture_shader, square_VAO, new_transf);
   Pepper::Renderer::EndScene();
 }
 
@@ -206,5 +157,18 @@ void ExampleLayer::OnEvent(Pepper::Event&) {}
 ClientApp::ClientApp() { PushLayer(new ExampleLayer{}); }
 
 ClientApp::~ClientApp() {}
+
+std::filesystem::path ClientApp::GetAssets()
+{
+  std::filesystem::path assets_path;
+#if defined APP_WORKING_DIR
+  const std::string working_dir = APP_WORKING_DIR;
+  assets_path = std::filesystem::path{ working_dir } / "App" / "assets";
+#else
+  assets_path = std::filesystem::current_path().parent_path() / "App" / "assets";
+#endif
+
+  return assets_path;
+}
 
 Pepper::Application* Pepper::CreateApplication() { return new ClientApp(); }

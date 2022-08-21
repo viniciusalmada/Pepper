@@ -77,7 +77,4 @@ const std::set<Pepper::Ref<Pepper::VertexBuffer>>& Pepper::OpenGLVertexArray::Ge
   return this->vertex_buffers;
 }
 
-const Pepper::Ref<Pepper::IndexBuffer>& Pepper::OpenGLVertexArray::GetIndexBuffer() const
-{
-  return this->index_buffer;
-}
+const Pepper::Ref<Pepper::IndexBuffer>& Pepper::OpenGLVertexArray::GetIndexBuffer() const { return this->index_buffer; }

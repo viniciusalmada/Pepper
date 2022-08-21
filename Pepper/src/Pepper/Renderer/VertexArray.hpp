@@ -26,6 +26,6 @@ namespace Pepper
 
     virtual uint32_t GetRendererID() const = 0;
 
-    static VertexArray* Create();
+    static Ref<VertexArray> Create();
   };
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Pepper/Core/Core.hpp"
+
 #include <cstdint>
 
 namespace Pepper
@@ -133,7 +135,7 @@ namespace Pepper
 
     virtual void SetLayout(const BufferLayout& layout) = 0;
 
-    static VertexBuffer* Create(float* vertices, uint32_t size, uint32_t parent);
+    static Ref<VertexBuffer> Create(float* vertices, uint32_t size, uint32_t parent);
   };
 
   class IndexBuffer : public Buffer
@@ -141,6 +143,6 @@ namespace Pepper
   public:
     virtual uint32_t GetCount() const = 0;
 
-    static IndexBuffer* Create(uint32_t* indices, uint32_t count, uint32_t parent);
+    static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count, uint32_t parent);
   };
 }
