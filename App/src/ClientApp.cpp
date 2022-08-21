@@ -4,7 +4,7 @@
 
 #include "ClientApp.hpp"
 
-#include <Pepper/Platform/OpenGL/OpenGLShader.hpp>
+#include <Pepper/Platform/OpenGL/OpenGLShader.hpp> // TODO: Remove
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
