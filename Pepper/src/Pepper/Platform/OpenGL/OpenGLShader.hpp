@@ -19,6 +19,8 @@ namespace Pepper
     void Bind() const override;
     void Unbind() const override;
 
+    const std::string& GetName() const override;
+
     void UploadUniformInt(const std::string& name, const int& value);
 
     void UploadUniformFloat(const std::string& name, const float& value);
@@ -51,5 +53,6 @@ namespace Pepper
   private:
     std::unordered_map<std::string, u_int32_t> uniform_locations;
     uint32_t renderer_id;
+    std::string name;
   };
 }
