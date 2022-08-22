@@ -29,78 +29,64 @@ void Pepper::OpenGLShader::Unbind() const { glUseProgram(0); }
 
 void Pepper::OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Pepper::OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void Pepper::OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& vec)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
 }
 
 void Pepper::OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& vec)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniform3f(location, vec.x, vec.y, vec.z);
 }
 
 void Pepper::OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniform2f(location, value.x, value.y);
 }
 
 void Pepper::OpenGLShader::UploadUniformFloat(const std::string& name, const float& value)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniform1f(location, value);
 }
 
 void Pepper::OpenGLShader::UploadUniformInt(const std::string& name, const int& value)
 {
-  bool is_bound = CheckIsBound();
-  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
-  if (!is_bound)
+  if (!AssertShaderIsBound())
     return;
 
-  int location = glGetUniformLocation(renderer_id, name.c_str());
+  int location = RetrieveUniformLocation(name);
   glUniform1i(location, value);
 }
 
@@ -226,6 +212,13 @@ std::unordered_map<Pepper::ShaderType, std::string> Pepper::OpenGLShader::SplitS
   return shaders_src_by_type;
 }
 
+bool Pepper::OpenGLShader::AssertShaderIsBound() const
+{
+  bool is_bound = CheckIsBound();
+  PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
+  return is_bound;
+}
+
 void Pepper::OpenGLShader::CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc)
 {
   auto [vertex_shader, vertex_ok] = Compile(vertexSrc, ShaderType::VERTEX);
@@ -279,4 +272,16 @@ bool Pepper::OpenGLShader::CheckIsBound() const
     return false;
 
   return curr_program == renderer_id;
+}
+
+uint32_t Pepper::OpenGLShader::RetrieveUniformLocation(const std::string& name)
+{
+  if (uniform_locations.contains(name))
+    return uniform_locations.at(name);
+
+  int location = glGetUniformLocation(renderer_id, name.c_str());
+  PP_CORE_ASSERT(location != -1, "Invalid uniform name to this shader!");
+
+  uniform_locations[name] = location;
+  return location;
 }

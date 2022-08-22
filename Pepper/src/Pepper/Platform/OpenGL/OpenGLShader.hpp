@@ -40,11 +40,16 @@ namespace Pepper
 
     static std::unordered_map<ShaderType, std::string> SplitShaderSrc(const std::string& rawSrc);
 
+    bool AssertShaderIsBound() const;
+
     void CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc);
 
     bool CheckIsBound() const;
 
+    uint32_t RetrieveUniformLocation(const std::string& name);
+
   private:
+    std::unordered_map<std::string, u_int32_t> uniform_locations;
     uint32_t renderer_id;
   };
 }
