@@ -12,7 +12,7 @@
 ExampleLayer::ExampleLayer()
     : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f),
       square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::VertexArray::Create()),
-      square_VAO(Pepper::VertexArray::Create())
+      square_VAO(Pepper::VertexArray::Create()), shader_library({})
 {
   triangle_VAO->Bind();
   {
@@ -64,15 +64,15 @@ ExampleLayer::ExampleLayer()
     square_VAO->SetIndexBuffer(ibo);
   };
 
-  shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/Simple.glsl");
-  flat_color_shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/FlatColor.glsl");
-  texture_shader = Pepper::Shader::Create(ClientApp::GetAssets() / "shaders/Texture.glsl");
+  shader_library.Load(ClientApp::GetAssets() / "shaders/Simple.glsl");
+  shader_library.Load(ClientApp::GetAssets() / "shaders/FlatColor.glsl");
+  shader_library.Load(ClientApp::GetAssets() / "shaders/Texture.glsl");
 
   texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/checkerboard.png");
   pepper_texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/black-pepper.png");
 
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->Bind();
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(texture_shader)->UploadUniformInt("u_texture", 0);
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->Bind();
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->UploadUniformInt("u_texture", 0);
 
   camera.SetPosition({ 0.0f, 0.0f, 0.0f });
   // camera.SetRotationDeg(45.0f);
@@ -129,6 +129,9 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
 
   Pepper::Renderer::BeginScene(camera);
   glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+  Pepper::Ref<Pepper::Shader> flat_color_shader = shader_library.Get("FlatColor");
+  Pepper::Ref<Pepper::Shader> texture_shader = shader_library.Get("Texture");
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->UploadUniformFloat3("u_color", square_color);

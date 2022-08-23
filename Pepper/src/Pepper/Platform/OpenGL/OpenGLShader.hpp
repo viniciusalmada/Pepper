@@ -13,11 +13,13 @@ namespace Pepper
   {
   public:
     OpenGLShader(const std::filesystem::path& filepath);
-    OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+    OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
     ~OpenGLShader();
 
     void Bind() const override;
     void Unbind() const override;
+
+    const std::string& GetName() const override;
 
     void UploadUniformInt(const std::string& name, const int& value);
 
@@ -51,5 +53,6 @@ namespace Pepper
   private:
     std::unordered_map<std::string, u_int32_t> uniform_locations;
     uint32_t renderer_id;
+    std::string name;
   };
 }
