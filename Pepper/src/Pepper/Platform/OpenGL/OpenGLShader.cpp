@@ -11,14 +11,15 @@
 
 namespace Pepper
 {
-  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : name(filepath.nam)
+  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : name(filepath.stem())
   {
     std::string shader_raw_src = std::move(ReadFile(filepath));
     auto shaders_src = SplitShaderSrc(shader_raw_src);
     CreateProgram(shaders_src[ShaderType::VERTEX], shaders_src[ShaderType::FRAGMENT]);
   }
 
-  OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+  OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+      : name(name)
   {
     CreateProgram(vertexSrc, fragmentSrc);
   }

@@ -15,9 +15,10 @@ public:
   void OnEvent(Pepper::Event&) override;
 
 private:
-  Pepper::Ref<Pepper::Shader> shader;
-  Pepper::Ref<Pepper::Shader> flat_color_shader;
-  Pepper::Ref<Pepper::Shader> texture_shader;
+  // Pepper::Ref<Pepper::Shader> shader;
+  // Pepper::Ref<Pepper::Shader> flat_color_shader;
+  // Pepper::Ref<Pepper::Shader> texture_shader;
+  Pepper::ShaderLibrary shader_library;
 
   Pepper::Ref<Pepper::VertexArray> triangle_VAO;
   Pepper::Ref<Pepper::VertexArray> square_VAO;

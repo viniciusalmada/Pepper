@@ -21,12 +21,12 @@ namespace Pepper
     }
   }
 
-  Ref<Shader> Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+  Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
   {
     switch (Renderer::GetAPI())
     {
     case RendererAPI::API::OPEN_GL:
-      return std::make_shared<OpenGLShader>(vertexSrc, fragmentSrc);
+      return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
     default:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
@@ -36,10 +36,20 @@ namespace Pepper
   void ShaderLibrary::Add(const Ref<Shader>& shader)
   {
     auto name = shader->GetName();
+    PP_CORE_ASSERT(!shaders.contains(name), "Shader already exists!");
     shaders[name] = shader;
   }
 
-  Ref<Shader> ShaderLibrary::Load(const std::filesystem::path& filepath) {}
+  Ref<Shader> ShaderLibrary::Load(const std::filesystem::path& filepath)
+  {
+    auto shader = Shader::Create(filepath);
+    Add(shader);
+    return shader;
+  }
 
-  Ref<Shader> ShaderLibrary::Get(const std::string& name) const {}
+  Ref<Shader> ShaderLibrary::Get(const std::string& name) const
+  {
+    PP_CORE_ASSERT(shaders.contains(name), "Shader does not exist!");
+    return shaders.at(name);
+  }
 }

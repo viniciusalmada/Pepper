@@ -13,7 +13,7 @@ namespace Pepper
   {
   public:
     OpenGLShader(const std::filesystem::path& filepath);
-    OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+    OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
     ~OpenGLShader();
 
     void Bind() const override;

@@ -16,7 +16,7 @@ namespace Pepper
     virtual const std::string& GetName() const = 0;
 
     static Ref<Shader> Create(const std::filesystem::path& filepath);
-    [[deprecated]] static Ref<Shader> Create(const std::string& vertexSrc, const std::string& fragmentSrc);
+    static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
   };
 
   class ShaderLibrary
@@ -28,6 +28,6 @@ namespace Pepper
     Ref<Shader> Get(const std::string& name) const;
 
   private:
-    std::unordered_map<std::string, Ref<Shader>> shaders;
+    std::unordered_map<std::string, Ref<Shader>> shaders{};
   };
 }
