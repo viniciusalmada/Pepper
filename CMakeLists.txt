@@ -82,6 +82,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Renderer/Shader.cpp
   ${SOURCE_DIR}/Pepper/Renderer/Texture.cpp
   ${SOURCE_DIR}/Pepper/Renderer/VertexArray.cpp
+  ${SOURCE_DIR}/Pepper/OrthoCameraController.cpp
 )
 
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})

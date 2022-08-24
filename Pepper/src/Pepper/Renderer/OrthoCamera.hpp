@@ -10,17 +10,13 @@ namespace Pepper
     OrthoCamera(float left, float right, float bottom, float top);
 
     const glm::vec3& GetPosition() const;
-
     void SetPosition(const glm::vec3& position);
 
     float GetRotation() const;
-
     void SetRotationDeg(float rotation);
 
     const glm::mat4& GetProjectionMatrix() const;
-
     const glm::mat4& GetViewMatrix() const;
-
     const glm::mat4& GetViewProjectionMatrix() const;
 
   private:

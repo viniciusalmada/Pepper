@@ -27,8 +27,7 @@ private:
   Pepper::Ref<Pepper::Texture2D> pepper_texture;
 
   Pepper::OrthoCamera camera;
-  const float CAMERA_MOVE_SPEED = 5.0f;
-  const float CAMERA_ROTATION_SPEED = 180.0f;
+  
   const float SQUARE_MOVE_SPEED = 1.0f;
 
   glm::vec3 square_position;

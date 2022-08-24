@@ -22,5 +22,19 @@
       "#include \"PepperPCH.hpp\"",
       "// clang-format on"
     ]
+  },
+  "Pepper class": {
+    "prefix": "pcla",
+    "body": [
+      "#pragma once",
+      "",
+      "namespace ",
+      "{",
+      "  class ${0:Name}",
+      "  {",
+      "",
+      "  };",
+      "}"
+    ]
   }
 }
