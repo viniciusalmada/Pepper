@@ -161,4 +161,4 @@ endif(WIN32)
 
 target_link_libraries(App Pepper)
 
-target_precompile_headers(App REUSE_FROM Pepper)
+target_precompile_headers(App PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
