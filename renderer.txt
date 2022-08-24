@@ -23,3 +23,10 @@ Where do we start?
 * Note: these steps have overlap and mostly aren't dependent
 * After that we have a base to render anything we want
 * In the future (TBD), we will implement other APIs
+
+## Renderer2D
+
+Renderer2D::DrawCircle(c,r)
+Renderer2D::DrawRect(p,s,c,t)
+
+-Batch rendering 100k sprits, 60 fps, with textures
