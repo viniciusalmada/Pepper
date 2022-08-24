@@ -1,11 +1,7 @@
 #pragma once
 
 #include <string>
-namespace Pepper
+namespace Pepper::Utils
 {
-  class Utils
-  {
-  public:
-    static std::string GetNewLine();
-  };
+  std::string GetNewLine();
 }

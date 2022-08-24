@@ -4,15 +4,11 @@
 
 namespace Pepper
 {
-  class OpenGLDebugger
-  {
-  public:
-    static void Func(GLenum source,
-                     GLenum type,
-                     unsigned int id,
-                     GLenum severity,
-                     GLsizei length,
-                     const char* message,
-                     const void* userParam);
-  };
+  void OpenGLDebuggerFunc(GLenum source,
+                          GLenum type,
+                          unsigned int id,
+                          GLenum severity,
+                          GLsizei length,
+                          const char* message,
+                          const void* userParam);
 }

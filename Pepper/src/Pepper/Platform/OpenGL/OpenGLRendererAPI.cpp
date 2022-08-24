@@ -14,7 +14,7 @@ namespace Pepper
 #ifdef PP_DEBUG
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(OpenGLDebugger::Func, nullptr);
+    glDebugMessageCallback(OpenGLDebuggerFunc, nullptr);
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 #endif
 
