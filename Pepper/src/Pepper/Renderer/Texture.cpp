@@ -7,14 +7,17 @@
 #include "Pepper/Platform/OpenGL/OpenGLTexture.hpp"
 #include "RendererAPI.hpp"
 
-Pepper::Ref<Pepper::Texture2D> Pepper::Texture2D::Create(const std::filesystem::path& path)
+namespace Pepper
 {
-  switch (RendererAPI::GetAPI())
+  Ref<Texture2D> Texture2D::Create(const std::filesystem::path& path)
   {
-  case RendererAPI::API::OPEN_GL:
-    return Ref<Texture2D>(new OpenGLTexture2D(path));
-  default:
-    PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-    return nullptr;
+    switch (RendererAPI::GetAPI())
+    {
+    case RendererAPI::API::OPEN_GL:
+      return Ref<Texture2D>(new OpenGLTexture2D(path));
+    default:
+      PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+      return nullptr;
+    }
   }
 }

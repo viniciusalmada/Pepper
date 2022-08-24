@@ -6,21 +6,24 @@
 
 #include <glad/glad.h>
 
-void Pepper::OpenGLDebugger::Func(GLenum /* source */,
-                                  GLenum /* type */,
-                                  unsigned int id,
-                                  GLenum /* severity */,
-                                  GLsizei /* length */,
-                                  const char* message,
-                                  const void* /* userParam */)
+namespace Pepper
 {
-  // ignore non-significant error/warning codes
-  if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
-    return;
+  void OpenGLDebugger::Func(GLenum /* source */,
+                                    GLenum /* type */,
+                                    unsigned int id,
+                                    GLenum /* severity */,
+                                    GLsizei /* length */,
+                                    const char* message,
+                                    const void* /* userParam */)
+  {
+    // ignore non-significant error/warning codes
+    if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
+      return;
 
-  PP_CORE_WARN("--------------------");
-  PP_CORE_WARN("OpenGL Error:");
-  PP_CORE_WARN("(0x{0:04x}): {1}", id, message);
+    PP_CORE_WARN("--------------------");
+    PP_CORE_WARN("OpenGL Error:");
+    PP_CORE_WARN("(0x{0:04x}): {1}", id, message);
 
-  PP_CORE_ASSERT(false, "");
+    PP_CORE_ASSERT(false, "");
+  }
 }

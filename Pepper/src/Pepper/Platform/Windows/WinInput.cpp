@@ -1,44 +1,48 @@
 // clang-format off
 #include "PepperPCH.hpp"
 // clang-format on
+
 #include "WinInput.hpp"
 
 #include "Pepper/Core/Application.hpp"
 
 #include <GLFW/glfw3.h>
 
-Pepper::Input* Pepper::Input::instance = new WinInput{};
-
-bool Pepper::WinInput::IsKeyPressedImpl(PPKey keyCode)
+namespace Pepper
 {
-  GLFWwindow* glfw_window = GetGLFWWindow();
+  Input* Input::instance = new WinInput{};
 
-  int state = glfwGetKey(glfw_window, PPKey::ToGLFWKey(keyCode));
+  bool WinInput::IsKeyPressedImpl(PPKey keyCode)
+  {
+    GLFWwindow* glfw_window = GetGLFWWindow();
 
-  return state == GLFW_PRESS;
-}
+    int state = glfwGetKey(glfw_window, PPKey::ToGLFWKey(keyCode));
 
-bool Pepper::WinInput::IsMouseButtonImpl(PPMouseBt button)
-{
-  GLFWwindow* glfw_window = GetGLFWWindow();
+    return state == GLFW_PRESS;
+  }
 
-  int state = glfwGetMouseButton(glfw_window, PPMouseBt::ToGLFWMouse(button));
+  bool WinInput::IsMouseButtonImpl(PPMouseBt button)
+  {
+    GLFWwindow* glfw_window = GetGLFWWindow();
 
-  return state == GLFW_PRESS;
-}
+    int state = glfwGetMouseButton(glfw_window, PPMouseBt::ToGLFWMouse(button));
 
-std::pair<float, float> Pepper::WinInput::GetMouseXYImpl()
-{
-  GLFWwindow* glfw_window = GetGLFWWindow();
-  double x{}, y{};
-  glfwGetCursorPos(glfw_window, &x, &y);
+    return state == GLFW_PRESS;
+  }
 
-  return { static_cast<float>(x), static_cast<float>(y) };
-}
+  std::pair<float, float> WinInput::GetMouseXYImpl()
+  {
+    GLFWwindow* glfw_window = GetGLFWWindow();
+    double x{}, y{};
+    glfwGetCursorPos(glfw_window, &x, &y);
 
-GLFWwindow* Pepper::WinInput::GetGLFWWindow()
-{
-  Window& window = Application::Get().GetWindow();
-  GLFWwindow* glfw_window = std::any_cast<GLFWwindow*>(window.GetNativeWindow());
-  return glfw_window;
+    return { static_cast<float>(x), static_cast<float>(y) };
+  }
+
+  GLFWwindow* WinInput::GetGLFWWindow()
+  {
+    Window& window = Application::Get().GetWindow();
+    GLFWwindow* glfw_window = std::any_cast<GLFWwindow*>(window.GetNativeWindow());
+    return glfw_window;
+  }
 }

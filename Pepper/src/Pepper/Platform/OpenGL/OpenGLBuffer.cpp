@@ -22,59 +22,62 @@ static bool CheckValidVAO(uint32_t vaoID)
   return true;
 }
 
-/*****************
- * Vertex Buffer *
- *****************/
-
-Pepper::OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent)
-    : renderer_id(0), parent_id(parent)
+namespace Pepper
 {
-  if (!CheckValidVAO(parent))
-    return;
+  /*****************
+   * Vertex Buffer *
+   *****************/
 
-  glCreateBuffers(1, &renderer_id);
-  glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
-  glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+  OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent)
+      : renderer_id(0), parent_id(parent)
+  {
+    if (!CheckValidVAO(parent))
+      return;
+
+    glCreateBuffers(1, &renderer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
+    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+  }
+
+  OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &renderer_id); }
+
+  void OpenGLVertexBuffer::Bind() const
+  {
+    if (!CheckValidVAO(parent_id))
+      return;
+
+    glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
+  }
+
+  void OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+
+  const BufferLayout& OpenGLVertexBuffer::GetLayout() const { return this->layout; }
+
+  void OpenGLVertexBuffer::SetLayout(const BufferLayout& newLayout) { this->layout = newLayout; }
+
+  /****************
+   * Index Buffer *
+   ****************/
+
+  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent)
+      : count(count), parent_id(parent)
+  {
+    if (!CheckValidVAO(parent_id))
+      return;
+
+    glCreateBuffers(1, &renderer_id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+  }
+
+  OpenGLIndexBuffer::~OpenGLIndexBuffer() { glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &renderer_id); }
+
+  void OpenGLIndexBuffer::Bind() const
+  {
+    if (!CheckValidVAO(parent_id))
+      return;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
+  }
+
+  void OpenGLIndexBuffer::Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 }
-
-Pepper::OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &renderer_id); }
-
-void Pepper::OpenGLVertexBuffer::Bind() const
-{
-  if (!CheckValidVAO(parent_id))
-    return;
-
-  glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
-}
-
-void Pepper::OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
-
-const Pepper::BufferLayout& Pepper::OpenGLVertexBuffer::GetLayout() const { return this->layout; }
-
-void Pepper::OpenGLVertexBuffer::SetLayout(const Pepper::BufferLayout& newLayout) { this->layout = newLayout; }
-
-/****************
- * Index Buffer *
- ****************/
-
-Pepper::OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent)
-    : count(count), parent_id(parent)
-{
-  if (!CheckValidVAO(parent_id))
-    return;
-
-  glCreateBuffers(1, &renderer_id);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
-}
-
-Pepper::OpenGLIndexBuffer::~OpenGLIndexBuffer() { glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &renderer_id); }
-
-void Pepper::OpenGLIndexBuffer::Bind() const
-{
-  if (!CheckValidVAO(parent_id))
-    return;
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
-}
-
-void Pepper::OpenGLIndexBuffer::Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }

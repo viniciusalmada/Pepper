@@ -4,11 +4,14 @@
 
 #include "Utils.hpp"
 
-std::string Pepper::Utils::GetNewLine()
+namespace Pepper
 {
+  std::string Utils::GetNewLine()
+  {
 #ifdef PP_PLATFORM_WINDOWS
-  return "\r\n";
+    return "\r\n";
 #else
-  return "\n";
+    return "\n";
 #endif
+  }
 }

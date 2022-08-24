@@ -4,4 +4,7 @@
 
 #include "RendererAPI.hpp"
 
-Pepper::RendererAPI::API Pepper::RendererAPI::api = Pepper::RendererAPI::API::OPEN_GL;
+namespace Pepper
+{
+  RendererAPI::API RendererAPI::api = RendererAPI::API::OPEN_GL;
+}
