@@ -55,7 +55,7 @@ target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/imgui)
 target_include_directories(ImGui PRIVATE ${VENDOR_DIR}/GLFW/include)
 
 # #############################################################################
-# The engine itself is a static library
+# The Pepper engine
 add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Core/Application.cpp
   ${SOURCE_DIR}/Pepper/Core/Log.cpp
@@ -161,4 +161,4 @@ endif(WIN32)
 
 target_link_libraries(App Pepper)
 
-target_precompile_headers(App PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)
+target_precompile_headers(App REUSE_FROM Pepper)
