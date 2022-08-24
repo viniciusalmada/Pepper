@@ -3,8 +3,6 @@
 #include "Layer.hpp"
 #include "Pepper/Core/Core.hpp"
 
-#include <PepperPCH.hpp>
-
 namespace Pepper
 {
   class LayerStack

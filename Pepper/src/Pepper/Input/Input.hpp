@@ -1,7 +1,4 @@
 #pragma once
-// clang-format off
-#include "PepperPCH.hpp"
-// clang-format on
 
 #include "Pepper/Core/Core.hpp"
 #include "Pepper/Input/KeyCodes.hpp"

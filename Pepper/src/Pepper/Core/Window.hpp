@@ -1,8 +1,7 @@
 #pragma once
+
 #include "Core.hpp"
 #include "Pepper/Events/Event.hpp"
-
-#include <PepperPCH.hpp>
 
 namespace Pepper
 {
