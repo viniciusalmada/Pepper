@@ -46,6 +46,7 @@ namespace Pepper
   {
     EventDispatcher dispatcher{ e };
     dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+    dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 
     // From top to bottom of stack check event handled
     for (auto iter = layer_stack.end(); iter != layer_stack.begin();)
@@ -64,14 +65,17 @@ namespace Pepper
       Timestep timestep{ time_sec - last_frame_time };
       last_frame_time = time_sec;
 
-      for (Layer* layer : layer_stack)
-        layer->OnUpdate(timestep);
+      if (!minimized)
+      {
+        for (Layer* layer : layer_stack)
+          layer->OnUpdate(timestep);
 
+      }
       imGuiLayer->Begin();
       for (Layer* layer : layer_stack)
         layer->OnImGuiRender();
       imGuiLayer->End();
-
+      
       window->OnUpdate();
     }
   }
@@ -80,5 +84,16 @@ namespace Pepper
   {
     running = false;
     return true;
+  }
+
+  bool Application::OnWindowResize(WindowResizeEvent& e)
+  {
+    if (e.GetWidth() == 0 || e.GetHeight() == 0)
+    {
+      minimized = true;
+      return false;
+    }
+    minimized = false;
+    return false;
   }
 }
