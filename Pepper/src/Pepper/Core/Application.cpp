@@ -69,13 +69,12 @@ namespace Pepper
       {
         for (Layer* layer : layer_stack)
           layer->OnUpdate(timestep);
-
       }
       imGuiLayer->Begin();
       for (Layer* layer : layer_stack)
         layer->OnImGuiRender();
       imGuiLayer->End();
-      
+
       window->OnUpdate();
     }
   }
@@ -94,6 +93,8 @@ namespace Pepper
       return false;
     }
     minimized = false;
+    Renderer::OnViewportResize(e.GetWidth(), e.GetHeight());
+
     return false;
   }
 }
