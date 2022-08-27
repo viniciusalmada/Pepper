@@ -30,7 +30,6 @@ namespace Pepper
     float zoom_level = 1.0f;
     OrthoCamera camera;
 
-    // TODO: calculate move speed based on zoom level
     float camera_move_speed = 5.0f;
     static constexpr float CAMERA_ROTATION_SPEED = 180.0f;
   };
