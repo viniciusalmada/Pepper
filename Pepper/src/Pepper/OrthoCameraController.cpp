@@ -9,8 +9,10 @@
 
 namespace Pepper
 {
-  OrthoCameraController::OrthoCameraController(float aspectRatio, bool enableRotation)
-      : aspect_ratio(aspectRatio), rotation(enableRotation), camera(BuildCamera())
+  OrthoCameraController::OrthoCameraController(float aspectRatio, bool enableRotation) :
+      aspect_ratio(aspectRatio),
+      rotation(enableRotation),
+      camera(BuildCamera())
   {
   }
 
@@ -69,6 +71,9 @@ namespace Pepper
     return { left, right, bottom, top };
   }
 
-  OrthoCamera OrthoCameraController::BuildCamera() const { return OrthoCamera{ GetLimits() }; }
+  OrthoCamera OrthoCameraController::BuildCamera() const
+  {
+    return OrthoCamera{ GetLimits() };
+  }
 
 } // namespace Pepper

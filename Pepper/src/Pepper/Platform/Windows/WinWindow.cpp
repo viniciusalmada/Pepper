@@ -10,13 +10,25 @@ namespace Pepper
 
   static bool s_glfw_initialized = false;
 
-  static void GLFWErrorCallback(int error, const char* desc) { PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc); }
+  static void GLFWErrorCallback(int error, const char* desc)
+  {
+    PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
+  }
 
-  Window* Window::Create(const WindowProps& props) { return new WinWindow(props); }
+  Window* Window::Create(const WindowProps& props)
+  {
+    return new WinWindow(props);
+  }
 
-  WinWindow::WinWindow(const WindowProps& props) { Init(props); }
+  WinWindow::WinWindow(const WindowProps& props)
+  {
+    Init(props);
+  }
 
-  WinWindow::~WinWindow() { Shutdown(); }
+  WinWindow::~WinWindow()
+  {
+    Shutdown();
+  }
 
   void WinWindow::Init(const WindowProps& props)
   {
@@ -188,5 +200,8 @@ namespace Pepper
     data.vsync = enabled;
   }
 
-  bool WinWindow::IsVsync() const { return data.vsync; }
+  bool WinWindow::IsVsync() const
+  {
+    return data.vsync;
+  }
 }

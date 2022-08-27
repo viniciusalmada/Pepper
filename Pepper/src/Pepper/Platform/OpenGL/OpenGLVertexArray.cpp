@@ -37,7 +37,10 @@ namespace Pepper
     glCreateVertexArrays(1, &renderer_id);
   }
 
-  OpenGLVertexArray::~OpenGLVertexArray() { glDeleteVertexArrays(1, &renderer_id); }
+  OpenGLVertexArray::~OpenGLVertexArray()
+  {
+    glDeleteVertexArrays(1, &renderer_id);
+  }
 
   void OpenGLVertexArray::Bind() const
   {
@@ -48,7 +51,10 @@ namespace Pepper
       index_buffer->Bind();
   }
 
-  void OpenGLVertexArray::Unbind() const { glBindVertexArray(0); }
+  void OpenGLVertexArray::Unbind() const
+  {
+    glBindVertexArray(0);
+  }
 
   void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buffer)
   {
@@ -72,7 +78,10 @@ namespace Pepper
     vertex_buffers.insert(buffer);
   }
 
-  void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buffer) { index_buffer = buffer; }
+  void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buffer)
+  {
+    index_buffer = buffer;
+  }
 
   const std::set<Ref<VertexBuffer>>& OpenGLVertexArray::GetVertexBuffers() const
   {

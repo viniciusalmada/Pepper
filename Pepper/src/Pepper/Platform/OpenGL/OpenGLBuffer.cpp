@@ -28,8 +28,9 @@ namespace Pepper
    * Vertex Buffer *
    *****************/
 
-  OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent)
-      : renderer_id(0), parent_id(parent)
+  OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent) :
+      renderer_id(0),
+      parent_id(parent)
   {
     if (!CheckValidVAO(parent))
       return;
@@ -39,7 +40,10 @@ namespace Pepper
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
   }
 
-  OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &renderer_id); }
+  OpenGLVertexBuffer::~OpenGLVertexBuffer()
+  {
+    glDeleteBuffers(1, &renderer_id);
+  }
 
   void OpenGLVertexBuffer::Bind() const
   {
@@ -49,18 +53,28 @@ namespace Pepper
     glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
   }
 
-  void OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+  void OpenGLVertexBuffer::Unbind() const
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
 
-  const BufferLayout& OpenGLVertexBuffer::GetLayout() const { return this->layout; }
+  const BufferLayout& OpenGLVertexBuffer::GetLayout() const
+  {
+    return this->layout;
+  }
 
-  void OpenGLVertexBuffer::SetLayout(const BufferLayout& newLayout) { this->layout = newLayout; }
+  void OpenGLVertexBuffer::SetLayout(const BufferLayout& newLayout)
+  {
+    this->layout = newLayout;
+  }
 
   /****************
    * Index Buffer *
    ****************/
 
-  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent)
-      : count(count), parent_id(parent)
+  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent) :
+      count(count),
+      parent_id(parent)
   {
     if (!CheckValidVAO(parent_id))
       return;
@@ -70,7 +84,10 @@ namespace Pepper
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
   }
 
-  OpenGLIndexBuffer::~OpenGLIndexBuffer() { glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &renderer_id); }
+  OpenGLIndexBuffer::~OpenGLIndexBuffer()
+  {
+    glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &renderer_id);
+  }
 
   void OpenGLIndexBuffer::Bind() const
   {
@@ -79,5 +96,8 @@ namespace Pepper
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
   }
 
-  void OpenGLIndexBuffer::Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+  void OpenGLIndexBuffer::Unbind() const
+  {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
 }

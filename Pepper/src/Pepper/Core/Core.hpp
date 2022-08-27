@@ -5,7 +5,7 @@
 #ifdef PP_PLATFORM_WINDOWS
   #define DEBUG_BREAK __debugbreak();
 #else
-  #define DEBUG_BREAK asm volatile ("int3;");
+  #define DEBUG_BREAK asm volatile("int3;");
 #endif
 
 #ifdef PP_ENABLE_ASSERTS

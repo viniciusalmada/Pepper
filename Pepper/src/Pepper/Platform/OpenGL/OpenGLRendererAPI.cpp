@@ -27,7 +27,10 @@ namespace Pepper
     glClearColor(color.r, color.g, color.b, color.a);
   }
 
-  void OpenGLRendererAPI::Clear() const { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
+  void OpenGLRendererAPI::Clear() const
+  {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
 
   void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray) const
   {

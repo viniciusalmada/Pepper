@@ -18,19 +18,31 @@ namespace Pepper
     CreateProgram(shaders_src[ShaderType::VERTEX], shaders_src[ShaderType::FRAGMENT]);
   }
 
-  OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
-      : name(name)
+  OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
+      name(name)
   {
     CreateProgram(vertexSrc, fragmentSrc);
   }
 
-  OpenGLShader::~OpenGLShader() { glDeleteProgram(renderer_id); }
+  OpenGLShader::~OpenGLShader()
+  {
+    glDeleteProgram(renderer_id);
+  }
 
-  void OpenGLShader::Bind() const { glUseProgram(renderer_id); }
+  void OpenGLShader::Bind() const
+  {
+    glUseProgram(renderer_id);
+  }
 
-  void OpenGLShader::Unbind() const { glUseProgram(0); }
+  void OpenGLShader::Unbind() const
+  {
+    glUseProgram(0);
+  }
 
-  const std::string& OpenGLShader::GetName() const { return this->name; }
+  const std::string& OpenGLShader::GetName() const
+  {
+    return this->name;
+  }
 
   void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
   {

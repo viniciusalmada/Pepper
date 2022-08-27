@@ -20,7 +20,7 @@ namespace Pepper
     void SetProjection(const CameraLimits&& limits);
 
     const glm::vec3& GetPosition() const;
-    void SetPosition(const glm::vec3& position);
+    void SetPosition(const glm::vec3& newPosition);
 
     float GetRotation() const;
     void SetRotationDeg(float rotation);

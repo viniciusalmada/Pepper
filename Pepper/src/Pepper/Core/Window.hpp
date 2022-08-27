@@ -11,8 +11,10 @@ namespace Pepper
     unsigned int width;
     unsigned int height;
 
-    WindowProps(const std::string& title = "Pepper engine", unsigned int w = 1280, unsigned int h = 720)
-        : title(title), width(w), height(h)
+    WindowProps(const std::string& title = "Pepper engine", unsigned int w = 1280, unsigned int h = 720) :
+        title(title),
+        width(w),
+        height(h)
     {
     }
   };

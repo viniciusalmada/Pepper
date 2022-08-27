@@ -78,10 +78,16 @@ namespace Pepper
   };
 
 #define EVENT_INFO(x)                                                                                                  \
-  EventInfo GetEventInfo() const override { return EventInfo{ GetStaticType(), x }; }
+  EventInfo GetEventInfo() const override                                                                              \
+  {                                                                                                                    \
+    return EventInfo{ GetStaticType(), x };                                                                            \
+  }
 
 #define STATIC_TYPE(x)                                                                                                 \
-  static EvType GetStaticType() { return x; }
+  static EvType GetStaticType()                                                                                        \
+  {                                                                                                                    \
+    return x;                                                                                                          \
+  }
 
   class Event
   {

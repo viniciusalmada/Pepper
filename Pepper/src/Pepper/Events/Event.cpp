@@ -6,5 +6,8 @@
 
 namespace Pepper
 {
-  std::ostream& operator<<(std::ostream& os, const Event& e) { return os << e.ToString(); }
+  std::ostream& operator<<(std::ostream& os, const Event& e)
+  {
+    return os << e.ToString();
+  }
 }

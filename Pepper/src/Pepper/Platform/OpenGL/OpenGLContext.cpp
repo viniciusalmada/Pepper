@@ -25,5 +25,8 @@ namespace Pepper
     PP_CORE_INFO("OpenGL Version: {0}", (char*)glGetString(GL_VERSION));
   }
 
-  void OpenGLContext::SwapBuffers() { glfwSwapBuffers(window_handle); }
+  void OpenGLContext::SwapBuffers()
+  {
+    glfwSwapBuffers(window_handle);
+  }
 }

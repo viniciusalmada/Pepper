@@ -46,8 +46,12 @@ namespace Pepper
 
     BufferElement() {}
 
-    BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
-        : name(name), type(type), size(ShaderDataTypeSize(type)), offset(0), normalized(normalized)
+    BufferElement(ShaderDataType type, const std::string& name, bool normalized = false) :
+        name(name),
+        type(type),
+        size(ShaderDataTypeSize(type)),
+        offset(0),
+        normalized(normalized)
     {
     }
 

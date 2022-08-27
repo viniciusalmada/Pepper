@@ -32,9 +32,15 @@ namespace Pepper
     last_frame_time = 0;
   }
 
-  void Application::PushLayer(Layer* layer) { layer_stack.PushLayer(layer); }
+  void Application::PushLayer(Layer* layer)
+  {
+    layer_stack.PushLayer(layer);
+  }
 
-  void Application::PushOverlay(Layer* overlay) { layer_stack.PushOverlay(overlay); }
+  void Application::PushOverlay(Layer* overlay)
+  {
+    layer_stack.PushOverlay(overlay);
+  }
 
   void Application::OnEvent(Event& e)
   {

@@ -50,7 +50,13 @@ namespace Pepper
     stbi_image_free(data);
   }
 
-  OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &renderer_ID); }
+  OpenGLTexture2D::~OpenGLTexture2D()
+  {
+    glDeleteTextures(1, &renderer_ID);
+  }
 
-  void OpenGLTexture2D::Bind(uint32_t slot) const { glBindTextureUnit(slot, renderer_ID); }
+  void OpenGLTexture2D::Bind(uint32_t slot) const
+  {
+    glBindTextureUnit(slot, renderer_ID);
+  }
 }

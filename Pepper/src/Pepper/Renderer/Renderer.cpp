@@ -11,7 +11,10 @@ namespace Pepper
 {
   Renderer::SceneData* Renderer::scene_data = new Renderer::SceneData{};
 
-  void Renderer::Init() { RenderCommand::Init(); }
+  void Renderer::Init()
+  {
+    RenderCommand::Init();
+  }
 
   void Renderer::BeginScene(const OrthoCamera& camera)
   {

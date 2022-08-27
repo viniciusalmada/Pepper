@@ -6,9 +6,15 @@
 
 namespace Pepper
 {
-  bool Input::IsKeyPressed(PPKey keyCode) { return instance->IsKeyPressedImpl(keyCode); }
+  bool Input::IsKeyPressed(PPKey keyCode)
+  {
+    return instance->IsKeyPressedImpl(keyCode);
+  }
 
-  bool Input::IsMouseButtonPressed(PPMouseBt button) { return instance->IsMouseButtonImpl(button); }
+  bool Input::IsMouseButtonPressed(PPMouseBt button)
+  {
+    return instance->IsMouseButtonImpl(button);
+  }
 
   float Input::GetMouseX()
   {

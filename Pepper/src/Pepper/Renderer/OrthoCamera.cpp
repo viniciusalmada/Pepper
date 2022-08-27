@@ -8,20 +8,25 @@
 
 namespace Pepper
 {
-  OrthoCamera::OrthoCamera(const CameraLimits&& lim)
-      : proj_matrix(glm::ortho(lim.left, lim.right, lim.bottom, lim.top, - 1.0f, 1.0f)), view_matrix(1.0f),
-        position({ 0.0f, 0.0f, 0.0f }), rotation_deg(0.0f)
+  OrthoCamera::OrthoCamera(const CameraLimits&& lim) :
+      proj_matrix(glm::ortho(lim.left, lim.right, lim.bottom, lim.top, -1.0f, 1.0f)),
+      view_matrix(1.0f),
+      position({ 0.0f, 0.0f, 0.0f }),
+      rotation_deg(0.0f)
   {
     view_proj_matrix = proj_matrix * view_matrix;
   }
 
   void OrthoCamera::SetProjection(const CameraLimits&& lim)
   {
-    proj_matrix = glm::ortho(lim.left, lim.right, lim.bottom, lim.top,-1.0f, 1.0f);
+    proj_matrix = glm::ortho(lim.left, lim.right, lim.bottom, lim.top, -1.0f, 1.0f);
     view_proj_matrix = proj_matrix * view_matrix;
   }
 
-  const glm::vec3& OrthoCamera::GetPosition() const { return position; }
+  const glm::vec3& OrthoCamera::GetPosition() const
+  {
+    return position;
+  }
 
   void OrthoCamera::SetPosition(const glm::vec3& newPosition)
   {
@@ -29,7 +34,10 @@ namespace Pepper
     RecalculateViewMatrix();
   }
 
-  float OrthoCamera::GetRotation() const { return rotation_deg; }
+  float OrthoCamera::GetRotation() const
+  {
+    return rotation_deg;
+  }
 
   void OrthoCamera::SetRotationDeg(float rotation)
   {
@@ -37,11 +45,20 @@ namespace Pepper
     RecalculateViewMatrix();
   }
 
-  const glm::mat4& OrthoCamera::GetProjectionMatrix() const { return proj_matrix; }
+  const glm::mat4& OrthoCamera::GetProjectionMatrix() const
+  {
+    return proj_matrix;
+  }
 
-  const glm::mat4& OrthoCamera::GetViewMatrix() const { return view_matrix; }
+  const glm::mat4& OrthoCamera::GetViewMatrix() const
+  {
+    return view_matrix;
+  }
 
-  const glm::mat4& OrthoCamera::GetViewProjectionMatrix() const { return view_proj_matrix; }
+  const glm::mat4& OrthoCamera::GetViewProjectionMatrix() const
+  {
+    return view_proj_matrix;
+  }
 
   void OrthoCamera::RecalculateViewMatrix()
   {
