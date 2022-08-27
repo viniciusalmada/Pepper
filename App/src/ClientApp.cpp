@@ -10,9 +10,8 @@
 #include <imgui.h>
 
 ExampleLayer::ExampleLayer()
-    : Pepper::Layer("Example"), camera({ -1.6f, 1.6f, -0.9f, 0.9f }), square_position(0.0f),
-      square_color({ 0.2, 0.4, 0.7 }), triangle_VAO(Pepper::VertexArray::Create()),
-      square_VAO(Pepper::VertexArray::Create()), shader_library({})
+    : Pepper::Layer("Example"), camera_controller(1.6f / 0.9f, true), square_position(0.0f), square_color({ 0.2, 0.4, 0.7 }),
+      triangle_VAO(Pepper::VertexArray::Create()), square_VAO(Pepper::VertexArray::Create()), shader_library({})
 {
   triangle_VAO->Bind();
   {
@@ -74,8 +73,6 @@ ExampleLayer::ExampleLayer()
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->UploadUniformInt("u_texture", 0);
 
-  camera.SetPosition({ 0.0f, 0.0f, 0.0f });
-  // camera.SetRotationDeg(45.0f);
 }
 
 void ExampleLayer::OnImGuiRender()
@@ -87,24 +84,7 @@ void ExampleLayer::OnImGuiRender()
 
 void ExampleLayer::OnUpdate(Pepper::Timestep ts)
 {
-  // PP_TRACE("dT: {0}ms ({1}ms)", timestep.GetMilliSeconds(), timestep.GetSeconds());
-  glm::vec3 pos = camera.GetPosition();
-  if (Pepper::Input::IsKeyPressed(PP_KEY_W))
-    pos.y -= CAMERA_MOVE_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_A))
-    pos.x += CAMERA_MOVE_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_S))
-    pos.y += CAMERA_MOVE_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_D))
-    pos.x -= CAMERA_MOVE_SPEED * ts;
-  camera.SetPosition(pos);
-
-  float rot_deg = camera.GetRotation();
-  if (Pepper::Input::IsKeyPressed(PP_KEY_UP))
-    rot_deg += CAMERA_ROTATION_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
-    rot_deg -= CAMERA_ROTATION_SPEED * ts;
-  camera.SetRotationDeg(rot_deg);
+  camera_controller.OnUpdate(ts);
 
   if (Pepper::Input::IsKeyPressed(PP_KEY_H))
     square_position.x -= SQUARE_MOVE_SPEED * ts;
@@ -127,7 +107,7 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   // material->Set("u_Color", redColor);
   // squareMesh->SetMaterial(material)
 
-  Pepper::Renderer::BeginScene(camera);
+  Pepper::Renderer::BeginScene(camera_controller.GetCamera());
   glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
   Pepper::Ref<Pepper::Shader> flat_color_shader = shader_library.Get("FlatColor");
@@ -155,7 +135,7 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   Pepper::Renderer::EndScene();
 }
 
-void ExampleLayer::OnEvent(Pepper::Event&) {}
+void ExampleLayer::OnEvent(Pepper::Event& e) { camera_controller.OnEvent(e); }
 
 ClientApp::ClientApp() { PushLayer(new ExampleLayer{}); }
 

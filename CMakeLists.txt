@@ -82,6 +82,7 @@ add_library(Pepper STATIC
   ${SOURCE_DIR}/Pepper/Renderer/Shader.cpp
   ${SOURCE_DIR}/Pepper/Renderer/Texture.cpp
   ${SOURCE_DIR}/Pepper/Renderer/VertexArray.cpp
+  ${SOURCE_DIR}/Pepper/OrthoCameraController.cpp
 )
 
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
@@ -161,4 +162,4 @@ endif(WIN32)
 
 target_link_libraries(App Pepper)
 
-target_precompile_headers(App REUSE_FROM Pepper)
+target_precompile_headers(App PRIVATE ${SOURCE_DIR}/PepperPCH.hpp)

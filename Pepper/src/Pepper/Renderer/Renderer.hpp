@@ -11,7 +11,7 @@ namespace Pepper
   public:
     static void Init();
 
-    static void BeginScene(OrthoCamera& camera);
+    static void BeginScene(const OrthoCamera& camera);
 
     static void EndScene();
 
