@@ -8,10 +8,16 @@
 
 namespace Pepper
 {
-  OrthoCamera::OrthoCamera(float left, float right, float bottom, float top)
-      : proj_matrix(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), view_matrix(1.0f),
+  OrthoCamera::OrthoCamera(const CameraLimits&& lim)
+      : proj_matrix(glm::ortho(lim.left, lim.right, lim.bottom, lim.top, - 1.0f, 1.0f)), view_matrix(1.0f),
         position({ 0.0f, 0.0f, 0.0f }), rotation_deg(0.0f)
   {
+    view_proj_matrix = proj_matrix * view_matrix;
+  }
+
+  void OrthoCamera::SetProjection(const CameraLimits&& lim)
+  {
+    proj_matrix = glm::ortho(lim.left, lim.right, lim.bottom, lim.top,-1.0f, 1.0f);
     view_proj_matrix = proj_matrix * view_matrix;
   }
 

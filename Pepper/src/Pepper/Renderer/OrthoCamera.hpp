@@ -4,10 +4,20 @@
 
 namespace Pepper
 {
+  struct CameraLimits
+  {
+    float left;
+    float right;
+    float bottom;
+    float top;
+  };
+
   class OrthoCamera
   {
   public:
-    OrthoCamera(float left, float right, float bottom, float top);
+    OrthoCamera(const CameraLimits&& limits);
+
+    void SetProjection(const CameraLimits&& limits);
 
     const glm::vec3& GetPosition() const;
     void SetPosition(const glm::vec3& position);

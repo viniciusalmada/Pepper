@@ -13,12 +13,15 @@ namespace Pepper
     OrthoCameraController(float aspectRatio, bool enableRotation = false);
 
     void OnUpdate(Timestep ts);
-    void OnEvent(Event& e) const;
+    void OnEvent(Event& e);
+
+    const OrthoCamera& GetCamera() const { return camera; }
 
   private:
-    bool OnMouseScrolled(MouseScrolledEvent& e) const;
-    bool OnWindowResized(WindowResizeEvent& e) const;
+    bool OnMouseScrolled(MouseScrolledEvent& e);
+    bool OnWindowResized(WindowResizeEvent& e);
 
+    CameraLimits GetLimits() const;
     OrthoCamera BuildCamera() const;
 
   private:
@@ -28,7 +31,7 @@ namespace Pepper
     OrthoCamera camera;
 
     // TODO: calculate move speed based on zoom level
-    static const float CAMERA_MOVE_SPEED = 5.0f;
-    static const float CAMERA_ROTATION_SPEED = 180.0f;
+    float camera_move_speed = 5.0f;
+    static constexpr float CAMERA_ROTATION_SPEED = 180.0f;
   };
 }

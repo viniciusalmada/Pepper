@@ -18,13 +18,13 @@ namespace Pepper
   {
     glm::vec3 pos = camera.GetPosition();
     if (Input::IsKeyPressed(PP_KEY_W))
-      pos.y -= CAMERA_MOVE_SPEED * ts;
+      pos.y -= camera_move_speed * ts;
     else if (Input::IsKeyPressed(PP_KEY_A))
-      pos.x += CAMERA_MOVE_SPEED * ts;
+      pos.x += camera_move_speed * ts;
     else if (Input::IsKeyPressed(PP_KEY_S))
-      pos.y += CAMERA_MOVE_SPEED * ts;
+      pos.y += camera_move_speed * ts;
     else if (Input::IsKeyPressed(PP_KEY_D))
-      pos.x -= CAMERA_MOVE_SPEED * ts;
+      pos.x -= camera_move_speed * ts;
     camera.SetPosition(pos);
 
     float rot_deg = camera.GetRotation();
@@ -33,20 +33,34 @@ namespace Pepper
     else if (Input::IsKeyPressed(PP_KEY_E))
       rot_deg -= CAMERA_ROTATION_SPEED * ts;
     camera.SetRotationDeg(rot_deg);
+
+    camera_move_speed = zoom_level;
   }
 
-  void OrthoCameraController::OnEvent(Event& e) const
+  void OrthoCameraController::OnEvent(Event& e)
   {
     EventDispatcher dispatcher(e);
     dispatcher.Dispatch<MouseScrolledEvent>(PP_BIND_EVENT_FN(OrthoCameraController::OnMouseScrolled));
     dispatcher.Dispatch<WindowResizeEvent>(PP_BIND_EVENT_FN(OrthoCameraController::OnWindowResized));
   }
 
-  bool OrthoCameraController::OnMouseScrolled(MouseScrolledEvent& e) const {}
+  bool OrthoCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+  {
+    zoom_level -= e.GetYOffset() / 5.0f;
+    zoom_level = std::max(zoom_level, 0.25f);
+    zoom_level = std::min(zoom_level, 4.0f);
+    camera.SetProjection(GetLimits());
+    return false;
+  }
 
-  bool OrthoCameraController::OnWindowResized(WindowResizeEvent& e) const {}
+  bool OrthoCameraController::OnWindowResized(WindowResizeEvent& e)
+  {
+    aspect_ratio = (float)e.GetWidth() / (float)e.GetHeight();
+    camera.SetProjection(GetLimits());
+    return false;
+  }
 
-  OrthoCamera OrthoCameraController::BuildCamera() const
+  CameraLimits OrthoCameraController::GetLimits() const
   {
     float left = -aspect_ratio * zoom_level;
     float right = aspect_ratio * zoom_level;
@@ -54,5 +68,7 @@ namespace Pepper
     float top = zoom_level;
     return { left, right, bottom, top };
   }
+
+  OrthoCamera OrthoCameraController::BuildCamera() const { return OrthoCamera{ GetLimits() }; }
 
 } // namespace Pepper

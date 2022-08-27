@@ -13,7 +13,10 @@ namespace Pepper
 
   void Renderer::Init() { RenderCommand::Init(); }
 
-  void Renderer::BeginScene(OrthoCamera& camera) { scene_data->view_proj_matrix = camera.GetViewProjectionMatrix(); }
+  void Renderer::BeginScene(const OrthoCamera& camera)
+  {
+    scene_data->view_proj_matrix = camera.GetViewProjectionMatrix();
+  }
 
   void Renderer::EndScene() {}
 
