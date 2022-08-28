@@ -110,6 +110,8 @@ target_compile_definitions(Pepper PRIVATE GLFW_INCLUDE_NONE) # not include gl
 
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
+elseif(UNIX)
+  target_compile_definitions(Pepper PRIVATE PP_PLATFORM_LINUX)
 endif(WIN32)
 
 # Configurations flags
