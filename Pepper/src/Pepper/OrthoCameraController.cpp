@@ -35,8 +35,6 @@ namespace Pepper
     else if (Input::IsKeyPressed(PP_KEY_E))
       rot_deg -= CAMERA_ROTATION_SPEED * ts;
     camera.SetRotationDeg(rot_deg);
-
-    camera_move_speed = zoom_level;
   }
 
   void OrthoCameraController::OnEvent(Event& e)
@@ -48,9 +46,11 @@ namespace Pepper
 
   bool OrthoCameraController::OnMouseScrolled(MouseScrolledEvent& e)
   {
+
     zoom_level -= e.GetYOffset() / 5.0f;
-    zoom_level = std::max(zoom_level, 0.25f);
-    zoom_level = std::min(zoom_level, 4.0f);
+    zoom_level = std::max(zoom_level, MIN_ZOOM_LEVEL);
+    zoom_level = std::min(zoom_level, MAX_ZOOM_LEVEL);
+
     camera.SetProjection(GetLimits());
     return false;
   }

@@ -9,9 +9,14 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 
-ExampleLayer::ExampleLayer()
-    : Pepper::Layer("Example"), camera_controller(1.6f / 0.9f, true), square_position(0.0f), square_color({ 0.2, 0.4, 0.7 }),
-      triangle_VAO(Pepper::VertexArray::Create()), square_VAO(Pepper::VertexArray::Create()), shader_library({})
+ExampleLayer::ExampleLayer() :
+    Pepper::Layer("Example"),
+    camera_controller(1280.f / 720.f, true),
+    square_position(0.0f),
+    square_color({ 0.2, 0.4, 0.7 }),
+    triangle_VAO(Pepper::VertexArray::Create()),
+    square_VAO(Pepper::VertexArray::Create()),
+    shader_library({})
 {
   triangle_VAO->Bind();
   {
@@ -72,7 +77,6 @@ ExampleLayer::ExampleLayer()
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->UploadUniformInt("u_texture", 0);
-
 }
 
 void ExampleLayer::OnImGuiRender()
@@ -135,9 +139,15 @@ void ExampleLayer::OnUpdate(Pepper::Timestep ts)
   Pepper::Renderer::EndScene();
 }
 
-void ExampleLayer::OnEvent(Pepper::Event& e) { camera_controller.OnEvent(e); }
+void ExampleLayer::OnEvent(Pepper::Event& e)
+{
+  camera_controller.OnEvent(e);
+}
 
-ClientApp::ClientApp() { PushLayer(new ExampleLayer{}); }
+ClientApp::ClientApp()
+{
+  PushLayer(new ExampleLayer{});
+}
 
 ClientApp::~ClientApp() {}
 
@@ -154,4 +164,7 @@ std::filesystem::path ClientApp::GetAssets()
   return assets_path;
 }
 
-Pepper::Application* Pepper::CreateApplication() { return new ClientApp(); }
+Pepper::Application* Pepper::CreateApplication()
+{
+  return new ClientApp();
+}

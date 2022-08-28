@@ -17,6 +17,9 @@ namespace Pepper
 
     const OrthoCamera& GetCamera() const { return camera; }
 
+    float GetZoomLevel() { return zoom_level; }
+    void SetZoomLevel(float level) { zoom_level = level; }
+
   private:
     bool OnMouseScrolled(MouseScrolledEvent& e);
     bool OnWindowResized(WindowResizeEvent& e);
@@ -29,8 +32,10 @@ namespace Pepper
     bool rotation;
     float zoom_level = 1.0f;
     OrthoCamera camera;
-
     float camera_move_speed = 5.0f;
+
     static constexpr float CAMERA_ROTATION_SPEED = 180.0f;
+    static constexpr float MAX_ZOOM_LEVEL = 4.0f;
+    static constexpr float MIN_ZOOM_LEVEL = 0.25f;
   };
 }

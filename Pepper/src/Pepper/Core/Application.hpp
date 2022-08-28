@@ -21,7 +21,6 @@ namespace Pepper
     void OnEvent(Event& e);
 
     void PushLayer(Layer* layer);
-
     void PushOverlay(Layer* overlay);
 
     Window& GetWindow() { return *window; }
