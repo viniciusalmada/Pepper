@@ -14,6 +14,8 @@ namespace Pepper
   public:
     virtual void Init() = 0;
 
+    virtual void SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) const = 0;
+
     virtual void SetClearColor(const glm::vec4& color) const = 0;
 
     virtual void Clear() const = 0;

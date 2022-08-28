@@ -21,7 +21,6 @@ namespace Pepper
     void OnEvent(Event& e);
 
     void PushLayer(Layer* layer);
-
     void PushOverlay(Layer* overlay);
 
     Window& GetWindow() { return *window; }
@@ -30,10 +29,12 @@ namespace Pepper
 
   private:
     bool OnWindowClose(WindowCloseEvent& e);
+    bool OnWindowResize(WindowResizeEvent& e);
 
     Scope<Window> window;
     ImGuiLayer* imGuiLayer;
     bool running = true;
+    bool minimized = false;
     LayerStack layer_stack;
     float last_frame_time;
 

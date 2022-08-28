@@ -7,7 +7,6 @@
 
 namespace Pepper
 {
-
   static bool s_glfw_initialized = false;
 
   static void GLFWErrorCallback(int error, const char* desc)
@@ -77,9 +76,27 @@ namespace Pepper
       data.height = h;
 
       WindowResizeEvent event{ data.width, data.height };
+      PP_CORE_WARN("{0}, {1}", w, h);
+      data.eventCallback(event);
+    };
+    auto iconify_callback = [](GLFWwindow* win, int iconified)
+    {
+      WindowData& data = *(WindowData*)glfwGetWindowUserPointer(win);
+      if (iconified)
+      {
+        data.width = 0;
+        data.height = 0;
+      }
+      else
+      {
+        glfwGetWindowSize(win, (int*)&data.width, (int*)&data.height);
+      }
+      WindowResizeEvent event{ data.width, data.height };
+      PP_CORE_WARN("{0}, {1}", data.width, data.height);
       data.eventCallback(event);
     };
     glfwSetWindowSizeCallback(window, size_callback);
+    glfwSetWindowIconifyCallback(window, iconify_callback);
   }
 
   void WinWindow::ConfigCloseCB() const
