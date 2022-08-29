@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pepper/Core/Core.hpp"
-#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Events/Event.hpp"
 
 namespace Pepper
@@ -17,7 +17,7 @@ namespace Pepper
 
     virtual void OnDetach() {}
 
-    virtual void OnUpdate(Timestep) {}
+    virtual void OnUpdate(TimeStep) {}
 
     virtual void OnImGuiRender() {}
 

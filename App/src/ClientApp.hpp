@@ -10,7 +10,7 @@ public:
 
   void OnImGuiRender() override;
 
-  void OnUpdate(Pepper::Timestep timestep) override;
+  void OnUpdate(Pepper::TimeStep) override;
 
   void OnEvent(Pepper::Event&) override;
 

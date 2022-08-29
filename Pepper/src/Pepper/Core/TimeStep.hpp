@@ -6,10 +6,10 @@ namespace Pepper
 {
   // The timestep entity works as a representation of the
   // time used to render a single frame (in seconds).
-  class Timestep
+  class TimeStep
   {
   public:
-    Timestep(float time) : time_sec(time) {}
+    TimeStep(float time) : time_sec(time) {}
 
     operator float() const { return time_sec; }
 
