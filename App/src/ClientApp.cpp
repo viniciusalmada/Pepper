@@ -86,7 +86,7 @@ void ExampleLayer::OnImGuiRender()
   ImGui::End();
 }
 
-void ExampleLayer::OnUpdate(Pepper::Timestep ts)
+void ExampleLayer::OnUpdate(Pepper::TimeStep ts)
 {
   camera_controller.OnUpdate(ts);
 

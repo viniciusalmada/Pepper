@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
 #include "Pepper/Renderer/OrthoCamera.hpp"
@@ -12,7 +12,7 @@ namespace Pepper
   public:
     OrthoCameraController(float aspectRatio, bool enableRotation = false);
 
-    void OnUpdate(Timestep ts);
+    void OnUpdate(TimeStep ts);
     void OnEvent(Event& e);
 
     const OrthoCamera& GetCamera() const { return camera; }

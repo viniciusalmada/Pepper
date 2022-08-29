@@ -16,7 +16,7 @@ namespace Pepper
   {
   }
 
-  void OrthoCameraController::OnUpdate(Timestep ts)
+  void OrthoCameraController::OnUpdate(TimeStep ts)
   {
     glm::vec3 pos = camera.GetPosition();
     if (Input::IsKeyPressed(PP_KEY_W))
