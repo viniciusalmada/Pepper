@@ -23,23 +23,25 @@ namespace Pepper
     void PushLayer(Layer* layer);
     void PushOverlay(Layer* overlay);
 
-    Window& GetWindow() { return *window; }
+    Window& GetWindow(); /* { return *window; } */
 
-    static Application& Get() { return *app_instance; }
-
-  private:
-    bool OnWindowClose(WindowCloseEvent& e);
-    bool OnWindowResize(WindowResizeEvent& e);
-
-    Scope<Window> window;
-    ImGuiLayer* imGuiLayer;
-    bool running = true;
-    bool minimized = false;
-    LayerStack layer_stack;
-    float last_frame_time;
+    static Application& Get(); /* { return *app_instance; } */
 
   private:
-    static Application* app_instance;
+    struct Impl;
+    Scope<Impl> impl;
+    // bool OnWindowClose(WindowCloseEvent& e);
+    // bool OnWindowResize(WindowResizeEvent& e);
+
+    // Scope<Window> window;
+    // ImGuiLayer* imGuiLayer;
+    // bool running = true;
+    // bool minimized = false;
+    // LayerStack layer_stack;
+    // float last_frame_time;
+
+  private:
+    // static Application* app_instance;
   };
 
   // To be defined in client
