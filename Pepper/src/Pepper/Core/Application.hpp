@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pepper/Core/Core.hpp"
-#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Events/Event.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
 #include "Pepper/Layers/ImGui/ImGuiLayer.hpp"
@@ -14,7 +14,7 @@ namespace Pepper
   {
   public:
     Application();
-    virtual ~Application() = default;
+    virtual ~Application();
 
     void Run();
 
@@ -23,25 +23,11 @@ namespace Pepper
     void PushLayer(Layer* layer);
     void PushOverlay(Layer* overlay);
 
-    Window& GetWindow(); /* { return *window; } */
+    Window& GetWindow();
 
-    static Application& Get(); /* { return *app_instance; } */
+    static Application& Get();
 
-  private:
-    struct Impl;
-    Scope<Impl> impl;
-    // bool OnWindowClose(WindowCloseEvent& e);
-    // bool OnWindowResize(WindowResizeEvent& e);
-
-    // Scope<Window> window;
-    // ImGuiLayer* imGuiLayer;
-    // bool running = true;
-    // bool minimized = false;
-    // LayerStack layer_stack;
-    // float last_frame_time;
-
-  private:
-    // static Application* app_instance;
+    PIMPL()
   };
 
   // To be defined in client
