@@ -9,47 +9,64 @@
 
 #include <GLFW/glfw3.h>
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+// #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 namespace Pepper
 {
 
-  Application* Application::app_instance = nullptr;
-
-  Application::Application()
+  struct Application::Impl
   {
-    PP_CORE_ASSERT(!app_instance, "Application already defined!");
-    app_instance = this;
+    bool OnWindowClose(WindowCloseEvent& e);
+    bool OnWindowResize(WindowResizeEvent& e);
 
-    window = std::unique_ptr<Window>(Window::Create());
-    window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+    Scope<Window> window;
+    ImGuiLayer* imGuiLayer;
+    bool running = true;
+    bool minimized = false;
+    LayerStack layer_stack;
+    float last_frame_time;
+
+    static Application* app_instance;
+  };
+
+  Application* Application::Impl::app_instance = nullptr;
+
+  Application::Application() : impl(new Impl())
+  {
+    PP_CORE_ASSERT(!impl->app_instance, "Application already defined!");
+    impl->app_instance = this;
+
+    impl->window = std::unique_ptr<Window>(Window::Create());
+    impl->window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
     Renderer::Init();
 
-    imGuiLayer = new ImGuiLayer();
-    PushOverlay(imGuiLayer);
+    impl->imGuiLayer = new ImGuiLayer();
+    PushOverlay(impl->imGuiLayer);
 
-    last_frame_time = 0;
+    impl->last_frame_time = 0;
   }
 
   void Application::PushLayer(Layer* layer)
   {
-    layer_stack.PushLayer(layer);
+    impl->layer_stack.PushLayer(layer);
   }
 
   void Application::PushOverlay(Layer* overlay)
   {
-    layer_stack.PushOverlay(overlay);
+    impl->layer_stack.PushOverlay(overlay);
   }
 
   void Application::OnEvent(Event& e)
   {
     EventDispatcher dispatcher{ e };
-    dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-    dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+    dispatcher.Dispatch<WindowCloseEvent>(
+      std::bind(&Application::Impl::OnWindowClose, impl.get(), std::placeholders::_1));
+    dispatcher.Dispatch<WindowResizeEvent>(
+      std::bind(&Application::Impl::OnWindowResize, impl.get(), std::placeholders::_1));
 
     // From top to bottom of stack check event handled
-    for (auto iter = layer_stack.end(); iter != layer_stack.begin();)
+    for (auto iter = impl->layer_stack.end(); iter != impl->layer_stack.begin();)
     {
       (*--iter)->OnEvent(e);
       if (e.IsHandled())
@@ -59,33 +76,33 @@ namespace Pepper
 
   void Application::Run()
   {
-    while (running)
+    while (impl->running)
     {
       float time_sec = static_cast<float>(glfwGetTime()); // Platform::GetTime
-      Timestep timestep{ time_sec - last_frame_time };
-      last_frame_time = time_sec;
+      Timestep timestep{ time_sec - impl->last_frame_time };
+      impl->last_frame_time = time_sec;
 
-      if (!minimized)
+      if (!impl->minimized)
       {
-        for (Layer* layer : layer_stack)
+        for (Layer* layer : impl->layer_stack)
           layer->OnUpdate(timestep);
       }
-      imGuiLayer->Begin();
-      for (Layer* layer : layer_stack)
+      impl->imGuiLayer->Begin();
+      for (Layer* layer : impl->layer_stack)
         layer->OnImGuiRender();
-      imGuiLayer->End();
+      impl->imGuiLayer->End();
 
-      window->OnUpdate();
+      impl->window->OnUpdate();
     }
   }
 
-  bool Application::OnWindowClose(WindowCloseEvent&)
+  bool Application::Impl::OnWindowClose(WindowCloseEvent&)
   {
     running = false;
     return true;
   }
 
-  bool Application::OnWindowResize(WindowResizeEvent& e)
+  bool Application::Impl::OnWindowResize(WindowResizeEvent& e)
   {
     if (e.GetWidth() == 0 || e.GetHeight() == 0)
     {
