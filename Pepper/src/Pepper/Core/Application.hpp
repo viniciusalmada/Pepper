@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Pepper/Core/Core.hpp"
-#include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Events/Event.hpp"
-#include "Pepper/Events/WindowEvent.hpp"
-#include "Pepper/Layers/ImGui/ImGuiLayer.hpp"
 #include "Pepper/Layers/LayerStack.hpp"
 #include "Window.hpp"
 
@@ -27,6 +24,7 @@ namespace Pepper
 
     static Application& Get();
 
+  private:
     PIMPL()
   };
 
