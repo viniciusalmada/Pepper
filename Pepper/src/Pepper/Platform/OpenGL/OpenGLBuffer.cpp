@@ -30,7 +30,8 @@ namespace Pepper
 
   OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent) :
       renderer_id(0),
-      parent_id(parent)
+      parent_id(parent),
+      layout({})
   {
     if (!CheckValidVAO(parent))
       return;

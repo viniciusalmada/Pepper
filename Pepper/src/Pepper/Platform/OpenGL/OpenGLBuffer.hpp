@@ -23,8 +23,8 @@ namespace Pepper
 
   private:
     uint32_t renderer_id;
-    BufferLayout layout;
     uint32_t parent_id;
+    BufferLayout layout;
   };
 
   class OpenGLIndexBuffer : public IndexBuffer
