@@ -9,23 +9,23 @@ namespace Pepper
   class Layer
   {
   public:
-    Layer(const std::string& name = "Layer");
+    Layer(const std::string& name);
 
-    virtual ~Layer() = default;
+    virtual ~Layer();
 
-    virtual void OnAttach() {}
+    virtual void OnAttach();
 
-    virtual void OnDetach() {}
+    virtual void OnDetach();
 
-    virtual void OnUpdate(TimeStep) {}
+    virtual void OnUpdate(TimeStep);
 
-    virtual void OnImGuiRender() {}
+    virtual void OnImGuiRender();
 
-    virtual void OnEvent(Event&) {}
+    virtual void OnEvent(Event&);
 
-    const std::string& GetName() const { return debugName; }
+    const std::string& GetName() const;
 
   protected:
-    std::string debugName;
+    PIMPL()
   };
 }
