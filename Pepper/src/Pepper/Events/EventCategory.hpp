@@ -1,6 +1,6 @@
 #pragma once
 
-namespace
+namespace Pepper
 {
   // clang-format off
   enum EvCategory : int {
