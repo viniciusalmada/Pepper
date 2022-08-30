@@ -12,6 +12,11 @@ set(CXX_STANDARD cxx_std_20)
 # GLFW library
 add_subdirectory(${PP_VENDOR_DIR}/GLFW)
 
+if(WIN32)
+  set_property(TARGET glfw PROPERTY
+    MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif(WIN32)
+
 # #############################################################################
 # glm library
 add_subdirectory(${PP_VENDOR_DIR}/glm)
