@@ -75,6 +75,7 @@
     "csignal": "cpp",
     "shared_mutex": "cpp",
     "codecvt": "cpp",
-    "filesystem": "cpp"
+    "filesystem": "cpp",
+    "xutility": "cpp"
   }
 }
