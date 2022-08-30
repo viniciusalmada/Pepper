@@ -15,6 +15,6 @@ namespace Pepper
     void SwapBuffers() override;
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
   };
 }

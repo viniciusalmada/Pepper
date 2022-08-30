@@ -31,6 +31,6 @@ namespace Pepper
     const glm::mat4& GetViewProjectionMatrix() const;
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
   };
 }

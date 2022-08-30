@@ -20,6 +20,6 @@ namespace Pepper
     std::vector<Layer*>::iterator end();
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
   };
 }

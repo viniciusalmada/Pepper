@@ -22,7 +22,7 @@ namespace Pepper
     void SetZoomLevel(float level);
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
     
   };
 }

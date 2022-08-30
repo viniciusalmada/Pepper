@@ -25,7 +25,7 @@ namespace Pepper
     static Application& Get();
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
   };
 
   // To be defined in client

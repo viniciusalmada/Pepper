@@ -24,6 +24,6 @@ namespace Pepper
     bool IsEmpty() const;
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
   };
 }

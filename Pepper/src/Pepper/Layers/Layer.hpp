@@ -26,6 +26,6 @@ namespace Pepper
     const std::string& GetName() const;
 
   protected:
-    PIMPL()
+    DECLARE_PIMPL
   };
 }

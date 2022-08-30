@@ -19,6 +19,6 @@ namespace Pepper
     Ref<Shader> Get(const std::string&) const;
 
   private:
-    PIMPL()
+    DECLARE_PIMPL
   };
 }

@@ -43,6 +43,6 @@ namespace Pepper
   using Ref = std::shared_ptr<T>;
 }
 
-#define PIMPL()                                                                                                        \
+#define DECLARE_PIMPL                                                                                                  \
   class Impl;                                                                                                          \
   Scope<Impl> pimp;
