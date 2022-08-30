@@ -22,9 +22,7 @@ namespace Pepper
     void SetLayout(const BufferLayout& layout) override;
 
   private:
-    uint32_t renderer_id;
-    uint32_t parent_id;
-    BufferLayout layout;
+    PIMPL()
   };
 
   class OpenGLIndexBuffer : public IndexBuffer
@@ -38,11 +36,9 @@ namespace Pepper
 
     void Unbind() const override;
 
-    uint32_t GetCount() const override { return count; }
+    uint32_t GetCount() const override;
 
   private:
-    uint32_t renderer_id;
-    uint32_t count;
-    uint32_t parent_id;
+    PIMPL()
   };
 }
