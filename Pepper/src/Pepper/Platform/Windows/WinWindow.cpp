@@ -19,17 +19,46 @@ namespace Pepper
     return new WinWindow(props);
   }
 
-  WinWindow::WinWindow(const WindowProps& props)
+  class WinWindow::Impl
+  {
+  public:
+    Impl(const WindowProps& props, WinWindow& self);
+
+    void Init(const WindowProps& props);
+    void Shutdown();
+
+    void ConfigResizeCB() const;
+    void ConfigCloseCB() const;
+    void ConfigKeyCB() const;
+    void ConfigMouseButtonCB() const;
+    void ConfigMouseScrollCB() const;
+    void ConfigMouseMoveCB() const;
+
+    GLFWwindow* window;
+    GraphicsContext* graphics_context;
+
+    struct WindowData : WindowProps
+    {
+      bool vsync;
+      EventCallbackFn eventCallback;
+    };
+    WindowData data;
+    WinWindow& self;
+  };
+
+  WinWindow::Impl::Impl(const WindowProps& props, WinWindow& self) : self(self)
   {
     Init(props);
   }
 
+  WinWindow::WinWindow(const WindowProps& props) : pimp(new Impl{ props, *this }) {}
+
   WinWindow::~WinWindow()
   {
-    Shutdown();
+    pimp->Shutdown();
   }
 
-  void WinWindow::Init(const WindowProps& props)
+  void WinWindow::Impl::Init(const WindowProps& props)
   {
     data.title = props.title;
     data.width = props.width;
@@ -47,11 +76,11 @@ namespace Pepper
     }
 
     window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
-    graphics_context = new OpenGLContext(*this);
+    graphics_context = new OpenGLContext(self);
     graphics_context->Init();
 
     glfwSetWindowUserPointer(window, &data);
-    SetVsync(true);
+    self.SetVsync(true);
 
     ConfigResizeCB();
     ConfigCloseCB();
@@ -61,13 +90,13 @@ namespace Pepper
     ConfigMouseMoveCB();
   }
 
-  void WinWindow::Shutdown()
+  void WinWindow::Impl::Shutdown()
   {
     glfwDestroyWindow(window);
     glfwTerminate();
   }
 
-  void WinWindow::ConfigResizeCB() const
+  void WinWindow::Impl::ConfigResizeCB() const
   {
     auto size_callback = [](GLFWwindow* win, int w, int h)
     {
@@ -99,7 +128,7 @@ namespace Pepper
     glfwSetWindowIconifyCallback(window, iconify_callback);
   }
 
-  void WinWindow::ConfigCloseCB() const
+  void WinWindow::Impl::ConfigCloseCB() const
   {
     auto close_callback = [](GLFWwindow* win)
     {
@@ -111,7 +140,7 @@ namespace Pepper
     glfwSetWindowCloseCallback(window, close_callback);
   }
 
-  void WinWindow::ConfigKeyCB() const
+  void WinWindow::Impl::ConfigKeyCB() const
   {
     auto key_callback = [](GLFWwindow* win, int key, int, int action, int)
     {
@@ -152,7 +181,7 @@ namespace Pepper
     glfwSetCharCallback(window, char_callback);
   }
 
-  void WinWindow::ConfigMouseButtonCB() const
+  void WinWindow::Impl::ConfigMouseButtonCB() const
   {
     auto mouse_callback = [](GLFWwindow* win, int bt, int action, int)
     {
@@ -177,7 +206,7 @@ namespace Pepper
     glfwSetMouseButtonCallback(window, mouse_callback);
   }
 
-  void WinWindow::ConfigMouseScrollCB() const
+  void WinWindow::Impl::ConfigMouseScrollCB() const
   {
     auto mouse_callback = [](GLFWwindow* win, double xOff, double yOff)
     {
@@ -189,7 +218,7 @@ namespace Pepper
     glfwSetScrollCallback(window, mouse_callback);
   }
 
-  void WinWindow::ConfigMouseMoveCB() const
+  void WinWindow::Impl::ConfigMouseMoveCB() const
   {
     auto mouse_callback = [](GLFWwindow* win, double xPos, double yPos)
     {
@@ -204,7 +233,22 @@ namespace Pepper
   void WinWindow::OnUpdate()
   {
     glfwPollEvents();
-    graphics_context->SwapBuffers();
+    pimp->graphics_context->SwapBuffers();
+  }
+
+  unsigned int WinWindow::GetWidth() const
+  {
+    return pimp->data.width;
+  }
+
+  unsigned int WinWindow::GetHeight() const
+  {
+    return pimp->data.height;
+  }
+
+  void WinWindow::SetEventCallback(const EventCallbackFn& callback)
+  {
+    pimp->data.eventCallback = callback;
   }
 
   void WinWindow::SetVsync(bool enabled)
@@ -214,11 +258,16 @@ namespace Pepper
     else
       glfwSwapInterval(0);
 
-    data.vsync = enabled;
+    pimp->data.vsync = enabled;
   }
 
   bool WinWindow::IsVsync() const
   {
-    return data.vsync;
+    return pimp->data.vsync;
   }
+
+  std::any WinWindow::GetNativeWindow() const
+  {
+    return std::make_any<GLFWwindow*>(pimp->window);
+  };
 }
