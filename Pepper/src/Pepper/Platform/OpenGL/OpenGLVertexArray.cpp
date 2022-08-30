@@ -33,23 +33,32 @@ namespace Pepper
     }
   }
 
-  OpenGLVertexArray::OpenGLVertexArray() : vertex_buffers({}), index_buffer({})
+  class OpenGLVertexArray::Impl
   {
-    glCreateVertexArrays(1, &renderer_id);
+  public:
+    uint32_t renderer_id;
+    std::set<Ref<VertexBuffer>> vertex_buffers;
+    Ref<IndexBuffer> index_buffer;
+  };
+
+  OpenGLVertexArray::OpenGLVertexArray() :
+      pimp(new Impl{})
+  {
+    glCreateVertexArrays(1, &pimp->renderer_id);
   }
 
   OpenGLVertexArray::~OpenGLVertexArray()
   {
-    glDeleteVertexArrays(1, &renderer_id);
+    glDeleteVertexArrays(1, &pimp->renderer_id);
   }
 
   void OpenGLVertexArray::Bind() const
   {
-    glBindVertexArray(renderer_id);
-    for (auto& vbo : vertex_buffers)
+    glBindVertexArray(pimp->renderer_id);
+    for (auto& vbo : pimp->vertex_buffers)
       vbo->Bind();
-    if (index_buffer)
-      index_buffer->Bind();
+    if (pimp->index_buffer)
+      pimp->index_buffer->Bind();
   }
 
   void OpenGLVertexArray::Unbind() const
@@ -76,21 +85,26 @@ namespace Pepper
       index++;
     }
 
-    vertex_buffers.insert(buffer);
+    pimp->vertex_buffers.insert(buffer);
   }
 
   void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buffer)
   {
-    index_buffer = buffer;
+    pimp->index_buffer = buffer;
   }
 
   const std::set<Ref<VertexBuffer>>& OpenGLVertexArray::GetVertexBuffers() const
   {
-    return this->vertex_buffers;
+    return this->pimp->vertex_buffers;
   }
 
   const Ref<IndexBuffer>& OpenGLVertexArray::GetIndexBuffer() const
   {
-    return this->index_buffer;
+    return this->pimp->index_buffer;
   }
+
+  uint32_t OpenGLVertexArray::GetRendererID() const
+  {
+    return pimp->renderer_id;
+  };
 }

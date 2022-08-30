@@ -27,11 +27,9 @@ namespace Pepper
 
     const Ref<IndexBuffer>& GetIndexBuffer() const override;
 
-    uint32_t GetRendererID() const override { return renderer_id; };
+    uint32_t GetRendererID() const override;
 
   private:
-    uint32_t renderer_id;
-    std::set<Ref<VertexBuffer>> vertex_buffers;
-    Ref<IndexBuffer> index_buffer;
+    DECLARE_PIMPL
   };
 }
