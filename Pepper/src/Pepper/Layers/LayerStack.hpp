@@ -16,11 +16,10 @@ namespace Pepper
     void PopLayer(Layer* layer);
     void PopOverlay(Layer* overlay);
 
-    std::vector<Layer*>::iterator begin() { return layers.begin(); }
-    std::vector<Layer*>::iterator end() { return layers.end(); }
+    std::vector<Layer*>::iterator begin();
+    std::vector<Layer*>::iterator end();
 
   private:
-    std::vector<Layer*> layers;
-    unsigned int layer_index = 0;
+    PIMPL()
   };
 }
