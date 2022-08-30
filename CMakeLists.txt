@@ -104,6 +104,7 @@ target_compile_definitions(Pepper
   PRIVATE GLFW_INCLUDE_NONE # Not include gl
   PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE> # Configurations flags
   PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
+  PRIVATE PP_CORE
 )
 
 if(WIN32)
