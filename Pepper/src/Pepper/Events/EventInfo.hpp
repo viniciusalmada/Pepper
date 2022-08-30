@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace
+namespace Pepper
 {
   class EventInfo
   {

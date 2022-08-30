@@ -1,6 +1,6 @@
 #pragma once
 
-namespace
+namespace Pepper
 {
   enum class EvType {
     NONE,

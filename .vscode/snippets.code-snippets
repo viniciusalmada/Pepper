@@ -28,7 +28,7 @@
     "body": [
       "#pragma once",
       "",
-      "namespace ",
+      "namespace Pepper",
       "{",
       "  class ${0:Name}",
       "  {",
