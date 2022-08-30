@@ -18,16 +18,4 @@ namespace Pepper
     static Ref<Shader> Create(const std::filesystem::path& filepath);
     static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
   };
-
-  class ShaderLibrary
-  {
-  public:
-    void Add(const Ref<Shader>& shader);
-    Ref<Shader> Load(const std::filesystem::path& filepath);
-
-    Ref<Shader> Get(const std::string& name) const;
-
-  private:
-    std::unordered_map<std::string, Ref<Shader>> shaders{};
-  };
 }

@@ -67,11 +67,13 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/Pepper/Platform/Windows/WinInput.cpp
   ${PP_SRC_DIR}/Pepper/Platform/Windows/WinWindow.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/Buffer.cpp
+  ${PP_SRC_DIR}/Pepper/Renderer/BufferLayout.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/OrthoCamera.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/RenderCommand.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/Renderer.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/RendererAPI.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/Shader.cpp
+  ${PP_SRC_DIR}/Pepper/Renderer/ShaderLibrary.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/Texture.cpp
   ${PP_SRC_DIR}/Pepper/Renderer/VertexArray.cpp
   ${PP_SRC_DIR}/Pepper/OrthoCameraController.cpp
