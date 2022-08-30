@@ -3,6 +3,7 @@
 //clang-format on
 
 #include "OpenGLVertexArray.hpp"
+#include "Pepper/Renderer/BufferElement.hpp"
 
 #include <glad/glad.h>
 
