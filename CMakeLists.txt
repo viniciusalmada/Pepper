@@ -5,6 +5,7 @@ project(PepperEngine VERSION 0.1)
 # Global constants
 set(PP_VENDOR_DIR Pepper/vendor)
 set(PP_SRC_DIR Pepper/src)
+set(PP_INCLUDE_DIR Pepper/include)
 
 set(CXX_STANDARD cxx_std_20)
 
@@ -54,34 +55,34 @@ target_include_directories(ImGui PRIVATE ${PP_VENDOR_DIR}/GLFW/include)
 # #############################################################################
 # The Pepper engine
 add_library(Pepper STATIC
-  ${PP_SRC_DIR}/Pepper/Core/Application.cpp
-  ${PP_SRC_DIR}/Pepper/Core/Log.cpp
-  ${PP_SRC_DIR}/Pepper/Core/Utils.cpp
-  ${PP_SRC_DIR}/Pepper/Events/Event.cpp
-  ${PP_SRC_DIR}/Pepper/Input/Input.cpp
-  ${PP_SRC_DIR}/Pepper/Layers/ImGui/ImGuiLayer.cpp
-  ${PP_SRC_DIR}/Pepper/Layers/Layer.cpp
-  ${PP_SRC_DIR}/Pepper/Layers/LayerStack.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLBuffer.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLContext.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLDebugger.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLRendererAPI.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLShader.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLTexture.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/OpenGL/OpenGLVertexArray.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/Windows/WinInput.cpp
-  ${PP_SRC_DIR}/Pepper/Platform/Windows/WinWindow.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/Buffer.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/BufferLayout.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/OrthoCamera.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/RenderCommand.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/Renderer.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/RendererAPI.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/Shader.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/ShaderLibrary.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/Texture.cpp
-  ${PP_SRC_DIR}/Pepper/Renderer/VertexArray.cpp
-  ${PP_SRC_DIR}/Pepper/OrthoCameraController.cpp
+  ${PP_SRC_DIR}/Application.cpp
+  ${PP_SRC_DIR}/Log.cpp
+  ${PP_SRC_DIR}/Utils.cpp
+  ${PP_SRC_DIR}/Event.cpp
+  ${PP_SRC_DIR}/Input.cpp
+  ${PP_SRC_DIR}/ImGuiLayer.cpp
+  ${PP_SRC_DIR}/Layer.cpp
+  ${PP_SRC_DIR}/LayerStack.cpp
+  ${PP_SRC_DIR}/OpenGLBuffer.cpp
+  ${PP_SRC_DIR}/OpenGLContext.cpp
+  ${PP_SRC_DIR}/OpenGLDebugger.cpp
+  ${PP_SRC_DIR}/OpenGLRendererAPI.cpp
+  ${PP_SRC_DIR}/OpenGLShader.cpp
+  ${PP_SRC_DIR}/OpenGLTexture.cpp
+  ${PP_SRC_DIR}/OpenGLVertexArray.cpp
+  ${PP_SRC_DIR}/WinInput.cpp
+  ${PP_SRC_DIR}/WinWindow.cpp
+  ${PP_SRC_DIR}/Buffer.cpp
+  ${PP_SRC_DIR}/BufferLayout.cpp
+  ${PP_SRC_DIR}/OrthoCamera.cpp
+  ${PP_SRC_DIR}/RenderCommand.cpp
+  ${PP_SRC_DIR}/Renderer.cpp
+  ${PP_SRC_DIR}/RendererAPI.cpp
+  ${PP_SRC_DIR}/Shader.cpp
+  ${PP_SRC_DIR}/ShaderLibrary.cpp
+  ${PP_SRC_DIR}/Texture.cpp
+  ${PP_SRC_DIR}/VertexArray.cpp
+  ${PP_SRC_DIR}/OrthoCameraController.cpp
 )
 
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
@@ -98,7 +99,7 @@ if(WIN32)
 endif(WIN32)
 
 target_include_directories(Pepper PRIVATE
-  ${PP_SRC_DIR}
+  ${PP_INCLUDE_DIR}
   ${PP_VENDOR_DIR}/spdlog/include
   ${PP_VENDOR_DIR}/GLFW/include
   ${PP_VENDOR_DIR}/GLAD/include
@@ -133,7 +134,7 @@ elseif(UNIX)
   target_link_libraries(Pepper PRIVATE GL)
 endif(WIN32)
 
-target_precompile_headers(Pepper PRIVATE ${PP_SRC_DIR}/PepperPCH.hpp)
+target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 
 # #############################################################################
 # The client application
@@ -145,7 +146,7 @@ target_compile_features(App PRIVATE ${CXX_STANDARD})
 
 target_include_directories(App PRIVATE
   App/src
-  ${PP_SRC_DIR}
+  ${PP_INCLUDE_DIR}
   ${PP_VENDOR_DIR}/spdlog/include
   ${PP_VENDOR_DIR}/glm/
   ${PP_VENDOR_DIR}/imgui
@@ -170,4 +171,4 @@ endif(WIN32)
 
 target_link_libraries(App Pepper)
 
-target_precompile_headers(App PRIVATE ${PP_SRC_DIR}/PepperPCH.hpp)
+target_precompile_headers(App PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
