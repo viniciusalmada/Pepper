@@ -51,7 +51,7 @@ namespace Pepper
     uint32_t RetrieveUniformLocation(const std::string& name);
 
   private:
-    std::unordered_map<std::string, u_int32_t> uniform_locations;
+    std::unordered_map<std::string, uint32_t> uniform_locations;
     uint32_t renderer_id;
     std::string name;
   };

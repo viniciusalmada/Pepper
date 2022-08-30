@@ -11,7 +11,7 @@
 
 namespace Pepper
 {
-  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : name(filepath.stem())
+  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : name(filepath.stem().string())
   {
     std::string shader_raw_src = std::move(ReadFile(filepath));
     auto shaders_src = SplitShaderSrc(shader_raw_src);
@@ -44,66 +44,66 @@ namespace Pepper
     return this->name;
   }
 
-  void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
+  void OpenGLShader::UploadUniformMat4(const std::string& uniformName, const glm::mat4& matrix)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
   }
 
-  void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
+  void OpenGLShader::UploadUniformMat3(const std::string& uniformName, const glm::mat3& matrix)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
   }
 
-  void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& vec)
+  void OpenGLShader::UploadUniformFloat4(const std::string& uniformName, const glm::vec4& vec)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
   }
 
-  void OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& vec)
+  void OpenGLShader::UploadUniformFloat3(const std::string& uniformName, const glm::vec3& vec)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform3f(location, vec.x, vec.y, vec.z);
   }
 
-  void OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value)
+  void OpenGLShader::UploadUniformFloat2(const std::string& uniformName, const glm::vec2& value)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform2f(location, value.x, value.y);
   }
 
-  void OpenGLShader::UploadUniformFloat(const std::string& name, const float& value)
+  void OpenGLShader::UploadUniformFloat(const std::string& uniformName, const float& value)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform1f(location, value);
   }
 
-  void OpenGLShader::UploadUniformInt(const std::string& name, const int& value)
+  void OpenGLShader::UploadUniformInt(const std::string& uniformName, const int& value)
   {
     if (!AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(name);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform1i(location, value);
   }
 
@@ -291,15 +291,15 @@ namespace Pepper
     return curr_program == renderer_id;
   }
 
-  uint32_t OpenGLShader::RetrieveUniformLocation(const std::string& name)
+  uint32_t OpenGLShader::RetrieveUniformLocation(const std::string& uniformName)
   {
-    if (uniform_locations.contains(name))
-      return uniform_locations.at(name);
+    if (uniform_locations.contains(uniformName))
+      return uniform_locations.at(uniformName);
 
-    int location = glGetUniformLocation(renderer_id, name.c_str());
+    int location = glGetUniformLocation(renderer_id, uniformName.c_str());
     PP_CORE_ASSERT(location != -1, "Invalid uniform name to this shader!");
 
-    uniform_locations[name] = location;
+    uniform_locations[uniformName] = location;
     return location;
   }
 
