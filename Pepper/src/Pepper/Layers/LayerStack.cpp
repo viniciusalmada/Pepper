@@ -6,45 +6,62 @@
 
 namespace Pepper
 {
-  LayerStack::LayerStack() {}
+  class LayerStack::Impl
+  {
+  public:
+    std::vector<Layer*> layers;
+    unsigned int layer_index = 0;
+  };
+
+  LayerStack::LayerStack() : pimp(new Impl{}) {}
 
   LayerStack::~LayerStack()
   {
-    for (Layer* l : layers)
+    for (Layer* l : pimp->layers)
       delete l;
   }
 
   void LayerStack::PushLayer(Layer* layer)
   {
-    layers.emplace(layers.begin() + layer_index, layer);
-    layer_index++;
+    pimp->layers.emplace(pimp->layers.begin() + pimp->layer_index, layer);
+    pimp->layer_index++;
     layer->OnAttach();
   }
 
   void LayerStack::PushOverlay(Layer* overlay)
   {
-    layers.emplace_back(overlay);
+    pimp->layers.emplace_back(overlay);
     overlay->OnAttach();
   }
 
   void LayerStack::PopLayer(Layer* layer)
   {
-    auto iter = FIND(layers, layer);
-    if (iter != layers.end())
+    auto iter = FIND(pimp->layers, layer);
+    if (iter != pimp->layers.end())
     {
       layer->OnDetach();
-      layers.erase(iter);
-      layer_index--;
+      pimp->layers.erase(iter);
+      pimp->layer_index--;
     }
   }
 
   void LayerStack::PopOverlay(Layer* overlay)
   {
-    auto iter = FIND(layers, overlay);
-    if (iter != layers.end())
+    auto iter = FIND(pimp->layers, overlay);
+    if (iter != pimp->layers.end())
     {
       overlay->OnDetach();
-      layers.erase(iter);
+      pimp->layers.erase(iter);
     }
+  }
+
+  std::vector<Layer*>::iterator LayerStack::begin()
+  {
+    return pimp->layers.begin();
+  }
+
+  std::vector<Layer*>::iterator LayerStack::end()
+  {
+    return pimp->layers.end();
   }
 }

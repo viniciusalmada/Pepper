@@ -5,7 +5,7 @@
 #include "Pepper/Core/Application.hpp"
 #include "Pepper/Layers/Layer.hpp"
 #include "Pepper/Core/Log.hpp"
-#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Core/TimeStep.hpp"
 
 #include "Pepper/OrthoCameraController.hpp"
 
@@ -20,6 +20,7 @@
 #include "Pepper/Renderer/RenderCommand.hpp"
 #include "Pepper/Renderer/Renderer.hpp"
 #include "Pepper/Renderer/Shader.hpp"
+#include "Pepper/Renderer/ShaderLibrary.hpp"
 #include "Pepper/Renderer/Texture.hpp"
 // -------------------------------------
 

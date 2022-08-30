@@ -12,7 +12,17 @@
 
 namespace Pepper
 {
-  OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path) : path(path)
+  class OpenGLTexture2D::Impl
+  {
+  public:
+    Impl(const std::filesystem::path& path);
+
+    std::filesystem::path path;
+    uint32_t width;
+    uint32_t height;
+    uint32_t renderer_ID;
+  };
+  OpenGLTexture2D::Impl::Impl(const std::filesystem::path& path) : path(path)
   {
     int w{}, h{};
     int channels{};
@@ -50,13 +60,25 @@ namespace Pepper
     stbi_image_free(data);
   }
 
+  OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path) : pimp(new Impl{ path }) {}
+
   OpenGLTexture2D::~OpenGLTexture2D()
   {
-    glDeleteTextures(1, &renderer_ID);
+    glDeleteTextures(1, &pimp->renderer_ID);
+  }
+
+  uint32_t OpenGLTexture2D::GetWidth() const
+  {
+    return pimp->width;
+  }
+
+  uint32_t OpenGLTexture2D::GetHeight() const
+  {
+    return pimp->height;
   }
 
   void OpenGLTexture2D::Bind(uint32_t slot) const
   {
-    glBindTextureUnit(slot, renderer_ID);
+    glBindTextureUnit(slot, pimp->renderer_ID);
   }
 }

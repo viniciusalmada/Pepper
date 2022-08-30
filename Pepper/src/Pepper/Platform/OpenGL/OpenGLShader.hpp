@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Pepper/Core/Core.hpp"
 #include "Pepper/Renderer/Shader.hpp"
 
 #include <glm/glm.hpp>
-#include <unordered_map>
 
 namespace Pepper
 {
@@ -32,27 +32,6 @@ namespace Pepper
     void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
   private:
-    static std::tuple<uint32_t, bool> Compile(const std::string& src, ShaderType type);
-
-    static uint32_t GetGLShaderType(ShaderType type);
-
-    static std::string GetGLShaderName(ShaderType type);
-
-    static std::string ReadFile(const std::filesystem::path& filepath);
-
-    static std::unordered_map<ShaderType, std::string> SplitShaderSrc(const std::string& rawSrc);
-
-    bool AssertShaderIsBound() const;
-
-    void CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc);
-
-    bool CheckIsBound() const;
-
-    uint32_t RetrieveUniformLocation(const std::string& name);
-
-  private:
-    std::unordered_map<std::string, uint32_t> uniform_locations;
-    uint32_t renderer_id;
-    std::string name;
+    DECLARE_PIMPL
   };
 }

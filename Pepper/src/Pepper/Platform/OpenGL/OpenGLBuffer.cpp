@@ -28,9 +28,21 @@ namespace Pepper
    * Vertex Buffer *
    *****************/
 
-  OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent) :
+  class OpenGLVertexBuffer::Impl
+  {
+  public:
+    Impl(float* vertices, uint32_t size, uint32_t parent);
+
+    uint32_t renderer_id;
+    uint32_t parent_id;
+    BufferLayout layout;
+  };
+
+  OpenGLVertexBuffer::Impl::Impl(float* vertices, uint32_t size, uint32_t parent) :
       renderer_id(0),
-      parent_id(parent)
+      parent_id(parent),
+      layout({})
+
   {
     if (!CheckValidVAO(parent))
       return;
@@ -40,17 +52,22 @@ namespace Pepper
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
   }
 
+  OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent) :
+      pimp(new Impl{ vertices, size, parent })
+  {
+  }
+
   OpenGLVertexBuffer::~OpenGLVertexBuffer()
   {
-    glDeleteBuffers(1, &renderer_id);
+    glDeleteBuffers(1, &pimp->renderer_id);
   }
 
   void OpenGLVertexBuffer::Bind() const
   {
-    if (!CheckValidVAO(parent_id))
+    if (!CheckValidVAO(pimp->parent_id))
       return;
 
-    glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, pimp->renderer_id);
   }
 
   void OpenGLVertexBuffer::Unbind() const
@@ -60,21 +77,29 @@ namespace Pepper
 
   const BufferLayout& OpenGLVertexBuffer::GetLayout() const
   {
-    return this->layout;
+    return this->pimp->layout;
   }
 
   void OpenGLVertexBuffer::SetLayout(const BufferLayout& newLayout)
   {
-    this->layout = newLayout;
+    this->pimp->layout = newLayout;
   }
 
   /****************
    * Index Buffer *
    ****************/
 
-  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent) :
-      count(count),
-      parent_id(parent)
+  class OpenGLIndexBuffer::Impl
+  {
+  public:
+    Impl(uint32_t* indices, uint32_t count, uint32_t parent);
+
+    uint32_t renderer_id;
+    uint32_t count;
+    uint32_t parent_id;
+  };
+
+  OpenGLIndexBuffer::Impl::Impl(uint32_t* indices, uint32_t count, uint32_t parent) : count(count), parent_id(parent)
   {
     if (!CheckValidVAO(parent_id))
       return;
@@ -84,20 +109,30 @@ namespace Pepper
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
   }
 
+  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent) :
+      pimp(new Impl{ indices, count, parent })
+  {
+  }
+
   OpenGLIndexBuffer::~OpenGLIndexBuffer()
   {
-    glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &renderer_id);
+    glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &pimp->renderer_id);
   }
 
   void OpenGLIndexBuffer::Bind() const
   {
-    if (!CheckValidVAO(parent_id))
+    if (!CheckValidVAO(pimp->parent_id))
       return;
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pimp->renderer_id);
   }
 
   void OpenGLIndexBuffer::Unbind() const
   {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  }
+
+  uint32_t OpenGLIndexBuffer::GetCount() const
+  {
+    return pimp->count;
   }
 }

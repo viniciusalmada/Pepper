@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pepper/Core/Timestep.hpp"
+#include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Events/MouseEvent.hpp"
 #include "Pepper/Events/WindowEvent.hpp"
 #include "Pepper/Renderer/OrthoCamera.hpp"
@@ -11,31 +11,18 @@ namespace Pepper
   {
   public:
     OrthoCameraController(float aspectRatio, bool enableRotation = false);
+    ~OrthoCameraController();
 
-    void OnUpdate(Timestep ts);
+    void OnUpdate(TimeStep ts);
     void OnEvent(Event& e);
 
-    const OrthoCamera& GetCamera() const { return camera; }
+    const OrthoCamera& GetCamera() const;
 
-    float GetZoomLevel() { return zoom_level; }
-    void SetZoomLevel(float level) { zoom_level = level; }
-
-  private:
-    bool OnMouseScrolled(MouseScrolledEvent& e);
-    bool OnWindowResized(WindowResizeEvent& e);
-
-    CameraLimits GetLimits() const;
-    OrthoCamera BuildCamera() const;
+    float GetZoomLevel();
+    void SetZoomLevel(float level);
 
   private:
-    float aspect_ratio;
-    bool rotation;
-    float zoom_level = 1.0f;
-    OrthoCamera camera;
-    float camera_move_speed = 5.0f;
-
-    static constexpr float CAMERA_ROTATION_SPEED = 180.0f;
-    static constexpr float MAX_ZOOM_LEVEL = 4.0f;
-    static constexpr float MIN_ZOOM_LEVEL = 0.25f;
+    DECLARE_PIMPL
+    
   };
 }

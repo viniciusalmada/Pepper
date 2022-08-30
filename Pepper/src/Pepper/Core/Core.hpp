@@ -42,3 +42,7 @@ namespace Pepper
   template <typename T>
   using Ref = std::shared_ptr<T>;
 }
+
+#define DECLARE_PIMPL                                                                                                  \
+  class Impl;                                                                                                          \
+  Scope<Impl> pimp;

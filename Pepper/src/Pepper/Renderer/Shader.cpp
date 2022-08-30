@@ -32,24 +32,4 @@ namespace Pepper
       return nullptr;
     }
   }
-
-  void ShaderLibrary::Add(const Ref<Shader>& shader)
-  {
-    auto name = shader->GetName();
-    PP_CORE_ASSERT(!shaders.contains(name), "Shader already exists!");
-    shaders[name] = shader;
-  }
-
-  Ref<Shader> ShaderLibrary::Load(const std::filesystem::path& filepath)
-  {
-    auto shader = Shader::Create(filepath);
-    Add(shader);
-    return shader;
-  }
-
-  Ref<Shader> ShaderLibrary::Get(const std::string& name) const
-  {
-    PP_CORE_ASSERT(shaders.contains(name), "Shader does not exist!");
-    return shaders.at(name);
-  }
 }

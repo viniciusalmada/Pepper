@@ -8,7 +8,7 @@ extern Pepper::Application* Pepper::CreateApplication();
 int main()
 {
   Pepper::Log::Init();
-  PP_CORE_WARN("Initialized Log!");
+  PP_WARN("Initialized Log!");
   int a = 5;
   PP_INFO("App running! {0}", a);
 

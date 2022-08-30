@@ -11,27 +11,60 @@
 
 namespace Pepper
 {
-  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : name(filepath.stem().string())
+  class OpenGLShader::Impl
+  {
+  public:
+    Impl(const std::filesystem::path& filepath);
+    Impl(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+
+    static std::tuple<uint32_t, bool> Compile(const std::string& src, ShaderType type);
+
+    static uint32_t GetGLShaderType(ShaderType type);
+    static std::string GetGLShaderName(ShaderType type);
+
+    static std::string ReadFile(const std::filesystem::path& filepath);
+    static std::unordered_map<ShaderType, std::string> SplitShaderSrc(const std::string& rawSrc);
+
+    bool AssertShaderIsBound() const;
+
+    void CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc);
+    bool CheckIsBound() const;
+
+    uint32_t RetrieveUniformLocation(const std::string& name);
+
+    std::unordered_map<std::string, uint32_t> uniform_locations;
+    uint32_t renderer_id;
+    std::string name;
+  };
+
+  OpenGLShader::Impl::Impl(const std::filesystem::path& filepath) : name(filepath.stem().string())
   {
     std::string shader_raw_src = std::move(ReadFile(filepath));
     auto shaders_src = SplitShaderSrc(shader_raw_src);
     CreateProgram(shaders_src[ShaderType::VERTEX], shaders_src[ShaderType::FRAGMENT]);
   }
 
-  OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
+  OpenGLShader::Impl::Impl(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
       name(name)
   {
     CreateProgram(vertexSrc, fragmentSrc);
   }
 
+  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : pimp(new Impl{ filepath }) {}
+
+  OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
+      pimp(new Impl{ name, vertexSrc, fragmentSrc })
+  {
+  }
+
   OpenGLShader::~OpenGLShader()
   {
-    glDeleteProgram(renderer_id);
+    glDeleteProgram(pimp->renderer_id);
   }
 
   void OpenGLShader::Bind() const
   {
-    glUseProgram(renderer_id);
+    glUseProgram(pimp->renderer_id);
   }
 
   void OpenGLShader::Unbind() const
@@ -41,73 +74,73 @@ namespace Pepper
 
   const std::string& OpenGLShader::GetName() const
   {
-    return this->name;
+    return this->pimp->name;
   }
 
   void OpenGLShader::UploadUniformMat4(const std::string& uniformName, const glm::mat4& matrix)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
   }
 
   void OpenGLShader::UploadUniformMat3(const std::string& uniformName, const glm::mat3& matrix)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
   }
 
   void OpenGLShader::UploadUniformFloat4(const std::string& uniformName, const glm::vec4& vec)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
   }
 
   void OpenGLShader::UploadUniformFloat3(const std::string& uniformName, const glm::vec3& vec)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniform3f(location, vec.x, vec.y, vec.z);
   }
 
   void OpenGLShader::UploadUniformFloat2(const std::string& uniformName, const glm::vec2& value)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniform2f(location, value.x, value.y);
   }
 
   void OpenGLShader::UploadUniformFloat(const std::string& uniformName, const float& value)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniform1f(location, value);
   }
 
   void OpenGLShader::UploadUniformInt(const std::string& uniformName, const int& value)
   {
-    if (!AssertShaderIsBound())
+    if (!pimp->AssertShaderIsBound())
       return;
 
-    int location = RetrieveUniformLocation(uniformName);
+    int location = pimp->RetrieveUniformLocation(uniformName);
     glUniform1i(location, value);
   }
 
-  std::tuple<uint32_t, bool> OpenGLShader::Compile(const std::string& src, ShaderType type)
+  std::tuple<uint32_t, bool> OpenGLShader::Impl::Compile(const std::string& src, ShaderType type)
   {
     uint32_t shader_type = GetGLShaderType(type);
 
@@ -137,7 +170,7 @@ namespace Pepper
     return std::tuple<unsigned int, bool>{ shader, success == 1 };
   }
 
-  uint32_t OpenGLShader::GetGLShaderType(ShaderType type)
+  uint32_t OpenGLShader::Impl::GetGLShaderType(ShaderType type)
   {
     switch (type)
     {
@@ -150,7 +183,7 @@ namespace Pepper
     return 0;
   }
 
-  std::string OpenGLShader::GetGLShaderName(ShaderType type)
+  std::string OpenGLShader::Impl::GetGLShaderName(ShaderType type)
   {
     switch (type)
     {
@@ -163,7 +196,7 @@ namespace Pepper
     return {};
   }
 
-  std::string OpenGLShader::ReadFile(const std::filesystem::path& filepath)
+  std::string OpenGLShader::Impl::ReadFile(const std::filesystem::path& filepath)
   {
     std::ifstream in{ filepath, std::ios::in | std::ios::binary };
     PP_CORE_ASSERT(in, "Could not open shader file {0}", filepath);
@@ -181,7 +214,7 @@ namespace Pepper
     return shader_raw_src;
   }
 
-  std::unordered_map<ShaderType, std::string> OpenGLShader::SplitShaderSrc(const std::string& rawSrc)
+  std::unordered_map<ShaderType, std::string> OpenGLShader::Impl::SplitShaderSrc(const std::string& rawSrc)
   {
     std::unordered_map<std::string, std::string> shaders_src;
     const std::string TOKEN{ "//##" };
@@ -229,14 +262,14 @@ namespace Pepper
     return shaders_src_by_type;
   }
 
-  bool OpenGLShader::AssertShaderIsBound() const
+  bool OpenGLShader::Impl::AssertShaderIsBound() const
   {
     bool is_bound = CheckIsBound();
     PP_CORE_ASSERT(is_bound, "The shader is not bound to upload this uniform!");
     return is_bound;
   }
 
-  void OpenGLShader::CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc)
+  void OpenGLShader::Impl::CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc)
   {
     auto [vertex_shader, vertex_ok] = Compile(vertexSrc, ShaderType::VERTEX);
     if (!vertex_ok)
@@ -281,7 +314,7 @@ namespace Pepper
     glDetachShader(renderer_id, fragment_shader);
   }
 
-  bool OpenGLShader::CheckIsBound() const
+  bool OpenGLShader::Impl::CheckIsBound() const
   {
     uint32_t curr_program = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, (int*)&curr_program);
@@ -291,7 +324,7 @@ namespace Pepper
     return curr_program == renderer_id;
   }
 
-  uint32_t OpenGLShader::RetrieveUniformLocation(const std::string& uniformName)
+  uint32_t OpenGLShader::Impl::RetrieveUniformLocation(const std::string& uniformName)
   {
     if (uniform_locations.contains(uniformName))
       return uniform_locations.at(uniformName);

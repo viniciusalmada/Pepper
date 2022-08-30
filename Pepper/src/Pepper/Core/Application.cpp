@@ -4,52 +4,85 @@
 
 #include "Application.hpp"
 
+#include "Pepper/Events/EventDispatcher.hpp"
+#include "Pepper/Events/WindowEvent.hpp"
 #include "Pepper/Input/Input.hpp"
+#include "Pepper/Layers/ImGui/ImGuiLayer.hpp"
 #include "Pepper/Renderer/Renderer.hpp"
+#include "Window.hpp"
 
 #include <GLFW/glfw3.h>
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 namespace Pepper
 {
-
-  Application* Application::app_instance = nullptr;
-
-  Application::Application()
+  class Application::Impl
   {
-    PP_CORE_ASSERT(!app_instance, "Application already defined!");
-    app_instance = this;
+  public:
+    bool OnWindowClose(WindowCloseEvent& e);
+    bool OnWindowResize(WindowResizeEvent& e);
 
-    window = std::unique_ptr<Window>(Window::Create());
-    window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+    Scope<Window> window;
+    LayerStack layer_stack;
+    ImGuiLayer* imGuiLayer;
+
+    bool running = true;
+    bool minimized = false;
+
+    float last_frame_time;
+
+    static Application* app_instance;
+  };
+
+  Application* Application::Impl::app_instance = nullptr;
+
+  Application::Application() : pimp(new Impl())
+  {
+    PP_CORE_ASSERT(!pimp->app_instance, "Application already defined!");
+    pimp->app_instance = this;
+
+    pimp->window = std::unique_ptr<Window>(Window::Create());
+    pimp->window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
     Renderer::Init();
 
-    imGuiLayer = new ImGuiLayer();
-    PushOverlay(imGuiLayer);
+    pimp->imGuiLayer = new ImGuiLayer();
+    PushOverlay(pimp->imGuiLayer);
 
-    last_frame_time = 0;
+    pimp->last_frame_time = 0;
   }
+
+  Application::~Application() = default;
 
   void Application::PushLayer(Layer* layer)
   {
-    layer_stack.PushLayer(layer);
+    pimp->layer_stack.PushLayer(layer);
   }
 
   void Application::PushOverlay(Layer* overlay)
   {
-    layer_stack.PushOverlay(overlay);
+    pimp->layer_stack.PushOverlay(overlay);
+  }
+
+  Window& Application::GetWindow()
+  {
+    return *pimp->window;
+  }
+
+  Application& Application::Get()
+  {
+    return *Impl::app_instance;
   }
 
   void Application::OnEvent(Event& e)
   {
     EventDispatcher dispatcher{ e };
-    dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-    dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+    dispatcher.Dispatch<WindowCloseEvent>(
+      std::bind(&Application::Impl::OnWindowClose, pimp.get(), std::placeholders::_1));
+    dispatcher.Dispatch<WindowResizeEvent>(
+      std::bind(&Application::Impl::OnWindowResize, pimp.get(), std::placeholders::_1));
 
     // From top to bottom of stack check event handled
-    for (auto iter = layer_stack.end(); iter != layer_stack.begin();)
+    for (auto iter = pimp->layer_stack.end(); iter != pimp->layer_stack.begin();)
     {
       (*--iter)->OnEvent(e);
       if (e.IsHandled())
@@ -59,33 +92,33 @@ namespace Pepper
 
   void Application::Run()
   {
-    while (running)
+    while (pimp->running)
     {
       float time_sec = static_cast<float>(glfwGetTime()); // Platform::GetTime
-      Timestep timestep{ time_sec - last_frame_time };
-      last_frame_time = time_sec;
+      TimeStep timeStep{ time_sec - pimp->last_frame_time };
+      pimp->last_frame_time = time_sec;
 
-      if (!minimized)
+      if (!pimp->minimized)
       {
-        for (Layer* layer : layer_stack)
-          layer->OnUpdate(timestep);
+        for (Layer* layer : pimp->layer_stack)
+          layer->OnUpdate(timeStep);
       }
-      imGuiLayer->Begin();
-      for (Layer* layer : layer_stack)
+      pimp->imGuiLayer->Begin();
+      for (Layer* layer : pimp->layer_stack)
         layer->OnImGuiRender();
-      imGuiLayer->End();
+      pimp->imGuiLayer->End();
 
-      window->OnUpdate();
+      pimp->window->OnUpdate();
     }
   }
 
-  bool Application::OnWindowClose(WindowCloseEvent&)
+  bool Application::Impl::OnWindowClose(WindowCloseEvent&)
   {
     running = false;
     return true;
   }
 
-  bool Application::OnWindowResize(WindowResizeEvent& e)
+  bool Application::Impl::OnWindowResize(WindowResizeEvent& e)
   {
     if (e.GetWidth() == 0 || e.GetHeight() == 0)
     {
