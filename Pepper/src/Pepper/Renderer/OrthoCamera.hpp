@@ -15,7 +15,8 @@ namespace Pepper
   class OrthoCamera
   {
   public:
-    OrthoCamera(const CameraLimits&& limits);
+    OrthoCamera(const CameraLimits& lim);
+    ~OrthoCamera();
 
     void SetProjection(const CameraLimits&& limits);
 
@@ -30,14 +31,6 @@ namespace Pepper
     const glm::mat4& GetViewProjectionMatrix() const;
 
   private:
-    void RecalculateViewMatrix();
-
-  private:
-    glm::mat4 proj_matrix;
-    glm::mat4 view_matrix;
-    glm::mat4 view_proj_matrix;
-
-    glm::vec3 position;
-    float rotation_deg;
+    PIMPL()
   };
 }
