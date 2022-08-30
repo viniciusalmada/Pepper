@@ -1,20 +1,20 @@
 #pragma once
 
+#include "Pepper/Core/Window.hpp"
 #include "Pepper/Renderer/GraphicsContext.hpp"
-
-struct GLFWwindow;
 
 namespace Pepper
 {
   class OpenGLContext : public GraphicsContext
   {
   public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    OpenGLContext(Window& window);
+    ~OpenGLContext();
 
     void Init() override;
     void SwapBuffers() override;
 
   private:
-    GLFWwindow* window_handle;
+    PIMPL()
   };
 }

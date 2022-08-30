@@ -47,7 +47,7 @@ namespace Pepper
     }
 
     window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
-    graphics_context = new OpenGLContext(window);
+    graphics_context = new OpenGLContext(*this);
     graphics_context->Init();
 
     glfwSetWindowUserPointer(window, &data);
