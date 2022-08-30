@@ -11,16 +11,13 @@ namespace Pepper
 
     ~OpenGLTexture2D();
 
-    uint32_t GetWidth() const override { return width; }
+    uint32_t GetWidth() const override;
 
-    uint32_t GetHeight() const override { return height; }
+    uint32_t GetHeight() const override;
 
     void Bind(uint32_t slot) const override;
 
   private:
-    std::filesystem::path path;
-    uint32_t width;
-    uint32_t height;
-    uint32_t renderer_ID;
+    DECLARE_PIMPL
   };
 }
