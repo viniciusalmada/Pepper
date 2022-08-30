@@ -16,7 +16,7 @@ ExampleLayer::ExampleLayer() :
     square_color({ 0.2, 0.4, 0.7 }),
     triangle_VAO(Pepper::VertexArray::Create()),
     square_VAO(Pepper::VertexArray::Create()),
-    shader_library({})
+    shader_library()
 {
   triangle_VAO->Bind();
   {
