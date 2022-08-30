@@ -4,8 +4,12 @@
 
 #include "Application.hpp"
 
+#include "Pepper/Events/EventDispatcher.hpp"
+#include "Pepper/Events/WindowEvent.hpp"
 #include "Pepper/Input/Input.hpp"
+#include "Pepper/Layers/ImGui/ImGuiLayer.hpp"
 #include "Pepper/Renderer/Renderer.hpp"
+#include "Window.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -20,10 +24,10 @@ namespace Pepper
     Scope<Window> window;
     LayerStack layer_stack;
     ImGuiLayer* imGuiLayer;
-    
+
     bool running = true;
     bool minimized = false;
-    
+
     float last_frame_time;
 
     static Application* app_instance;

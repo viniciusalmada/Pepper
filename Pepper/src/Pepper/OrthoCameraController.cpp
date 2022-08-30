@@ -4,6 +4,7 @@
 
 #include "OrthoCameraController.hpp"
 
+#include "Pepper/Events/EventDispatcher.hpp"
 #include "Pepper/Input/Input.hpp"
 #include "Pepper/Input/KeyCodes.hpp"
 
