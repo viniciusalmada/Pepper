@@ -18,6 +18,6 @@ namespace Pepper
     static void DrawIndexed(const Ref<VertexArray>& vertexArray) { renderer_api->DrawIndexed(vertexArray); }
 
   private:
-    static RendererAPI* renderer_api;
+    static Scope<RendererAPI> renderer_api;
   };
 }

@@ -9,35 +9,37 @@ namespace Pepper
   class LayerStack::Impl
   {
   public:
-    std::vector<Layer*> layers;
+    std::vector<Ref<Layer>> layers;
     unsigned int layer_index = 0;
   };
 
-  LayerStack::LayerStack() : pimp(new Impl{}) {}
+  LayerStack::LayerStack() : pimp(CreateScope<Impl>()) {}
 
   LayerStack::~LayerStack()
   {
-    for (Layer* l : pimp->layers)
-      delete l;
+    for (Ref<Layer> l : pimp->layers)
+    {
+      l->OnDetach();
+    }
   }
 
-  void LayerStack::PushLayer(Layer* layer)
+  void LayerStack::PushLayer(Ref<Layer> layer)
   {
     pimp->layers.emplace(pimp->layers.begin() + pimp->layer_index, layer);
     pimp->layer_index++;
     layer->OnAttach();
   }
 
-  void LayerStack::PushOverlay(Layer* overlay)
+  void LayerStack::PushOverlay(Ref<Layer> overlay)
   {
     pimp->layers.emplace_back(overlay);
     overlay->OnAttach();
   }
 
-  void LayerStack::PopLayer(Layer* layer)
+  void LayerStack::PopLayer(Ref<Layer> layer)
   {
-    auto iter = FIND(pimp->layers, layer);
-    if (iter != pimp->layers.end())
+    auto iter = std::find(pimp->layers.begin(), pimp->layers.begin() + pimp->layer_index, layer);
+    if (iter != pimp->layers.begin() + pimp->layer_index)
     {
       layer->OnDetach();
       pimp->layers.erase(iter);
@@ -45,9 +47,9 @@ namespace Pepper
     }
   }
 
-  void LayerStack::PopOverlay(Layer* overlay)
+  void LayerStack::PopOverlay(Ref<Layer> overlay)
   {
-    auto iter = FIND(pimp->layers, overlay);
+    auto iter = std::find(pimp->layers.begin() + pimp->layer_index, pimp->layers.end(), overlay);
     if (iter != pimp->layers.end())
     {
       overlay->OnDetach();
@@ -55,12 +57,12 @@ namespace Pepper
     }
   }
 
-  std::vector<Layer*>::iterator LayerStack::begin()
+  std::vector<Ref<Layer>>::iterator LayerStack::begin()
   {
     return pimp->layers.begin();
   }
 
-  std::vector<Layer*>::iterator LayerStack::end()
+  std::vector<Ref<Layer>>::iterator LayerStack::end()
   {
     return pimp->layers.end();
   }

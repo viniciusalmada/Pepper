@@ -50,10 +50,10 @@ namespace Pepper
     CreateProgram(vertexSrc, fragmentSrc);
   }
 
-  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : pimp(new Impl{ filepath }) {}
+  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : pimp(CreateScope<Impl>(filepath)) {}
 
   OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
-      pimp(new Impl{ name, vertexSrc, fragmentSrc })
+      pimp(CreateScope<Impl>(name, vertexSrc, fragmentSrc))
   {
   }
 

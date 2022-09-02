@@ -14,7 +14,7 @@ namespace Pepper
     switch (RendererAPI::GetAPI())
     {
     case RendererAPI::API::OPEN_GL:
-      return Ref<Texture2D>(new OpenGLTexture2D(path));
+      return CreateRef<OpenGLTexture2D>(path);
     default:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;

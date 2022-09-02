@@ -37,11 +37,12 @@ namespace Pepper
   {
   public:
     uint32_t renderer_id;
+    uint32_t vertex_attrib_index = 0;
     std::set<Ref<VertexBuffer>> vertex_buffers;
     Ref<IndexBuffer> index_buffer;
   };
 
-  OpenGLVertexArray::OpenGLVertexArray() : pimp(new Impl{})
+  OpenGLVertexArray::OpenGLVertexArray() : pimp(CreateScope<Impl>())
   {
     glCreateVertexArrays(1, &pimp->renderer_id);
   }
@@ -70,18 +71,17 @@ namespace Pepper
     const auto& layout = buffer->GetLayout();
     PP_CORE_ASSERT(!layout.IsEmpty(), "Layout is empty!");
 
-    uint32_t index = 0;
     for (const auto& element : layout)
     {
-      glEnableVertexAttribArray(index);
+      glEnableVertexAttribArray(pimp->vertex_attrib_index);
       uint64_t offset = element.offset;
-      glVertexAttribPointer(index,
+      glVertexAttribPointer(pimp->vertex_attrib_index,
                             element.GetComponentCount(),
                             ShaderDataTypeToOpenGLBaseType(element.type),
                             element.normalized,
                             layout.GetStride(),
                             (void*)offset);
-      index++;
+      pimp->vertex_attrib_index++;
     }
 
     pimp->vertex_buffers.insert(buffer);

@@ -60,7 +60,7 @@ namespace Pepper
     stbi_image_free(data);
   }
 
-  OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path) : pimp(new Impl{ path }) {}
+  OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path) : pimp(CreateScope<Impl>(path)) {}
 
   OpenGLTexture2D::~OpenGLTexture2D()
   {

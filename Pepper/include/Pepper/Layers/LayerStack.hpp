@@ -11,13 +11,13 @@ namespace Pepper
     LayerStack();
     ~LayerStack();
 
-    void PushLayer(Layer* layer);
-    void PushOverlay(Layer* overlay);
-    void PopLayer(Layer* layer);
-    void PopOverlay(Layer* overlay);
+    void PushLayer(Ref<Layer> layer);
+    void PushOverlay(Ref<Layer> overlay);
+    void PopLayer(Ref<Layer> layer);
+    void PopOverlay(Ref<Layer> overlay);
 
-    std::vector<Layer*>::iterator begin();
-    std::vector<Layer*>::iterator end();
+    std::vector<Ref<Layer>>::iterator begin();
+    std::vector<Ref<Layer>>::iterator end();
 
   private:
     DECLARE_PIMPL

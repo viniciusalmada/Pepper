@@ -23,7 +23,7 @@ namespace Pepper
     PP_CORE_ASSERT(native_window, "Window handle is null!");
   }
 
-  OpenGLContext::OpenGLContext(Window& windowsHandle) : pimp(new Impl{ windowsHandle }) {}
+  OpenGLContext::OpenGLContext(Window& windowsHandle) : pimp(CreateScope<Impl>(windowsHandle)) {}
 
   OpenGLContext::~OpenGLContext() = default;
 
@@ -36,6 +36,16 @@ namespace Pepper
     PP_CORE_INFO("OpenGL Vendor: {0}", (char*)glGetString(GL_VENDOR));
     PP_CORE_INFO("OpenGL Renderer: {0}", (char*)glGetString(GL_RENDERER));
     PP_CORE_INFO("OpenGL Version: {0}", (char*)glGetString(GL_VERSION));
+
+#ifdef PP_ENABLE_ASSERTS
+    int versionMajor;
+    int versionMinor;
+    glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
+    glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
+
+    PP_CORE_ASSERT(versionMajor > 3 || (versionMajor == 3 && versionMinor >= 3),
+                   "Pepper requires at least OpenGL version 3.3!");
+#endif
   }
 
   void OpenGLContext::SwapBuffers()
