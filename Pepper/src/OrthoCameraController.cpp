@@ -2,7 +2,7 @@
 #include "PepperPCH.hpp"
 // clang-format on
 
-#include "Pepper/OrthoCameraController.hpp"
+#include "Pepper/Core/OrthoCameraController.hpp"
 
 #include "Pepper/Events/EventDispatcher.hpp"
 #include "Pepper/Input/Input.hpp"
