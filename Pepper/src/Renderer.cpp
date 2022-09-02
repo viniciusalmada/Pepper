@@ -9,7 +9,7 @@
 
 namespace Pepper
 {
-  Renderer::SceneData* Renderer::scene_data = new Renderer::SceneData{};
+  Scope<Renderer::SceneData> Renderer::scene_data = CreateScope<Renderer::SceneData>();
 
   void Renderer::Init()
   {

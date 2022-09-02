@@ -10,7 +10,7 @@
 
 namespace Pepper
 {
-  Input* Input::instance = new WinInput{};
+  Scope<Input> Input::instance = CreateScope<WinInput>();
 
   class WinInput::Impl
   {
@@ -18,7 +18,7 @@ namespace Pepper
     GLFWwindow* GetGLFWWindow();
   };
 
-  WinInput::WinInput() : pimp{ new Impl{} } {}
+  WinInput::WinInput() : pimp(CreateScope<Impl>()) {}
 
   WinInput::~WinInput() = default;
 

@@ -45,7 +45,9 @@ namespace Pepper
     }
   }
 
-  BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& elements) : pimp(new Impl{ elements }) {}
+  BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& elements) : pimp(CreateScope<Impl>(elements))
+  {
+  }
 
   BufferLayout::~BufferLayout() = default;
 
@@ -55,7 +57,7 @@ namespace Pepper
     {
       if (this->pimp != other.pimp)
       {
-        this->pimp.reset(new Impl{ other.pimp->elements });
+        this->pimp = CreateScope<Impl>(other.pimp->elements);
       }
     }
     return *this;

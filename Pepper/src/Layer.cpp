@@ -12,7 +12,7 @@ namespace Pepper
     std::string debugName;
   };
 
-  Layer::Layer(const std::string& name) : pimp(new Impl{})
+  Layer::Layer(const std::string& name) : pimp(CreateScope<Impl>())
   {
     pimp->debugName = name;
   }

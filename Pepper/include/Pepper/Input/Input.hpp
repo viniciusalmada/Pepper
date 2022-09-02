@@ -25,6 +25,6 @@ namespace Pepper
     virtual std::pair<float, float> GetMouseXYImpl() = 0;
 
   private:
-    static Input* instance;
+    static Scope<Input> instance;
   };
 }

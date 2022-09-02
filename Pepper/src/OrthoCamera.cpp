@@ -31,7 +31,7 @@ namespace Pepper
     view_proj_matrix = proj_matrix * view_matrix;
   }
 
-  OrthoCamera::OrthoCamera(const CameraLimits& lim) : pimp(new Impl{ lim }) {}
+  OrthoCamera::OrthoCamera(const CameraLimits& lim) : pimp(CreateScope<Impl>(lim)) {}
 
   OrthoCamera::~OrthoCamera() = default;
 

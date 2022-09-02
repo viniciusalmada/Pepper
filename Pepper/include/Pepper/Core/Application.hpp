@@ -17,8 +17,8 @@ namespace Pepper
 
     void OnEvent(Event& e);
 
-    void PushLayer(Layer* layer);
-    void PushOverlay(Layer* overlay);
+    void PushLayer(Ref<Layer> layer);
+    void PushOverlay(Ref<Layer> overlay);
 
     Window& GetWindow();
 
@@ -29,5 +29,5 @@ namespace Pepper
   };
 
   // To be defined in client
-  Application* CreateApplication();
+  Scope<Application> CreateApplication();
 }

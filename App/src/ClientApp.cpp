@@ -146,7 +146,7 @@ void ExampleLayer::OnEvent(Pepper::Event& e)
 
 ClientApp::ClientApp()
 {
-  PushLayer(new ExampleLayer{});
+  PushLayer(Pepper::CreateRef<ExampleLayer>());
 }
 
 ClientApp::~ClientApp() {}
@@ -164,7 +164,7 @@ std::filesystem::path ClientApp::GetAssets()
   return assets_path;
 }
 
-Pepper::Application* Pepper::CreateApplication()
+Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
 {
-  return new ClientApp();
+  return CreateScope<ClientApp>();
 }

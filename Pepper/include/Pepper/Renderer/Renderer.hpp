@@ -28,6 +28,6 @@ namespace Pepper
       glm::mat4 view_proj_matrix;
     };
 
-    static SceneData* scene_data;
+    static Scope<SceneData> scene_data;
   };
 }

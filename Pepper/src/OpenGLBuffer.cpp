@@ -53,7 +53,7 @@ namespace Pepper
   }
 
   OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent) :
-      pimp(new Impl{ vertices, size, parent })
+      pimp(CreateScope<Impl>(vertices, size, parent))
   {
   }
 
@@ -110,7 +110,7 @@ namespace Pepper
   }
 
   OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent) :
-      pimp(new Impl{ indices, count, parent })
+      pimp(CreateScope<Impl>(indices, count, parent))
   {
   }
 

@@ -40,7 +40,7 @@ namespace Pepper
   }
 
   OrthoCameraController::OrthoCameraController(float aspectRatio, bool enableRotation) :
-      pimp(new Impl{ aspectRatio, enableRotation })
+      pimp(CreateScope<Impl>(aspectRatio, enableRotation))
   {
   }
 

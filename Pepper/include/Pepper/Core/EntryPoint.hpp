@@ -3,7 +3,7 @@
 // Expected to be defined in client.
 // With this, the main function does not needed to be defined in client
 // application
-extern Pepper::Application* Pepper::CreateApplication();
+extern Pepper::Scope<Pepper::Application> Pepper::CreateApplication();
 
 int main()
 {
@@ -12,7 +12,6 @@ int main()
   int a = 5;
   PP_INFO("App running! {0}", a);
 
-  auto* app = Pepper::CreateApplication();
+  auto app = Pepper::CreateApplication();
   app->Run();
-  delete app;
 }

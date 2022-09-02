@@ -23,7 +23,7 @@ namespace Pepper
 
     Scope<Window> window;
     LayerStack layer_stack;
-    ImGuiLayer* imGuiLayer;
+    Ref<ImGuiLayer> imGuiLayer;
 
     bool running = true;
     bool minimized = false;
@@ -35,7 +35,7 @@ namespace Pepper
 
   Application* Application::Impl::app_instance = nullptr;
 
-  Application::Application() : pimp(new Impl())
+  Application::Application() : pimp(CreateScope<Impl>())
   {
     PP_CORE_ASSERT(!pimp->app_instance, "Application already defined!");
     pimp->app_instance = this;
@@ -45,7 +45,7 @@ namespace Pepper
 
     Renderer::Init();
 
-    pimp->imGuiLayer = new ImGuiLayer();
+    pimp->imGuiLayer = CreateRef<ImGuiLayer>();
     PushOverlay(pimp->imGuiLayer);
 
     pimp->last_frame_time = 0;
@@ -53,12 +53,12 @@ namespace Pepper
 
   Application::~Application() = default;
 
-  void Application::PushLayer(Layer* layer)
+  void Application::PushLayer(Ref<Layer> layer)
   {
     pimp->layer_stack.PushLayer(layer);
   }
 
-  void Application::PushOverlay(Layer* overlay)
+  void Application::PushOverlay(Ref<Layer> overlay)
   {
     pimp->layer_stack.PushOverlay(overlay);
   }
@@ -100,11 +100,11 @@ namespace Pepper
 
       if (!pimp->minimized)
       {
-        for (Layer* layer : pimp->layer_stack)
+        for (Ref<Layer> layer : pimp->layer_stack)
           layer->OnUpdate(timeStep);
       }
       pimp->imGuiLayer->Begin();
-      for (Layer* layer : pimp->layer_stack)
+      for (Ref<Layer> layer : pimp->layer_stack)
         layer->OnImGuiRender();
       pimp->imGuiLayer->End();
 

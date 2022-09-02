@@ -12,7 +12,7 @@ namespace Pepper
     std::unordered_map<std::string, Ref<Shader>> shaders{};
   };
 
-  ShaderLibrary::ShaderLibrary() : pimp(new Impl{}) {}
+  ShaderLibrary::ShaderLibrary() : pimp(CreateScope<Impl>()) {}
 
   ShaderLibrary::~ShaderLibrary() = default;
 

@@ -23,7 +23,7 @@ namespace Pepper
     PP_CORE_ASSERT(native_window, "Window handle is null!");
   }
 
-  OpenGLContext::OpenGLContext(Window& windowsHandle) : pimp(new Impl{ windowsHandle }) {}
+  OpenGLContext::OpenGLContext(Window& windowsHandle) : pimp(CreateScope<Impl>(windowsHandle)) {}
 
   OpenGLContext::~OpenGLContext() = default;
 

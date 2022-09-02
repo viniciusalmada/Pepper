@@ -8,5 +8,5 @@
 
 namespace Pepper
 {
-  RendererAPI* RenderCommand::renderer_api = new OpenGLRendererAPI();
+  Scope<RendererAPI> RenderCommand::renderer_api = CreateScope<OpenGLRendererAPI>();
 }

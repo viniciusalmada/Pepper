@@ -18,9 +18,9 @@ namespace Pepper
     PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
   }
 
-  Window* Window::Create(const WindowProps& props)
+  Scope<Window> Window::Create(const WindowProps& props)
   {
-    return new WinWindow(props);
+    return CreateScope<WinWindow>(props);
   }
 
   class WinWindow::Impl
@@ -39,7 +39,7 @@ namespace Pepper
     void ConfigMouseMoveCB() const;
 
     GLFWwindow* window;
-    GraphicsContext* graphics_context;
+    Scope<GraphicsContext> graphics_context;
 
     struct WindowData : WindowProps
     {
@@ -54,9 +54,9 @@ namespace Pepper
     Init(props);
   }
 
-  WinWindow::WinWindow(const WindowProps& props) : pimp(new Impl{ props })
+  WinWindow::WinWindow(const WindowProps& props) : pimp(CreateScope<Impl>(props))
   {
-    pimp->graphics_context = new OpenGLContext(*this);
+    pimp->graphics_context = CreateScope<OpenGLContext>(*this);
     pimp->graphics_context->Init();
 
     SetVsync(true);

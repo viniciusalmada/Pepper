@@ -42,7 +42,7 @@ namespace Pepper
     Ref<IndexBuffer> index_buffer;
   };
 
-  OpenGLVertexArray::OpenGLVertexArray() : pimp(new Impl{})
+  OpenGLVertexArray::OpenGLVertexArray() : pimp(CreateScope<Impl>())
   {
     glCreateVertexArrays(1, &pimp->renderer_id);
   }
