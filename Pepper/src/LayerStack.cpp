@@ -37,7 +37,7 @@ namespace Pepper
   void LayerStack::PopLayer(Layer* layer)
   {
     auto iter = std::find(pimp->layers.begin(), pimp->layers.begin() + pimp->layer_index, layer);
-    if (iter != pimp->layers.end())
+    if (iter != pimp->layers.begin() + pimp->layer_index)
     {
       layer->OnDetach();
       pimp->layers.erase(iter);
