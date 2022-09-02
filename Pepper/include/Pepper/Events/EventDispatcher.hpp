@@ -8,22 +8,19 @@ namespace Pepper
 {
   class EventDispatcher
   {
-    template <typename Type>
-    using EventFn = std::function<bool(Type&)>;
-
   public:
     EventDispatcher(Event& e) : event(e) {}
 
-    template <typename TypeParam>
-    bool Dispatch(EventFn<TypeParam> fun)
+    template <typename T, typename Fun>
+    bool Dispatch(const Fun& fun)
     {
       EvType type = event.GetEventInfo().GetType();
-      if (type == TypeParam::GetStaticType())
+      if (type == T::GetStaticType())
       {
         // Transform reference into pointer
-        TypeParam* event_ptr = (TypeParam*)&event;
+        T& event_ptr = static_cast<T&>(event);
 
-        event.handled = fun(*event_ptr);
+        event.handled = fun(event_ptr);
 
         return true;
       }
