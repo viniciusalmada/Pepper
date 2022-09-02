@@ -49,22 +49,42 @@ namespace Pepper
   void OrthoCameraController::OnUpdate(TimeStep ts)
   {
     glm::vec3 pos = pimp->camera.GetPosition();
-    if (Input::IsKeyPressed(PP_KEY_W))
-      pos.y -= pimp->camera_move_speed * ts;
-    else if (Input::IsKeyPressed(PP_KEY_A))
-      pos.x += pimp->camera_move_speed * ts;
-    else if (Input::IsKeyPressed(PP_KEY_S))
-      pos.y += pimp->camera_move_speed * ts;
-    else if (Input::IsKeyPressed(PP_KEY_D))
-      pos.x -= pimp->camera_move_speed * ts;
+    float rot_deg = pimp->camera.GetRotation();
+
+    if (Input::IsKeyPressed(PP_KEY_W)) // move camera to down
+    {
+      pos.x -= std::sin(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+      pos.y += std::cos(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+    }
+    else if (Input::IsKeyPressed(PP_KEY_A)) // move camera to right
+    {
+      pos.x -= std::cos(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+      pos.y -= std::sin(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+    }
+    else if (Input::IsKeyPressed(PP_KEY_S)) // move camera to up
+    {
+      pos.x += std::sin(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+      pos.y -= std::cos(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+    }
+    else if (Input::IsKeyPressed(PP_KEY_D)) // move camera to left
+    {
+      pos.x += std::cos(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+      pos.y += std::sin(glm::radians(rot_deg)) * pimp->camera_move_speed * ts;
+    }
     pimp->camera.SetPosition(pos);
 
-    float rot_deg = pimp->camera.GetRotation();
-    if (Input::IsKeyPressed(PP_KEY_Q))
-      rot_deg += CAMERA_ROTATION_SPEED * ts;
-    else if (Input::IsKeyPressed(PP_KEY_E))
-      rot_deg -= CAMERA_ROTATION_SPEED * ts;
-    pimp->camera.SetRotationDeg(rot_deg);
+    if (pimp->rotation)
+    {
+      if (Input::IsKeyPressed(PP_KEY_Q))
+        rot_deg += CAMERA_ROTATION_SPEED * ts;
+      else if (Input::IsKeyPressed(PP_KEY_E))
+        rot_deg -= CAMERA_ROTATION_SPEED * ts;
+      if (rot_deg > 180.0f)
+        rot_deg -= 360.0f;
+      else if (rot_deg <= -180.0f)
+        rot_deg += 360.0f;
+      pimp->camera.SetRotationDeg(rot_deg);
+    }
   }
 
   void OrthoCameraController::OnEvent(Event& e)
