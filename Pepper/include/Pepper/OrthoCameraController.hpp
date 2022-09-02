@@ -23,6 +23,5 @@ namespace Pepper
 
   private:
     DECLARE_PIMPL
-    
-  };
+    };
 }
