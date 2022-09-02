@@ -23,11 +23,6 @@ namespace Pepper
     static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
   private:
-    struct SceneData
-    {
-      glm::mat4 view_proj_matrix;
-    };
-
-    static Scope<SceneData> scene_data;
+    DECLARE_PIMPL
   };
 }
