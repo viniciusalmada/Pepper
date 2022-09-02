@@ -14,13 +14,13 @@ namespace Pepper
   public:
     Impl(Window& windowsHandle);
 
-    GLFWwindow* window_handle;
+    GLFWwindow* native_window;
   };
 
   OpenGLContext::Impl::Impl(Window& windowsHandle) :
-      window_handle(std::any_cast<GLFWwindow*>(windowsHandle.GetNativeWindow()))
+      native_window(std::any_cast<GLFWwindow*>(windowsHandle.GetNativeWindow()))
   {
-    PP_CORE_ASSERT(window_handle, "Window handle is null!");
+    PP_CORE_ASSERT(native_window, "Window handle is null!");
   }
 
   OpenGLContext::OpenGLContext(Window& windowsHandle) : pimp(new Impl{ windowsHandle }) {}
@@ -29,7 +29,7 @@ namespace Pepper
 
   void OpenGLContext::Init()
   {
-    glfwMakeContextCurrent(pimp->window_handle);
+    glfwMakeContextCurrent(pimp->native_window);
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     PP_CORE_ASSERT(status, "Failed to initialize Glad!");
 
@@ -40,6 +40,6 @@ namespace Pepper
 
   void OpenGLContext::SwapBuffers()
   {
-    glfwSwapBuffers(pimp->window_handle);
+    glfwSwapBuffers(pimp->native_window);
   }
 }

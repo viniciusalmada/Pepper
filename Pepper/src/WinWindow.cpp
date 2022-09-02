@@ -26,7 +26,7 @@ namespace Pepper
   class WinWindow::Impl
   {
   public:
-    Impl(const WindowProps& props, WinWindow& self);
+    Impl(const WindowProps& props);
 
     void Init(const WindowProps& props);
     void Shutdown();
@@ -47,15 +47,20 @@ namespace Pepper
       EventCallbackFn eventCallback;
     };
     WindowData data;
-    WinWindow& self;
   };
 
-  WinWindow::Impl::Impl(const WindowProps& props, WinWindow& self) : self(self)
+  WinWindow::Impl::Impl(const WindowProps& props)
   {
     Init(props);
   }
 
-  WinWindow::WinWindow(const WindowProps& props) : pimp(new Impl{ props, *this }) {}
+  WinWindow::WinWindow(const WindowProps& props) : pimp(new Impl{ props })
+  {
+    pimp->graphics_context = new OpenGLContext(*this);
+    pimp->graphics_context->Init();
+
+    SetVsync(true);
+  }
 
   WinWindow::~WinWindow()
   {
@@ -80,11 +85,8 @@ namespace Pepper
     }
 
     window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
-    graphics_context = new OpenGLContext(self);
-    graphics_context->Init();
 
     glfwSetWindowUserPointer(window, &data);
-    self.SetVsync(true);
 
     ConfigResizeCB();
     ConfigCloseCB();
