@@ -36,7 +36,7 @@ namespace Pepper
 
   void LayerStack::PopLayer(Layer* layer)
   {
-    auto iter = FIND(pimp->layers, layer);
+    auto iter = std::find(pimp->layers.begin(), pimp->layers.begin() + pimp->layer_index, layer);
     if (iter != pimp->layers.end())
     {
       layer->OnDetach();
@@ -47,7 +47,7 @@ namespace Pepper
 
   void LayerStack::PopOverlay(Layer* overlay)
   {
-    auto iter = FIND(pimp->layers, overlay);
+    auto iter = std::find(pimp->layers.begin() + pimp->layer_index, pimp->layers.end(), overlay);
     if (iter != pimp->layers.end())
     {
       overlay->OnDetach();
