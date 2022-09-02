@@ -9,7 +9,12 @@
 
 namespace Pepper
 {
-  Scope<Renderer::SceneData> Renderer::scene_data = CreateScope<Renderer::SceneData>();
+  struct SceneData
+  {
+    glm::mat4 view_proj_matrix;
+  };
+
+  static Scope<SceneData> scene_data = CreateScope<SceneData>();
 
   void Renderer::Init()
   {
