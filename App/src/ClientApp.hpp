@@ -39,6 +39,4 @@ class ClientApp : public Pepper::Application
 public:
   ClientApp();
   ~ClientApp();
-
-  static std::filesystem::path GetAssets();
 };

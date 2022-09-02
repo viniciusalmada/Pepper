@@ -4,6 +4,8 @@
 
 #include "ClientApp.hpp"
 
+#include "IO.hpp"
+
 #include <Pepper/Platform/OpenGL/OpenGLShader.hpp> // TODO: Remove
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -23,7 +25,7 @@ ExampleLayer::ExampleLayer() :
     // -1.0 < x < 1.0
     // -1.0 < y < 1.0
     // clang-format off
-      float vertices[] = {
+      std::vector<float> vertices = {
         //  x,     y,     z,    r,    g,    b,    a
         -0.5f, -0.5f, +0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
         +0.5f, -0.5f, +0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
@@ -31,15 +33,15 @@ ExampleLayer::ExampleLayer() :
       };
     // clang-format on
 
-    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), triangle_VAO->GetRendererID());
+    auto vbo = Pepper::VertexBuffer::Create(vertices, triangle_VAO->GetRendererID());
     Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
                                     { Pepper::ShaderDataType::Float4, "in_color" } };
 
     vbo->SetLayout(layout);
     triangle_VAO->AddVertexBuffer(vbo);
 
-    uint32_t indices[] = { 0, 1, 2 };
-    auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), triangle_VAO->GetRendererID());
+    std::vector<uint32_t> indices = { 0, 1, 2 };
+    auto ibo = Pepper::IndexBuffer::Create(indices, triangle_VAO->GetRendererID());
     triangle_VAO->SetIndexBuffer(ibo);
   }
 
@@ -48,7 +50,7 @@ ExampleLayer::ExampleLayer() :
     // -1.0 < x < 1.0
     // -1.0 < y < 1.0
     // clang-format off
-      float vertices[] = {
+      std::vector<float> vertices = {
         //  x,     y,     z,    s,    t
         -1.6f, -0.9f, +0.0f, 0.0f, 0.0f, // bot-left
         -1.1f, -0.9f, +0.0f, 1.0f, 0.0f, // bot-right
@@ -57,23 +59,23 @@ ExampleLayer::ExampleLayer() :
       };
     // clang-format on
 
-    auto vbo = Pepper::VertexBuffer::Create(vertices, sizeof(vertices), square_VAO->GetRendererID());
+    auto vbo = Pepper::VertexBuffer::Create(vertices, square_VAO->GetRendererID());
     Pepper::BufferLayout layout = { { Pepper::ShaderDataType::Float3, "in_position" },
                                     { Pepper::ShaderDataType::Float2, "in_tex_coord" } };
     vbo->SetLayout(layout);
     square_VAO->AddVertexBuffer(vbo);
 
-    uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
-    auto ibo = Pepper::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t), square_VAO->GetRendererID());
+    std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
+    auto ibo = Pepper::IndexBuffer::Create(indices, square_VAO->GetRendererID());
     square_VAO->SetIndexBuffer(ibo);
   };
 
-  shader_library.Load(ClientApp::GetAssets() / "shaders/Simple.glsl");
-  shader_library.Load(ClientApp::GetAssets() / "shaders/FlatColor.glsl");
-  shader_library.Load(ClientApp::GetAssets() / "shaders/Texture.glsl");
+  shader_library.Load(IO::GetAssets() / "shaders/Simple.glsl");
+  shader_library.Load(IO::GetAssets() / "shaders/FlatColor.glsl");
+  shader_library.Load(IO::GetAssets() / "shaders/Texture.glsl");
 
-  texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/checkerboard.png");
-  pepper_texture = Pepper::Texture2D::Create(ClientApp::GetAssets() / "textures/black-pepper.png");
+  texture = Pepper::Texture2D::Create(IO::GetAssets() / "textures/checkerboard.png");
+  pepper_texture = Pepper::Texture2D::Create(IO::GetAssets() / "textures/black-pepper.png");
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->Bind();
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->UploadUniformInt("u_texture", 0);
@@ -89,15 +91,6 @@ void ExampleLayer::OnImGuiRender()
 void ExampleLayer::OnUpdate(Pepper::TimeStep ts)
 {
   camera_controller.OnUpdate(ts);
-
-  if (Pepper::Input::IsKeyPressed(PP_KEY_H))
-    square_position.x -= SQUARE_MOVE_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_J))
-    square_position.y -= SQUARE_MOVE_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_K))
-    square_position.y += SQUARE_MOVE_SPEED * ts;
-  else if (Pepper::Input::IsKeyPressed(PP_KEY_L))
-    square_position.x += SQUARE_MOVE_SPEED * ts;
 
   Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
   Pepper::RenderCommand::Clear();
@@ -150,19 +143,6 @@ ClientApp::ClientApp()
 }
 
 ClientApp::~ClientApp() {}
-
-std::filesystem::path ClientApp::GetAssets()
-{
-  std::filesystem::path assets_path;
-#if defined APP_WORKING_DIR
-  const std::string working_dir = APP_WORKING_DIR;
-  assets_path = std::filesystem::path{ working_dir } / "App" / "assets";
-#else
-  assets_path = std::filesystem::current_path().parent_path() / "App" / "assets";
-#endif
-
-  return assets_path;
-}
 
 Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
 {

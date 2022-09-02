@@ -140,6 +140,8 @@ target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 # The client application
 add_executable(App
   App/src/ClientApp.cpp
+  App/src/Sandbox2D.cpp
+  App/src/IO.cpp
 )
 
 target_compile_features(App PRIVATE ${CXX_STANDARD})

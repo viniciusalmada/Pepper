@@ -31,14 +31,14 @@ namespace Pepper
   class OpenGLVertexBuffer::Impl
   {
   public:
-    Impl(float* vertices, uint32_t size, uint32_t parent);
+    Impl(const std::vector<float>& vertices, uint32_t parent);
 
     uint32_t renderer_id;
     uint32_t parent_id;
     BufferLayout layout;
   };
 
-  OpenGLVertexBuffer::Impl::Impl(float* vertices, uint32_t size, uint32_t parent) :
+  OpenGLVertexBuffer::Impl::Impl(const std::vector<float>& vertices, uint32_t parent) :
       renderer_id(0),
       parent_id(parent),
       layout({})
@@ -49,11 +49,12 @@ namespace Pepper
 
     glCreateBuffers(1, &renderer_id);
     glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
-    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+    uint32_t size = vertices.size() * sizeof(float);
+    glBufferData(GL_ARRAY_BUFFER, size, vertices.data(), GL_STATIC_DRAW);
   }
 
-  OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size, uint32_t parent) :
-      pimp(CreateScope<Impl>(vertices, size, parent))
+  OpenGLVertexBuffer::OpenGLVertexBuffer(const std::vector<float>& vertices, uint32_t parent) :
+      pimp(CreateScope<Impl>(vertices, parent))
   {
   }
 
@@ -92,25 +93,27 @@ namespace Pepper
   class OpenGLIndexBuffer::Impl
   {
   public:
-    Impl(uint32_t* indices, uint32_t count, uint32_t parent);
+    Impl(const std::vector<uint32_t>& indices, uint32_t parent);
 
     uint32_t renderer_id;
     uint32_t count;
     uint32_t parent_id;
   };
 
-  OpenGLIndexBuffer::Impl::Impl(uint32_t* indices, uint32_t count, uint32_t parent) : count(count), parent_id(parent)
+  OpenGLIndexBuffer::Impl::Impl(const std::vector<uint32_t>& indices, uint32_t parent) :
+      count(indices.size()),
+      parent_id(parent)
   {
     if (!CheckValidVAO(parent_id))
       return;
 
     glCreateBuffers(1, &renderer_id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer_id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
   }
 
-  OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count, uint32_t parent) :
-      pimp(CreateScope<Impl>(indices, count, parent))
+  OpenGLIndexBuffer::OpenGLIndexBuffer(const std::vector<uint32_t>& indices, uint32_t parent) :
+      pimp(CreateScope<Impl>(indices, parent))
   {
   }
 
