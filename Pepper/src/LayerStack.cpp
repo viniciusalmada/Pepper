@@ -18,7 +18,10 @@ namespace Pepper
   LayerStack::~LayerStack()
   {
     for (Layer* l : pimp->layers)
+    {
+      l->OnDetach();
       delete l;
+    }
   }
 
   void LayerStack::PushLayer(Layer* layer)
