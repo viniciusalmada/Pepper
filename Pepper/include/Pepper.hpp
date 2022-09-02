@@ -22,8 +22,4 @@
 #include "Pepper/Renderer/ShaderLibrary.hpp"
 #include "Pepper/Renderer/Texture.hpp"
 // -------------------------------------
-
-// --Entry Point------------------------
-#include "Pepper/Core/EntryPoint.hpp"
-// -------------------------------------
 // clang-format on
