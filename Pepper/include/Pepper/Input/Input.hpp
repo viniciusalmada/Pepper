@@ -11,6 +11,7 @@ namespace Pepper
   public:
     Input(const Input&) = delete;
     Input& operator=(const Input&) = delete;
+    virtual ~Input() = default;
 
     static bool IsKeyPressed(PPKey keyCode);
     static bool IsMouseButtonPressed(PPMouseBt button);
