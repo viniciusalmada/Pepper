@@ -5,12 +5,14 @@
 #include "ClientApp.hpp"
 
 #include "ExampleLayer.hpp"
+#include "Sandbox2D.hpp"
 
 #include <Pepper/Core/EntryPoint.hpp>
 
 ClientApp::ClientApp()
 {
   PushLayer(Pepper::CreateRef<ExampleLayer>());
+  PushLayer(Pepper::CreateRef<Sandbox2D>());
 }
 
 ClientApp::~ClientApp() {}

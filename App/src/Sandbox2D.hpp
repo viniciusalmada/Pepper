@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Pepper/Layers/Layer.hpp>
+#include <Pepper.hpp>
 
 class Sandbox2D : public Pepper::Layer
 {
