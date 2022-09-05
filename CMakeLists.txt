@@ -56,13 +56,14 @@ target_include_directories(ImGui PRIVATE ${PP_VENDOR_DIR}/GLFW/include)
 # The Pepper engine
 add_library(Pepper STATIC
   ${PP_SRC_DIR}/Application.cpp
-  ${PP_SRC_DIR}/Log.cpp
-  ${PP_SRC_DIR}/Utils.cpp
+  ${PP_SRC_DIR}/Buffer.cpp
+  ${PP_SRC_DIR}/BufferLayout.cpp
   ${PP_SRC_DIR}/Event.cpp
-  ${PP_SRC_DIR}/Input.cpp
   ${PP_SRC_DIR}/ImGuiLayer.cpp
+  ${PP_SRC_DIR}/Input.cpp
   ${PP_SRC_DIR}/Layer.cpp
   ${PP_SRC_DIR}/LayerStack.cpp
+  ${PP_SRC_DIR}/Log.cpp
   ${PP_SRC_DIR}/OpenGLBuffer.cpp
   ${PP_SRC_DIR}/OpenGLContext.cpp
   ${PP_SRC_DIR}/OpenGLDebugger.cpp
@@ -70,19 +71,19 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/OpenGLShader.cpp
   ${PP_SRC_DIR}/OpenGLTexture.cpp
   ${PP_SRC_DIR}/OpenGLVertexArray.cpp
-  ${PP_SRC_DIR}/WinInput.cpp
-  ${PP_SRC_DIR}/WinWindow.cpp
-  ${PP_SRC_DIR}/Buffer.cpp
-  ${PP_SRC_DIR}/BufferLayout.cpp
   ${PP_SRC_DIR}/OrthoCamera.cpp
+  ${PP_SRC_DIR}/OrthoCameraController.cpp
   ${PP_SRC_DIR}/RenderCommand.cpp
   ${PP_SRC_DIR}/Renderer.cpp
+  ${PP_SRC_DIR}/Renderer2D.cpp
   ${PP_SRC_DIR}/RendererAPI.cpp
   ${PP_SRC_DIR}/Shader.cpp
   ${PP_SRC_DIR}/ShaderLibrary.cpp
   ${PP_SRC_DIR}/Texture.cpp
+  ${PP_SRC_DIR}/Utils.cpp
   ${PP_SRC_DIR}/VertexArray.cpp
-  ${PP_SRC_DIR}/OrthoCameraController.cpp
+  ${PP_SRC_DIR}/WinInput.cpp
+  ${PP_SRC_DIR}/WinWindow.cpp
 )
 
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
@@ -141,7 +142,7 @@ target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 add_executable(App
   App/src/ClientApp.cpp
   App/src/ExampleLayer.cpp
-  # App/src/Sandbox2D.cpp
+  App/src/Sandbox2D.cpp
   App/src/IO.cpp
 )
 

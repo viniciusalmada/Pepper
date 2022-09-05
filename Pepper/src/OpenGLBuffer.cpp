@@ -49,7 +49,7 @@ namespace Pepper
 
     glCreateBuffers(1, &renderer_id);
     glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
-    uint32_t size = vertices.size() * sizeof(float);
+    uint32_t size = (uint32_t)(vertices.size() * sizeof(float));
     glBufferData(GL_ARRAY_BUFFER, size, vertices.data(), GL_STATIC_DRAW);
   }
 
@@ -101,7 +101,7 @@ namespace Pepper
   };
 
   OpenGLIndexBuffer::Impl::Impl(const std::vector<uint32_t>& indices, uint32_t parent) :
-      count(indices.size()),
+      count((uint32_t)indices.size()),
       parent_id(parent)
   {
     if (!CheckValidVAO(parent_id))
