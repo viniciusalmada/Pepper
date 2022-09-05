@@ -12,6 +12,8 @@ namespace Pepper
     enum class API : unsigned int { NONE = 0, OPEN_GL = 1 };
 
   public:
+    virtual ~RendererAPI() = default;
+
     virtual void Init() = 0;
 
     virtual void SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) const = 0;
