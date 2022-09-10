@@ -3,6 +3,7 @@
 // clang-format on
 
 #include "Pepper/Renderer/Renderer.hpp"
+#include "Pepper/Renderer/Renderer2D.hpp"
 
 #include "Pepper/Platform/OpenGL/OpenGLShader.hpp"
 #include "Pepper/Renderer/RenderCommand.hpp"
@@ -19,6 +20,7 @@ namespace Pepper
   void Renderer::Init()
   {
     RenderCommand::Init();
+    Renderer2D::Init();
   }
 
   void Renderer::OnViewportResize(uint32_t width, uint32_t height)
