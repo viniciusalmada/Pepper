@@ -97,5 +97,8 @@
     "xtr1common": "cpp",
     "xtree": "cpp"
   },
-  "C_Cpp.errorSquiggles": "Disabled"
+  "C_Cpp.errorSquiggles": "Disabled",
+  "cmake.debugConfig": {
+    "cwd": "${workspaceFolder}/App"
+  }
 }
