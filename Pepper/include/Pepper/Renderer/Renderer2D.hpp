@@ -7,7 +7,7 @@ namespace Pepper
   class Renderer2D
   {
   public:
-    static void Init(const std::filesystem::path& assetsPath);
+    static void Init();
     static void Shutdown();
 
     static void BeginScene(const OrthoCamera& camera);
