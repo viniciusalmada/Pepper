@@ -21,12 +21,20 @@ namespace Pepper
 
   static Scope<RendererData> data;
 
-  void Renderer2D::Init(const std::filesystem::path& assetsPath)
+  void Renderer2D::Init()
   {
     data = CreateScope<RendererData>();
     data->quad_vertex_array = VertexArray::Create();
+    data->quad_vertex_array->Bind();
 
-    std::vector<float> square_vertices = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, -0.5f, 0.5f, 0.0f };
+    // clang-format off
+    std::vector<float> square_vertices = { 
+      -0.5f, -0.5f, 0.0f, 
+      +0.5f, -0.5f, 0.0f, 
+      +0.5f, +0.5f, 0.0f, 
+      -0.5f, +0.5f, 0.0f 
+    };
+    // clang-format on
     Ref<VertexBuffer> square_vb = VertexBuffer::Create(square_vertices, data->quad_vertex_array->GetRendererID());
     square_vb->SetLayout({ { ShaderDataType::Float3, "in_position" } });
     data->quad_vertex_array->AddVertexBuffer(square_vb);
@@ -35,7 +43,7 @@ namespace Pepper
     Ref<IndexBuffer> square_ib = IndexBuffer::Create(square_indices, data->quad_vertex_array->GetRendererID());
     data->quad_vertex_array->SetIndexBuffer(square_ib);
 
-    data->flat_color_shader = Shader::Create(assetsPath / "shaders" / "FlatColor.glsl");
+    data->flat_color_shader = Shader::Create(R"(assets/shaders/FlatColor.glsl)");
   }
 
   void Renderer2D::Shutdown()
