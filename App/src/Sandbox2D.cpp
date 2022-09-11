@@ -16,22 +16,16 @@ Sandbox2D::Sandbox2D() :
 {
 }
 
-void Sandbox2D::OnAttach()
-{
-  Pepper::Renderer2D::Init();
-}
+void Sandbox2D::OnAttach() {}
 
-void Sandbox2D::OnDetach()
-{
-  Pepper::Renderer2D::Shutdown();
-}
+void Sandbox2D::OnDetach() {}
 
 void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
 {
   camera_controller.OnUpdate(ts);
 
-  Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-  Pepper::RenderCommand::Clear();
+  // Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+  // Pepper::RenderCommand::Clear();
 
   Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
 
