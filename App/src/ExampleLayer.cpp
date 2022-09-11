@@ -15,7 +15,7 @@ ExampleLayer::ExampleLayer() :
     Pepper::Layer("Example"),
     camera_controller(1280.f / 720.f, true),
     square_position(0.0f),
-    square_color({ 0.2, 0.4, 0.7 }),
+    square_color({ 0.2, 0.4, 0.7, 1.0f}),
     triangle_VAO(Pepper::VertexArray::Create()),
     square_VAO(Pepper::VertexArray::Create()),
     shader_library()
@@ -111,7 +111,7 @@ void ExampleLayer::OnUpdate(Pepper::TimeStep ts)
   Pepper::Ref<Pepper::Shader> texture_shader = shader_library.Get("Texture");
 
   std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->Bind();
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->UploadUniformFloat3("u_color", square_color);
+  std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->UploadUniformFloat4("u_color", square_color);
   for (int i = 0; i < 30; i++)
   {
     for (int j = 0; j < 20; j++)

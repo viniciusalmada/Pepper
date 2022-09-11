@@ -30,5 +30,5 @@ private:
   const float SQUARE_MOVE_SPEED = 1.0f;
 
   glm::vec3 square_position;
-  glm::vec3 square_color;
+  glm::vec4 square_color;
 };
