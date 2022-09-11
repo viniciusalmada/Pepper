@@ -21,6 +21,10 @@ namespace Pepper
 
     const std::string& GetName() const override;
 
+    void SetInt(const std::string& name, const int& number) override;
+    void SetMat4(const std::string& name, const glm::mat4& matrix) override;
+    void SetFloat4(const std::string& name, const glm::vec4& matrix) override;
+
     void UploadUniformInt(const std::string& name, const int& value);
 
     void UploadUniformFloat(const std::string& name, const float& value);

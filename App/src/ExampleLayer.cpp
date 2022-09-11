@@ -6,7 +6,6 @@
 
 #include "IO.hpp"
 
-#include <Pepper/Platform/OpenGL/OpenGLShader.hpp> // TODO: Remove
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -15,7 +14,7 @@ ExampleLayer::ExampleLayer() :
     Pepper::Layer("Example"),
     camera_controller(1280.f / 720.f, true),
     square_position(0.0f),
-    square_color({ 0.2, 0.4, 0.7, 1.0f}),
+    square_color({ 0.2, 0.4, 0.7, 1.0f }),
     triangle_VAO(Pepper::VertexArray::Create()),
     square_VAO(Pepper::VertexArray::Create()),
     shader_library()
@@ -77,8 +76,8 @@ ExampleLayer::ExampleLayer() :
   texture = Pepper::Texture2D::Create(IO::GetAssets() / "textures/checkerboard.png");
   pepper_texture = Pepper::Texture2D::Create(IO::GetAssets() / "textures/black-pepper.png");
 
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->Bind();
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(shader_library.Get("Texture"))->UploadUniformInt("u_texture", 0);
+  shader_library.Get("Texture")->Bind();
+  shader_library.Get("Texture")->SetInt("u_texture", 0);
 }
 
 void ExampleLayer::OnImGuiRender()
@@ -110,8 +109,8 @@ void ExampleLayer::OnUpdate(Pepper::TimeStep ts)
   Pepper::Ref<Pepper::Shader> flat_color_shader = shader_library.Get("FlatColor");
   Pepper::Ref<Pepper::Shader> texture_shader = shader_library.Get("Texture");
 
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->Bind();
-  std::dynamic_pointer_cast<Pepper::OpenGLShader>(flat_color_shader)->UploadUniformFloat4("u_color", square_color);
+  flat_color_shader->Bind();
+  flat_color_shader->SetFloat4("u_color", square_color);
   for (int i = 0; i < 30; i++)
   {
     for (int j = 0; j < 20; j++)

@@ -4,12 +4,9 @@
 
 #include "Pepper/Renderer/Renderer2D.hpp"
 
-#include "Pepper/Renderer/Shader.hpp"
 #include "Pepper/Renderer/RenderCommand.hpp"
+#include "Pepper/Renderer/Shader.hpp"
 #include "Pepper/Renderer/VertexArray.hpp"
-
-// TODO: Remove
-#include "Pepper/Platform/OpenGL/OpenGLShader.hpp"
 
 namespace Pepper
 {
@@ -53,19 +50,17 @@ namespace Pepper
 
   void Renderer2D::BeginScene(const OrthoCamera& camera)
   {
-    Ref<OpenGLShader> gl_shader = std::dynamic_pointer_cast<OpenGLShader>(data->flat_color_shader);
-    gl_shader->Bind();
-    gl_shader->UploadUniformMat4("u_view_projection", camera.GetViewProjectionMatrix());
-    gl_shader->UploadUniformMat4("u_transform", glm::mat4(1.0f));
+    data->flat_color_shader->Bind();
+    data->flat_color_shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
+    data->flat_color_shader->SetMat4("u_transform", glm::mat4(1.0f));
   }
 
   void Renderer2D::EndScene() {}
 
-  void Renderer2D::DrawQuad(const glm::vec2& /* position */, const glm::vec2&/*  size */, const glm::vec4& color)
+  void Renderer2D::DrawQuad(const glm::vec2& /* position */, const glm::vec2& /*  size */, const glm::vec4& color)
   {
-    Ref<OpenGLShader> gl_shader = std::dynamic_pointer_cast<OpenGLShader>(data->flat_color_shader);
-    gl_shader->Bind();
-    gl_shader->UploadUniformFloat4("u_color", color);
+    data->flat_color_shader->Bind();
+    data->flat_color_shader->SetFloat4("u_color", color);
 
     data->quad_vertex_array->Bind();
     RenderCommand::DrawIndexed(data->quad_vertex_array);

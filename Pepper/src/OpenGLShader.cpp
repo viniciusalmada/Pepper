@@ -77,6 +77,21 @@ namespace Pepper
     return this->pimp->name;
   }
 
+  void OpenGLShader::SetInt(const std::string& name, const int& number)
+  {
+    this->UploadUniformInt(name, number); 
+  }
+
+  void OpenGLShader::SetMat4(const std::string& uniformName, const glm::mat4& matrix)
+  {
+    this->UploadUniformMat4(uniformName, matrix);
+  }
+
+  void OpenGLShader::SetFloat4(const std::string& uniformName, const glm::vec4& vec)
+  {
+    this->UploadUniformFloat4(uniformName, vec);
+  }
+
   void OpenGLShader::UploadUniformMat4(const std::string& uniformName, const glm::mat4& matrix)
   {
     if (!pimp->AssertShaderIsBound())
