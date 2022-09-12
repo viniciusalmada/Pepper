@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <sstream>
 #include <string>
 #include <unordered_map>

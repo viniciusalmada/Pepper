@@ -18,6 +18,8 @@ public:
   void OnEvent(Pepper::Event&) override;
 
 private:
+  void DrawRuler() const;
+
   Pepper::OrthoCameraController camera_controller;
 
   Pepper::Ref<Pepper::VertexArray> vertex_array;

@@ -8,6 +8,8 @@
 #include "Pepper/Renderer/Shader.hpp"
 #include "Pepper/Renderer/VertexArray.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Pepper
 {
   struct RendererData
@@ -52,15 +54,18 @@ namespace Pepper
   {
     data->flat_color_shader->Bind();
     data->flat_color_shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
-    data->flat_color_shader->SetMat4("u_transform", glm::mat4(1.0f));
   }
 
   void Renderer2D::EndScene() {}
 
-  void Renderer2D::DrawQuad(const glm::vec2& /* position */, const glm::vec2& /*  size */, const glm::vec4& color)
+  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
   {
     data->flat_color_shader->Bind();
     data->flat_color_shader->SetFloat4("u_color", color);
+
+    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, glm::vec3{ position.x, position.y, 1.0f }) *
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+    data->flat_color_shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
     RenderCommand::DrawIndexed(data->quad_vertex_array);
