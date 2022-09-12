@@ -30,7 +30,7 @@
       "",
       "namespace Pepper",
       "{",
-      "  class ${0:Name}",
+      "  class $TM_FILENAME_BASE",
       "  {",
       "",
       "  };",
