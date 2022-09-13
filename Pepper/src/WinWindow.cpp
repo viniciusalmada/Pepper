@@ -84,7 +84,7 @@ namespace Pepper
       s_glfw_initialized = true;
     }
 
-    glfwWindowHint(GLFW_SAMPLES, 16);
+    glfwWindowHint(GLFW_SAMPLES, 4);
     window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
 
     glfwSetWindowUserPointer(window, &data);
