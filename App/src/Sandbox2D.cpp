@@ -16,7 +16,10 @@ Sandbox2D::Sandbox2D() :
 {
 }
 
-void Sandbox2D::OnAttach() {}
+void Sandbox2D::OnAttach()
+{
+  texture = Pepper::Texture2D::Create(R"(assets/textures/checkerboard.png)");
+}
 
 void Sandbox2D::OnDetach() {}
 
@@ -29,11 +32,12 @@ void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
 
   Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
 
-  Pepper::Renderer2D::DrawQuad({ 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ -1.0, -1.0 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ .0, .0 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ -1.0, -1.0 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ 0, 0 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
+  Pepper::Renderer2D::DrawQuad({ 0.0, 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
+  Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.1 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
+  Pepper::Renderer2D::DrawQuad({ .0, .0, 0.2 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
+  Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.3 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
+  
+  Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture);
   // Pepper::Renderer2D::DrawQuad({ 0.f, 0.f }, { 0.2, 0.2 }, { 0.0f, 0.2f, 0.3f, 1.0f });
 
   DrawRuler();
@@ -58,7 +62,7 @@ void Sandbox2D::DrawRuler() const
   // Draw y axis
   for (int i : std::views::iota(-25, 25))
     Pepper::Renderer2D::DrawQuad({ 0.0, -0.1 * i }, { 0.01, 0.01 }, { 1.0f, 1.0f, 1.0f, 1.0f });
-  
+
   // Draw x axis
   for (int i : std::views::iota(-25, 25))
     Pepper::Renderer2D::DrawQuad({ -0.1 * i, 0.0 }, { 0.01, 0.01 }, { 1.0f, 1.0f, 1.0f, 1.0f });

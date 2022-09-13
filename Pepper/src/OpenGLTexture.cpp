@@ -55,6 +55,9 @@ namespace Pepper
     glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+    glTextureParameteri(renderer_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(renderer_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glTextureSubImage2D(renderer_ID, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
 
     stbi_image_free(data);

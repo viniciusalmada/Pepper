@@ -25,6 +25,6 @@ private:
   Pepper::Ref<Pepper::VertexArray> vertex_array;
   Pepper::Ref<Pepper::Shader> shader;
   Pepper::Ref<Pepper::Texture2D> texture;
-
+  
   glm::vec3 square_color;
 };
