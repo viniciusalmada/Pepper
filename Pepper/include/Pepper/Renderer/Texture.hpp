@@ -23,6 +23,8 @@ namespace Pepper
   class Texture2D : public Texture
   {
   public:
+    static Ref<Texture2D> Create(uint32_t width, uint32_t height, const std::vector<uint32_t>& data, uint32_t size);
+
     static Ref<Texture2D> Create(const std::filesystem::path& path);
   };
 }

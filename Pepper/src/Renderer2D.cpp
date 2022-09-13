@@ -15,8 +15,8 @@ namespace Pepper
   struct RendererData
   {
     Ref<VertexArray> quad_vertex_array;
-    Ref<Shader> flat_color_shader;
-    Ref<Shader> texture_shader;
+    Ref<Shader> shader;
+    Ref<Texture2D> white_texture;
   };
 
   static Scope<RendererData> data;
@@ -43,11 +43,11 @@ namespace Pepper
     Ref<IndexBuffer> square_ib = IndexBuffer::Create(square_indices, data->quad_vertex_array->GetRendererID());
     data->quad_vertex_array->SetIndexBuffer(square_ib);
 
-    data->flat_color_shader = Shader::Create(R"(assets/shaders/FlatColor.glsl)");
+    data->shader = Shader::Create(R"(assets/shaders/ColorOrTexture.glsl)");
+    data->shader->Bind();
+    data->shader->SetInt("u_texture", 0);
 
-    data->texture_shader = Shader::Create(R"(assets/shaders/Texture.glsl)");
-    data->texture_shader->Bind();
-    data->texture_shader->SetInt("u_texture", 0);
+    data->white_texture = Texture2D::Create(1, 1, { 0xFFFFFFFF }, sizeof(uint32_t));
   }
 
   void Renderer2D::Shutdown()
@@ -57,23 +57,20 @@ namespace Pepper
 
   void Renderer2D::BeginScene(const OrthoCamera& camera)
   {
-    data->flat_color_shader->Bind();
-    data->flat_color_shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
-
-    data->texture_shader->Bind();
-    data->texture_shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
+    data->shader->Bind();
+    data->shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
   }
 
   void Renderer2D::EndScene() {}
 
   void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
   {
-    data->flat_color_shader->Bind();
-    data->flat_color_shader->SetFloat4("u_color", color);
+    data->shader->SetFloat4("u_color", color);
+    data->white_texture->Bind();
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
                           glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
-    data->flat_color_shader->SetMat4("u_transform", transform);
+    data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
     RenderCommand::DrawIndexed(data->quad_vertex_array);
@@ -86,15 +83,14 @@ namespace Pepper
 
   void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex)
   {
-    data->texture_shader->Bind();
+    tex->Bind();
+    data->shader->SetFloat4("u_color", { 1.0f, 1.0f, 1.0f, 1.0f });
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
                           glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
-    data->texture_shader->SetMat4("u_transform", transform);
+    data->shader->SetMat4("u_transform", transform);
 
-    tex->Bind();
-
-    data->texture_shader->Bind();
+    data->quad_vertex_array->Bind();
     RenderCommand::DrawIndexed(data->quad_vertex_array);
   }
 
