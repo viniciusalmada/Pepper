@@ -4,16 +4,22 @@
 
 #include "Pepper/Renderer/Renderer.hpp"
 
-#include "Pepper/Platform/OpenGL/OpenGLShader.hpp"
 #include "Pepper/Renderer/RenderCommand.hpp"
+#include "Pepper/Renderer/Renderer2D.hpp"
 
 namespace Pepper
 {
-  Scope<Renderer::SceneData> Renderer::scene_data = CreateScope<Renderer::SceneData>();
+  struct SceneData
+  {
+    glm::mat4 view_proj_matrix;
+  };
+
+  static Scope<SceneData> scene_data = CreateScope<SceneData>();
 
   void Renderer::Init()
   {
     RenderCommand::Init();
+    Renderer2D::Init();
   }
 
   void Renderer::OnViewportResize(uint32_t width, uint32_t height)
@@ -31,9 +37,8 @@ namespace Pepper
   void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
   {
     shader->Bind();
-    std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_view_projection",
-                                                                       scene_data->view_proj_matrix);
-    std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_transform", transform);
+    shader->SetMat4("u_view_projection", scene_data->view_proj_matrix);
+    shader->SetMat4("u_transform", transform);
 
     vertexArray->Bind();
     RenderCommand::DrawIndexed(vertexArray);

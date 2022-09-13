@@ -32,6 +32,18 @@ namespace Pepper
 
     uint32_t RetrieveUniformLocation(const std::string& name);
 
+    void UploadUniformBool(const std::string& name, bool value);
+
+    void UploadUniformInt(const std::string& name, const int& value);
+
+    void UploadUniformFloat(const std::string& name, const float& value);
+    void UploadUniformFloat2(const std::string& name, const glm::vec2& value);
+    void UploadUniformFloat3(const std::string& name, const glm::vec3& value);
+    void UploadUniformFloat4(const std::string& name, const glm::vec4& value);
+
+    void UploadUniformMat3(const std::string& name, const glm::mat3& matrix);
+    void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
+
     std::unordered_map<std::string, uint32_t> uniform_locations;
     uint32_t renderer_id;
     std::string name;
@@ -77,66 +89,95 @@ namespace Pepper
     return this->pimp->name;
   }
 
-  void OpenGLShader::UploadUniformMat4(const std::string& uniformName, const glm::mat4& matrix)
+  void OpenGLShader::SetBoolean(const std::string& name, bool value)
   {
-    if (!pimp->AssertShaderIsBound())
+    this->pimp->UploadUniformBool(name, value);
+  }
+
+  void OpenGLShader::SetInt(const std::string& name, const int& number)
+  {
+    this->pimp->UploadUniformInt(name, number);
+  }
+
+  void OpenGLShader::SetMat4(const std::string& uniformName, const glm::mat4& matrix)
+  {
+    this->pimp->UploadUniformMat4(uniformName, matrix);
+  }
+
+  void OpenGLShader::SetFloat4(const std::string& uniformName, const glm::vec4& vec)
+  {
+    this->pimp->UploadUniformFloat4(uniformName, vec);
+  }
+
+  void OpenGLShader::Impl::UploadUniformMat4(const std::string& uniformName, const glm::mat4& matrix)
+  {
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
   }
 
-  void OpenGLShader::UploadUniformMat3(const std::string& uniformName, const glm::mat3& matrix)
+  void OpenGLShader::Impl::UploadUniformMat3(const std::string& uniformName, const glm::mat3& matrix)
   {
-    if (!pimp->AssertShaderIsBound())
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
     glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
   }
 
-  void OpenGLShader::UploadUniformFloat4(const std::string& uniformName, const glm::vec4& vec)
+  void OpenGLShader::Impl::UploadUniformFloat4(const std::string& uniformName, const glm::vec4& vec)
   {
-    if (!pimp->AssertShaderIsBound())
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
   }
 
-  void OpenGLShader::UploadUniformFloat3(const std::string& uniformName, const glm::vec3& vec)
+  void OpenGLShader::Impl::UploadUniformFloat3(const std::string& uniformName, const glm::vec3& vec)
   {
-    if (!pimp->AssertShaderIsBound())
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform3f(location, vec.x, vec.y, vec.z);
   }
 
-  void OpenGLShader::UploadUniformFloat2(const std::string& uniformName, const glm::vec2& value)
+  void OpenGLShader::Impl::UploadUniformFloat2(const std::string& uniformName, const glm::vec2& value)
   {
-    if (!pimp->AssertShaderIsBound())
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform2f(location, value.x, value.y);
   }
 
-  void OpenGLShader::UploadUniformFloat(const std::string& uniformName, const float& value)
+  void OpenGLShader::Impl::UploadUniformFloat(const std::string& uniformName, const float& value)
   {
-    if (!pimp->AssertShaderIsBound())
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
     glUniform1f(location, value);
   }
 
-  void OpenGLShader::UploadUniformInt(const std::string& uniformName, const int& value)
+  void OpenGLShader::Impl::UploadUniformInt(const std::string& uniformName, const int& value)
   {
-    if (!pimp->AssertShaderIsBound())
+    if (!AssertShaderIsBound())
       return;
 
-    int location = pimp->RetrieveUniformLocation(uniformName);
+    int location = RetrieveUniformLocation(uniformName);
+    glUniform1i(location, value);
+  }
+
+  void OpenGLShader::Impl::UploadUniformBool(const std::string& uniformName, bool value)
+  {
+    if (!AssertShaderIsBound())
+      return;
+
+    int location = RetrieveUniformLocation(uniformName);
     glUniform1i(location, value);
   }
 

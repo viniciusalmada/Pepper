@@ -95,6 +95,11 @@
     "xstddef": "cpp",
     "xstring": "cpp",
     "xtr1common": "cpp",
-    "xtree": "cpp"
+    "xtree": "cpp",
+    "ranges": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Disabled",
+  "cmake.debugConfig": {
+    "cwd": "${workspaceFolder}/App"
   }
 }

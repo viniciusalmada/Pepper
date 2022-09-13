@@ -21,16 +21,11 @@ namespace Pepper
 
     const std::string& GetName() const override;
 
-    void UploadUniformInt(const std::string& name, const int& value);
-
-    void UploadUniformFloat(const std::string& name, const float& value);
-    void UploadUniformFloat2(const std::string& name, const glm::vec2& value);
-    void UploadUniformFloat3(const std::string& name, const glm::vec3& value);
-    void UploadUniformFloat4(const std::string& name, const glm::vec4& value);
-
-    void UploadUniformMat3(const std::string& name, const glm::mat3& matrix);
-    void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
-
+    void SetBoolean(const std::string& name, bool value) override;
+    void SetInt(const std::string& name, const int& number) override;
+    void SetMat4(const std::string& name, const glm::mat4& matrix) override;
+    void SetFloat4(const std::string& name, const glm::vec4& matrix) override;
+    
   private:
     DECLARE_PIMPL
   };

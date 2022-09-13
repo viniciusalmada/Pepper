@@ -18,12 +18,9 @@
 #include "Pepper/Renderer/OrthoCamera.hpp"
 #include "Pepper/Renderer/RenderCommand.hpp"
 #include "Pepper/Renderer/Renderer.hpp"
+#include "Pepper/Renderer/Renderer2D.hpp"
 #include "Pepper/Renderer/Shader.hpp"
 #include "Pepper/Renderer/ShaderLibrary.hpp"
 #include "Pepper/Renderer/Texture.hpp"
-// -------------------------------------
-
-// --Entry Point------------------------
-#include "Pepper/Core/EntryPoint.hpp"
 // -------------------------------------
 // clang-format on

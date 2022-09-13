@@ -43,8 +43,8 @@ namespace Pepper
     glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
     glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 
-    PP_CORE_ASSERT(versionMajor > 3 || (versionMajor == 3 && versionMinor >= 3),
-                   "Pepper requires at least OpenGL version 3.3!");
+    PP_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5),
+                   "Pepper requires at least OpenGL version 4.5!");
 #endif
   }
 
