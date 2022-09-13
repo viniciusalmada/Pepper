@@ -3,10 +3,9 @@
 // clang-format on
 
 #include "Pepper/Renderer/Renderer.hpp"
-#include "Pepper/Renderer/Renderer2D.hpp"
 
-#include "Pepper/Platform/OpenGL/OpenGLShader.hpp"
 #include "Pepper/Renderer/RenderCommand.hpp"
+#include "Pepper/Renderer/Renderer2D.hpp"
 
 namespace Pepper
 {
@@ -38,9 +37,8 @@ namespace Pepper
   void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
   {
     shader->Bind();
-    std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_view_projection",
-                                                                       scene_data->view_proj_matrix);
-    std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_transform", transform);
+    shader->SetMat4("u_view_projection", scene_data->view_proj_matrix);
+    shader->SetMat4("u_transform", transform);
 
     vertexArray->Bind();
     RenderCommand::DrawIndexed(vertexArray);
