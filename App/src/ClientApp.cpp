@@ -11,7 +11,7 @@
 
 ClientApp::ClientApp()
 {
-  PushLayer(Pepper::CreateRef<ExampleLayer>());
+  // PushLayer(Pepper::CreateRef<ExampleLayer>());
   PushLayer(Pepper::CreateRef<Sandbox2D>());
 }
 
