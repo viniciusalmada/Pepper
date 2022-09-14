@@ -3,6 +3,7 @@
 // clang-format off
 #include <algorithm>
 #include <any>
+#include <chrono>
 #include <cstdint>
 #include <fstream>
 #include <functional>

@@ -7,6 +7,7 @@
 #include "Pepper/Core/Log.hpp"
 #include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Core/OrthoCameraController.hpp"
+#include "Pepper/Core/Utils.hpp"
 
 // --Input------------------------
 #include "Pepper/Input/Input.hpp"
