@@ -25,30 +25,79 @@ void Sandbox2D::OnDetach() {}
 
 void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
 {
-  camera_controller.OnUpdate(ts);
+  {
+    Pepper::Utils::Timer timer{ "CameraUpdate",
+                                [&](const std::string&& name, float duration)
+                                {
+                                  profile.emplace_back(name, duration);
+                                } };
+    camera_controller.OnUpdate(ts);
+  }
 
-  Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-  Pepper::RenderCommand::Clear();
+  {
+    Pepper::Utils::Timer timer{ "RenderPrep",
+                                [&](const std::string&& name, float duration)
+                                {
+                                  profile.emplace_back(name, duration);
+                                } };
+    Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+    Pepper::RenderCommand::Clear();
+  }
 
-  Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
+  {
+    Pepper::Utils::Timer timer{ "RenderDraw",
+                                [&](const std::string& name, float duration)
+                                {
+                                  profile.emplace_back(name, duration);
+                                } };
+    Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
 
-  Pepper::Renderer2D::DrawQuad({ 0.0, 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.1 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ .0, .0, 0.2 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
-  Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.3 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
-  
-  Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture);
-  // Pepper::Renderer2D::DrawQuad({ 0.f, 0.f }, { 0.2, 0.2 }, { 0.0f, 0.2f, 0.3f, 1.0f });
+    Pepper::Renderer2D::DrawQuad({ 0.0, 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
+    Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.1 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
+    Pepper::Renderer2D::DrawQuad({ .0, .0, 0.2 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
+    Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.3 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
 
-  DrawRuler();
+    Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture);
+    // Pepper::Renderer2D::DrawQuad({ 0.f, 0.f }, { 0.2, 0.2 }, { 0.0f, 0.2f, 0.3f, 1.0f });
 
-  Pepper::Renderer2D::EndScene();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+    DrawRuler();
+
+    Pepper::Renderer2D::EndScene();
+  }
 }
 
 void Sandbox2D::OnImGuiRender()
 {
   ImGui::Begin("Settings");
   ImGui::ColorEdit3("Square Color", glm::value_ptr(square_color));
+
+  for (auto& result : profile)
+  {
+    char _name[50];
+    strcpy(_name, result.name.c_str());
+    strcat(_name, " %.4fms");
+    ImGui::Text(_name, result.time);
+  }
+  profile.clear();
+
   ImGui::End();
 }
 
