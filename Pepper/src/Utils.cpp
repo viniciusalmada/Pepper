@@ -36,7 +36,7 @@ namespace Pepper::Utils
 
   Timer::~Timer()
   {
-    // if (pimp->stopped)
+    if (!pimp->stopped)
       pimp->Stop();
   }
 
