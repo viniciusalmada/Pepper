@@ -7,7 +7,7 @@ namespace Pepper::Utils
 {
   std::string GetNewLine();
 
-  using TimerFun = std::function<void(const std::string&, float)>;
+  using TimerFun = std::function<void(const std::string&&, float)>;
 
   class Timer
   {

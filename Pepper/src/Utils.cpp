@@ -47,6 +47,6 @@ namespace Pepper::Utils
     auto time_spent = std::chrono::duration_cast<std::chrono::microseconds>(end_time_point - pimp->start_time_point);
     float time_spent_ms = time_spent.count() / 1000.0f;
 
-    pimp->fun(pimp->name, time_spent_ms);
+    pimp->fun(std::move(pimp->name), time_spent_ms);
   }
 }
