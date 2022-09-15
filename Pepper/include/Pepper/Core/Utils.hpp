@@ -11,6 +11,8 @@ namespace Pepper::Utils
     Timer(const std::string& name);
     ~Timer();
 
+    void Stop();
+
   private:
     DECLARE_PIMPL
   };

@@ -20,8 +20,6 @@ namespace Pepper::Utils
   public:
     Impl(const std::string& name);
 
-    void Stop();
-
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> start_time_point;
     bool stopped;
@@ -37,19 +35,16 @@ namespace Pepper::Utils
   Timer::~Timer()
   {
     if (!pimp->stopped)
-      pimp->Stop();
+      Stop();
   }
 
-  void Timer::Impl::Stop()
+  void Timer::Stop()
   {
     auto end_time_point = std::chrono::steady_clock::now();
+    pimp->stopped = true;
 
-    uint64_t start =
-      std::chrono::time_point_cast<std::chrono::milliseconds>(start_time_point).time_since_epoch().count();
-    uint64_t end = std::chrono::time_point_cast<std::chrono::milliseconds>(end_time_point).time_since_epoch().count();
+    auto time_spent = std::chrono::duration_cast<std::chrono::microseconds>(end_time_point - pimp->start_time_point);
 
-    stopped = true;
-
-    PP_CORE_TRACE("Duration of {0}: {1}ms", name, end - start);
+    PP_CORE_TRACE("Duration of {0}: {1}ms", pimp->name, time_spent.count() / 1000.0f);
   }
 }
