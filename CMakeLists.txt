@@ -91,9 +91,9 @@ add_library(Pepper STATIC
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
 
 if(WIN32)
-  target_compile_options(Pepper PRIVATE /MP /W4 $<$<CONFIG:Debug>:/WX>)
+  target_compile_options(Pepper PRIVATE /MP /W4 /WX>)
 elseif(UNIX)
-  target_compile_options(Pepper PRIVATE -Wall -Wextra $<$<CONFIG:Debug>:-Werror>)
+  target_compile_options(Pepper PRIVATE -Wall -Wextra -Werror)
 endif(WIN32)
 
 if(WIN32)
