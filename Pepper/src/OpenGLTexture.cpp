@@ -31,7 +31,10 @@ namespace Pepper
     uint32_t internal_format = GL_RGBA8;
     uint32_t format = GL_RGBA;
 
-    PP_CORE_ASSERT(size == width * height * 4, "Error at texture size!");
+    bool size_check = size == width * height * 4;
+    PP_CORE_ASSERT(size_check, "Error at texture size!");
+    if (!size_check)
+      return;
 
     PP_CORE_ASSERT(internal_format != 0, "Incorrect number of texture channels");
     PP_CORE_ASSERT(format != 0, "Incorrect number of texture channels");
