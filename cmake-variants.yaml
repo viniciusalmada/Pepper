@@ -1,0 +1,17 @@
+buildType:
+  default: debug
+  choices:
+    debug:
+      short: Debug
+      long: Build with debugging information
+      buildType: Debug
+    release:
+      short: Release
+      long: Optimize the resulting binaries
+      buildType: Release
+    profiling:
+      short: Profiling
+      long: Measure the execution time
+      buildType: Release
+      settings:
+        ENABLE_PROFILING: yes

@@ -118,6 +118,11 @@ target_compile_definitions(Pepper
   PRIVATE PP_CORE
 )
 
+if(DEFINED ENABLE_PROFILING)
+  message("Build with profiling enabled.")
+  target_compile_definitions(Pepper PRIVATE PROFILING)
+endif()
+
 if(WIN32)
   target_compile_definitions(Pepper PRIVATE PP_PLATFORM_WINDOWS)
 elseif(UNIX)
