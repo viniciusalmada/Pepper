@@ -5,13 +5,23 @@ buildType:
       short: Debug
       long: Build with debugging information
       buildType: Debug
+      settings:
+        ENABLE_PROFILING: no
     release:
       short: Release
       long: Optimize the resulting binaries
       buildType: Release
+      settings:
+        ENABLE_PROFILING: no
     profiling:
       short: Profiling
       long: Measure the execution time
       buildType: Release
+      settings:
+        ENABLE_PROFILING: yes
+    profiling-dbg:
+      short: Profiling Debug
+      long: Profiling with debug information
+      buildType: Debug
       settings:
         ENABLE_PROFILING: yes

@@ -118,7 +118,7 @@ target_compile_definitions(Pepper
   PRIVATE PP_CORE
 )
 
-if(DEFINED ENABLE_PROFILING)
+if(DEFINED ENABLE_PROFILING AND ENABLE_PROFILING STREQUAL yes)
   message("Build with profiling enabled.")
   target_compile_definitions(Pepper PRIVATE PROFILING)
 endif()
@@ -179,6 +179,11 @@ if(WIN32)
 elseif(UNIX)
   target_compile_definitions(App PRIVATE PP_PLATFORM_LINUX)
 endif(WIN32)
+
+if(DEFINED ENABLE_PROFILING AND ENABLE_PROFILING STREQUAL yes)
+  message("Build client app with profiling enabled. (${ENABLE_PROFILING})")
+  target_compile_definitions(App PRIVATE PROFILING)
+endif()
 
 target_link_libraries(App Pepper)
 
