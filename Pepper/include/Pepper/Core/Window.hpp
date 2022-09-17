@@ -16,6 +16,9 @@ namespace Pepper
         width(w),
         height(h)
     {
+#if defined(PROFILING)
+      this->title += " - Profiling running";
+#endif
     }
   };
 

@@ -12,6 +12,7 @@
 ClientApp::ClientApp()
 {
   // PushLayer(Pepper::CreateRef<ExampleLayer>());
+  PP_PROFILE_FUNCTION();
   PushLayer(Pepper::CreateRef<Sandbox2D>());
 }
 

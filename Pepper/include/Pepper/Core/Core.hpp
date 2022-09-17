@@ -56,3 +56,7 @@ namespace Pepper
 #define DECLARE_PIMPL                                                                                                  \
   class Impl;                                                                                                          \
   Scope<Impl> pimp;
+
+#define CONCAT(x, y) x ## y
+
+#define COMBINE(x, y) CONCAT(x, y)

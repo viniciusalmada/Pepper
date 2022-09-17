@@ -37,6 +37,7 @@ namespace Pepper
 
   Application::Application() : pimp(CreateScope<Impl>())
   {
+    PP_PROFILE_FUNCTION();
     PP_CORE_ASSERT(!pimp->app_instance, "Application already defined!");
     pimp->app_instance = this;
 

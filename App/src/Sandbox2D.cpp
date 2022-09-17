@@ -25,31 +25,20 @@ void Sandbox2D::OnDetach() {}
 
 void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
 {
+  PP_PROFILE_FUNCTION();
   {
-    Pepper::Utils::Timer timer{ "CameraUpdate",
-                                [&](const std::string&& name, float duration)
-                                {
-                                  profile.emplace_back(name, duration);
-                                } };
+    PP_PROFILE_SCOPE("CameraController");
     camera_controller.OnUpdate(ts);
   }
 
   {
-    Pepper::Utils::Timer timer{ "RenderPrep",
-                                [&](const std::string&& name, float duration)
-                                {
-                                  profile.emplace_back(name, duration);
-                                } };
+    PP_PROFILE_SCOPE("Clear");
     Pepper::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     Pepper::RenderCommand::Clear();
   }
 
   {
-    Pepper::Utils::Timer timer{ "RenderDraw",
-                                [&](const std::string& name, float duration)
-                                {
-                                  profile.emplace_back(name, duration);
-                                } };
+    PP_PROFILE_SCOPE("Render");
     Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
 
     Pepper::Renderer2D::DrawQuad({ 0.0, 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
@@ -88,15 +77,6 @@ void Sandbox2D::OnImGuiRender()
 {
   ImGui::Begin("Settings");
   ImGui::ColorEdit3("Square Color", glm::value_ptr(square_color));
-
-  for (auto& result : profile)
-  {
-    char _name[50];
-    strcpy(_name, result.name.c_str());
-    strcat(_name, " %.4fms");
-    ImGui::Text(_name, result.time);
-  }
-  profile.clear();
 
   ImGui::End();
 }

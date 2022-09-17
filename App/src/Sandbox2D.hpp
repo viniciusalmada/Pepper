@@ -28,13 +28,5 @@ private:
   Pepper::Ref<Pepper::Texture2D> texture;
   
   glm::vec3 square_color;
-
-  struct ProfileResult
-  {
-    const std::string name;
-    float time;
-  };
-
-  std::list<ProfileResult> profile;
   
 };

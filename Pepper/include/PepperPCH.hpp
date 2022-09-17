@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -22,6 +23,7 @@
 
 // clang-format off
 #include "Pepper/Core/Log.hpp"
+#include "Pepper/Profiling/Profiler.hpp"
 
 #ifdef PP_PLATFORM_WINDOWS
   #include <Windows.h>
