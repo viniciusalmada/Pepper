@@ -1,8 +1,10 @@
+#if defined(PROFILING)
+
 // clang-format off
 #include "PepperPCH.hpp"
 // clang-format on
 
-#include "Pepper/Profiling/Profiler.hpp"
+  #include "Pepper/Profiling/Profiler.hpp"
 
 namespace Pepper
 {
@@ -35,12 +37,14 @@ namespace Pepper
     m_output.flush();
   }
 
-  Profiler::Profiler() = default;
+  Profiler::Profiler() : pimp(CreateScope<Impl>()) {}
 
   Profiler::~Profiler() = default;
 
   void Profiler::BeginSession(std::string&& filepath)
   {
+    std::filesystem::path file{ filepath };
+    PP_CORE_INFO("New profiler session path is: {0}", std::filesystem::absolute(filepath));
     pimp->m_output.open(filepath);
     pimp->WriteHeader();
 
@@ -72,12 +76,12 @@ namespace Pepper
 
     pimp->m_output << "{";
     pimp->m_output << "\"cat\":\"function\",";
-    pimp->m_output << "\"dur\":" << (data.m_end_ns - data.m_start_ns) * 1e-3 << ',';
+    pimp->m_output << "\"dur\":" << data.m_end_us - data.m_start_us << ',';
     pimp->m_output << "\"name\":\"" << title << "\",";
     pimp->m_output << "\"ph\":\"X\",";
     pimp->m_output << "\"pid\":0,";
     pimp->m_output << "\"tid\":" << pimp->m_threads_ids[data.m_thread_hash] << ",";
-    pimp->m_output << "\"ts\":" << data.m_start_ns * 1e-3;
+    pimp->m_output << "\"ts\":" << std::setprecision(24) << data.m_start_us;
     pimp->m_output << "}";
 
     pimp->m_output.flush();
@@ -85,8 +89,9 @@ namespace Pepper
 
   Profiler& Profiler::Get()
   {
-    static Profiler& self {}
+    static Profiler self{};
     return self;
   }
 
 }
+#endif

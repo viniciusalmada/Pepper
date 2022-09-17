@@ -1,6 +1,7 @@
-#pragma once
+#if defined(PROFILING)
+  #pragma once
 
-#include "Pepper/Core/Core.hpp"
+  #include "Pepper/Core/Core.hpp"
 
 namespace Pepper
 {
@@ -16,3 +17,4 @@ namespace Pepper
     DECLARE_PIMPL
   };
 }
+#endif
