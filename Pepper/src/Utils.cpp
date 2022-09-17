@@ -18,7 +18,7 @@ namespace Pepper::Utils
   class Timer::Impl
   {
   public:
-    Impl(const std::string& name, TimerFun fun);
+    Impl(std::string&& name, TimerFun&& fun);
 
     std::string name;
     std::chrono::time_point<std::chrono::steady_clock> start_time_point;
@@ -26,12 +26,12 @@ namespace Pepper::Utils
     TimerFun fun;
   };
 
-  Timer::Impl::Impl(const std::string& name, TimerFun fun) : name(name), stopped(false), fun(fun)
+  Timer::Impl::Impl(std::string&& name, TimerFun&& fun) : name(name), stopped(false), fun(fun)
   {
     start_time_point = std::chrono::steady_clock::now();
   }
 
-  Timer::Timer(const std::string& name, TimerFun&& fun) : pimp(CreateScope<Impl>(name, fun)) {}
+  Timer::Timer(std::string&& name, TimerFun&& fun) : pimp(CreateScope<Impl>(std::move(name), std::move(fun))) {}
 
   Timer::~Timer()
   {
@@ -44,8 +44,8 @@ namespace Pepper::Utils
     auto end_time_point = std::chrono::steady_clock::now();
     pimp->stopped = true;
 
-    auto time_spent = std::chrono::duration_cast<std::chrono::microseconds>(end_time_point - pimp->start_time_point);
-    float time_spent_ms = time_spent.count() / 1000.0f;
+    auto time_spent = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time_point - pimp->start_time_point);
+    float time_spent_ms = time_spent.count() / 1000.0f / 1000.0f;
 
     pimp->fun(std::move(pimp->name), time_spent_ms);
   }
