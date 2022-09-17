@@ -9,15 +9,24 @@
 static bool CheckValidVAO(uint32_t vaoID)
 {
   // Check valid parent VAO
-  PP_CORE_ASSERT(glIsVertexArray(vaoID), "Invalid Vertex Array Object");
+  bool is_valid_vao = glIsVertexArray(vaoID);
+  PP_CORE_ASSERT(is_valid_vao, "Invalid Vertex Array Object");
+  if (!is_valid_vao)
+    return false;
 
   // Check passed VAO is bound
   uint32_t current_VAO = 0;
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (int*)(&current_VAO));
 
-  PP_CORE_ASSERT(current_VAO != 0, "No Vertex Array Object is bound!");
+  bool is_any_vao_bound = current_VAO != 0;
+  PP_CORE_ASSERT(is_any_vao_bound, "No Vertex Array Object is bound!");
+  if (!is_any_vao_bound)
+    return false;
 
-  PP_CORE_ASSERT(current_VAO == vaoID, "The passed VAO is not bound!");
+  bool is_vao_bound = current_VAO == vaoID;
+  PP_CORE_ASSERT(is_vao_bound, "The passed VAO is not bound!");
+  if (!is_vao_bound)
+    return false;
 
   return true;
 }

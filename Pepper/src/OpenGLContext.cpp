@@ -32,6 +32,8 @@ namespace Pepper
     glfwMakeContextCurrent(pimp->native_window);
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     PP_CORE_ASSERT(status, "Failed to initialize Glad!");
+    if (!status)
+      return;
 
     PP_CORE_INFO("OpenGL Vendor: {0}", (char*)glGetString(GL_VENDOR));
     PP_CORE_INFO("OpenGL Renderer: {0}", (char*)glGetString(GL_RENDERER));
