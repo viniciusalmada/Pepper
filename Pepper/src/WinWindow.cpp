@@ -79,6 +79,8 @@ namespace Pepper
     {
       int success = glfwInit();
       PP_CORE_ASSERT(success, "Could not initialize GLFW!");
+      if (!success)
+        return;
       glfwSetErrorCallback(GLFWErrorCallback);
 
       s_glfw_initialized = true;
