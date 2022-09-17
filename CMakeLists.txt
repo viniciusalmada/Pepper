@@ -73,6 +73,7 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/OpenGLVertexArray.cpp
   ${PP_SRC_DIR}/OrthoCamera.cpp
   ${PP_SRC_DIR}/OrthoCameraController.cpp
+  ${PP_SRC_DIR}/Profiler.cpp
   ${PP_SRC_DIR}/RenderCommand.cpp
   ${PP_SRC_DIR}/Renderer.cpp
   ${PP_SRC_DIR}/Renderer2D.cpp
@@ -80,6 +81,7 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/Shader.cpp
   ${PP_SRC_DIR}/ShaderLibrary.cpp
   ${PP_SRC_DIR}/Texture.cpp
+  ${PP_SRC_DIR}/Timer.cpp
   ${PP_SRC_DIR}/Utils.cpp
   ${PP_SRC_DIR}/VertexArray.cpp
   ${PP_SRC_DIR}/WinInput.cpp
