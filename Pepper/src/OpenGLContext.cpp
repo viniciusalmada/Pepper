@@ -29,6 +29,7 @@ namespace Pepper
 
   void OpenGLContext::Init()
   {
+    PP_PROFILE_FUNCTION();
     glfwMakeContextCurrent(pimp->native_window);
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     PP_CORE_ASSERT(status, "Failed to initialize Glad!");
@@ -52,6 +53,7 @@ namespace Pepper
 
   void OpenGLContext::SwapBuffers()
   {
+    PP_PROFILE_FUNCTION();
     glfwSwapBuffers(pimp->native_window);
   }
 }

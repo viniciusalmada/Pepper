@@ -48,6 +48,7 @@ namespace Pepper
 
   void OrthoCameraController::OnUpdate(TimeStep ts)
   {
+    PP_PROFILE_FUNCTION();
     glm::vec3 pos = pimp->camera.GetPosition();
     float rot_deg = pimp->camera.GetRotation();
 
@@ -89,6 +90,7 @@ namespace Pepper
 
   void OrthoCameraController::OnEvent(Event& e)
   {
+    PP_PROFILE_FUNCTION();
     EventDispatcher dispatcher(e);
     dispatcher.Dispatch<MouseScrolledEvent>(
       std::bind(&OrthoCameraController::Impl::OnMouseScrolled, pimp.get(), std::placeholders::_1));
@@ -113,6 +115,7 @@ namespace Pepper
 
   bool OrthoCameraController::Impl::OnMouseScrolled(MouseScrolledEvent& e)
   {
+    PP_PROFILE_FUNCTION();
 
     zoom_level -= e.GetYOffset() / 5.0f;
     zoom_level = std::max(zoom_level, MIN_ZOOM_LEVEL);
@@ -124,6 +127,7 @@ namespace Pepper
 
   bool OrthoCameraController::Impl::OnWindowResized(WindowResizeEvent& e)
   {
+    PP_PROFILE_FUNCTION();
     aspect_ratio = (float)e.GetWidth() / (float)e.GetHeight();
     camera.SetProjection(GetLimits());
     return false;

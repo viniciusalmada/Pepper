@@ -51,6 +51,7 @@ namespace Pepper
 
   WinWindow::Impl::Impl(const WindowProps& props)
   {
+    PP_PROFILE_FUNCTION();
     Init(props);
   }
 
@@ -64,6 +65,7 @@ namespace Pepper
 
   WinWindow::~WinWindow()
   {
+    PP_PROFILE_FUNCTION();
     pimp->Shutdown();
   }
 
@@ -77,6 +79,7 @@ namespace Pepper
 
     if (!s_glfw_initialized)
     {
+      PP_PROFILE_SCOPE("GLFW Init");
       int success = glfwInit();
       PP_CORE_ASSERT(success, "Could not initialize GLFW!");
       if (!success)
@@ -86,17 +89,22 @@ namespace Pepper
       s_glfw_initialized = true;
     }
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
+    {
+      PP_PROFILE_SCOPE("GLFW window creation");
+      glfwWindowHint(GLFW_SAMPLES, 4);
+      window = glfwCreateWindow(props.width, props.height, props.title.c_str(), nullptr, nullptr);
+    }
 
-    glfwSetWindowUserPointer(window, &data);
-
-    ConfigResizeCB();
-    ConfigCloseCB();
-    ConfigKeyCB();
-    ConfigMouseButtonCB();
-    ConfigMouseScrollCB();
-    ConfigMouseMoveCB();
+    {
+      PP_PROFILE_SCOPE("GLFW config callbacks");
+      glfwSetWindowUserPointer(window, &data);
+      ConfigResizeCB();
+      ConfigCloseCB();
+      ConfigKeyCB();
+      ConfigMouseButtonCB();
+      ConfigMouseScrollCB();
+      ConfigMouseMoveCB();
+    }
   }
 
   void WinWindow::Impl::Shutdown()
@@ -241,6 +249,7 @@ namespace Pepper
 
   void WinWindow::OnUpdate()
   {
+    PP_PROFILE_FUNCTION();
     glfwPollEvents();
     pimp->graphics_context->SwapBuffers();
   }
@@ -262,6 +271,7 @@ namespace Pepper
 
   void WinWindow::SetVsync(bool enabled)
   {
+    PP_PROFILE_FUNCTION();
     if (enabled)
       glfwSwapInterval(1);
     else

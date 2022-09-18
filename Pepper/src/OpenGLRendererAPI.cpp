@@ -11,6 +11,7 @@ namespace Pepper
 {
   void OpenGLRendererAPI::Init()
   {
+    PP_PROFILE_FUNCTION();
 #ifdef PP_DEBUG
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -27,21 +28,25 @@ namespace Pepper
 
   void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) const
   {
+    PP_PROFILE_FUNCTION();
     glViewport(x, y, w, h);
   }
 
   void OpenGLRendererAPI::SetClearColor(const glm::vec4& color) const
   {
+    PP_PROFILE_FUNCTION();
     glClearColor(color.r, color.g, color.b, color.a);
   }
 
   void OpenGLRendererAPI::Clear() const
   {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    PP_PROFILE_FUNCTION();
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray) const
   {
+    PP_PROFILE_FUNCTION();
     glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
   }
 }

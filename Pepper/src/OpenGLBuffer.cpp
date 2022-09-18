@@ -53,6 +53,7 @@ namespace Pepper
       layout({})
 
   {
+    PP_PROFILE_FUNCTION();
     if (!CheckValidVAO(parent))
       return;
 
@@ -69,11 +70,13 @@ namespace Pepper
 
   OpenGLVertexBuffer::~OpenGLVertexBuffer()
   {
+    PP_PROFILE_FUNCTION();
     glDeleteBuffers(1, &pimp->renderer_id);
   }
 
   void OpenGLVertexBuffer::Bind() const
   {
+    PP_PROFILE_FUNCTION();
     if (!CheckValidVAO(pimp->parent_id))
       return;
 
@@ -82,6 +85,7 @@ namespace Pepper
 
   void OpenGLVertexBuffer::Unbind() const
   {
+    PP_PROFILE_FUNCTION();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
@@ -113,6 +117,7 @@ namespace Pepper
       count((uint32_t)indices.size()),
       parent_id(parent)
   {
+    PP_PROFILE_FUNCTION();
     if (!CheckValidVAO(parent_id))
       return;
 
@@ -128,11 +133,13 @@ namespace Pepper
 
   OpenGLIndexBuffer::~OpenGLIndexBuffer()
   {
+    PP_PROFILE_FUNCTION();
     glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &pimp->renderer_id);
   }
 
   void OpenGLIndexBuffer::Bind() const
   {
+    PP_PROFILE_FUNCTION();
     if (!CheckValidVAO(pimp->parent_id))
       return;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pimp->renderer_id);
@@ -140,6 +147,7 @@ namespace Pepper
 
   void OpenGLIndexBuffer::Unbind() const
   {
+    PP_PROFILE_FUNCTION();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 

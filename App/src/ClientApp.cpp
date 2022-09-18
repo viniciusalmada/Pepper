@@ -20,5 +20,7 @@ ClientApp::~ClientApp() {}
 
 Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
 {
+  PP_PROFILE_FUNCTION();
+  
   return CreateScope<ClientApp>();
 }

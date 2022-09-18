@@ -28,6 +28,7 @@ namespace Pepper
       width(width),
       height(height)
   {
+    PP_PROFILE_FUNCTION();
     uint32_t internal_format = GL_RGBA8;
     uint32_t format = GL_RGBA;
 
@@ -53,11 +54,16 @@ namespace Pepper
 
   OpenGLTexture2D::Impl::Impl(const std::filesystem::path& path) : path(path)
   {
+    PP_PROFILE_FUNCTION();
     int w{}, h{};
     int channels{};
     stbi_set_flip_vertically_on_load(1);
-    stbi_uc* data = stbi_load(path.string().c_str(), &w, &h, &channels, 0);
-    PP_CORE_ASSERT(data, "Failed to load image!");
+    stbi_uc* data;
+    {
+      PP_PROFILE_SCOPE("stbi_load");
+      data = stbi_load(path.string().c_str(), &w, &h, &channels, 0);
+      PP_CORE_ASSERT(data, "Failed to load image!");
+    }
 
     this->width = w;
     this->height = h;
@@ -101,6 +107,7 @@ namespace Pepper
 
   OpenGLTexture2D::~OpenGLTexture2D()
   {
+    PP_PROFILE_FUNCTION();
     glDeleteTextures(1, &pimp->renderer_ID);
   }
 
@@ -116,6 +123,7 @@ namespace Pepper
 
   void OpenGLTexture2D::Bind(uint32_t slot) const
   {
+    PP_PROFILE_FUNCTION();
     glBindTextureUnit(slot, pimp->renderer_ID);
   }
 }

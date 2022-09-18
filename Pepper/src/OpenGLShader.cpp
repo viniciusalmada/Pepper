@@ -51,6 +51,7 @@ namespace Pepper
 
   OpenGLShader::Impl::Impl(const std::filesystem::path& filepath) : name(filepath.stem().string())
   {
+    PP_PROFILE_FUNCTION();
     std::string shader_raw_src = std::move(ReadFile(filepath));
     auto shaders_src = SplitShaderSrc(shader_raw_src);
     CreateProgram(shaders_src[ShaderType::VERTEX], shaders_src[ShaderType::FRAGMENT]);
@@ -59,6 +60,7 @@ namespace Pepper
   OpenGLShader::Impl::Impl(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
       name(name)
   {
+    PP_PROFILE_FUNCTION();
     CreateProgram(vertexSrc, fragmentSrc);
   }
 
@@ -71,16 +73,19 @@ namespace Pepper
 
   OpenGLShader::~OpenGLShader()
   {
+    PP_PROFILE_FUNCTION();
     glDeleteProgram(pimp->renderer_id);
   }
 
   void OpenGLShader::Bind() const
   {
+    PP_PROFILE_FUNCTION();
     glUseProgram(pimp->renderer_id);
   }
 
   void OpenGLShader::Unbind() const
   {
+    PP_PROFILE_FUNCTION();
     glUseProgram(0);
   }
 
@@ -91,21 +96,25 @@ namespace Pepper
 
   void OpenGLShader::SetBoolean(const std::string& name, bool value)
   {
+    PP_PROFILE_FUNCTION();
     this->pimp->UploadUniformBool(name, value);
   }
 
   void OpenGLShader::SetInt(const std::string& name, const int& number)
   {
+    PP_PROFILE_FUNCTION();
     this->pimp->UploadUniformInt(name, number);
   }
 
   void OpenGLShader::SetMat4(const std::string& uniformName, const glm::mat4& matrix)
   {
+    PP_PROFILE_FUNCTION();
     this->pimp->UploadUniformMat4(uniformName, matrix);
   }
 
   void OpenGLShader::SetFloat4(const std::string& uniformName, const glm::vec4& vec)
   {
+    PP_PROFILE_FUNCTION();
     this->pimp->UploadUniformFloat4(uniformName, vec);
   }
 
@@ -183,6 +192,7 @@ namespace Pepper
 
   std::tuple<uint32_t, bool> OpenGLShader::Impl::Compile(const std::string& src, ShaderType type)
   {
+    PP_PROFILE_FUNCTION();
     uint32_t shader_type = GetGLShaderType(type);
 
     unsigned int shader = glCreateShader(shader_type);
@@ -239,6 +249,7 @@ namespace Pepper
 
   std::string OpenGLShader::Impl::ReadFile(const std::filesystem::path& filepath)
   {
+    PP_PROFILE_FUNCTION();
     std::ifstream in{ filepath, std::ios::in | std::ios::binary };
     PP_CORE_ASSERT(in, "Could not open shader file {0}", filepath);
 
@@ -257,6 +268,7 @@ namespace Pepper
 
   std::unordered_map<ShaderType, std::string> OpenGLShader::Impl::SplitShaderSrc(const std::string& rawSrc)
   {
+    PP_PROFILE_FUNCTION();
     std::unordered_map<std::string, std::string> shaders_src;
     const std::string TOKEN{ "//##" };
     const std::string NEW_LINE = Utils::GetNewLine();
@@ -312,6 +324,7 @@ namespace Pepper
 
   void OpenGLShader::Impl::CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc)
   {
+    PP_PROFILE_FUNCTION();
     auto [vertex_shader, vertex_ok] = Compile(vertexSrc, ShaderType::VERTEX);
     if (!vertex_ok)
       return;
@@ -367,6 +380,7 @@ namespace Pepper
 
   uint32_t OpenGLShader::Impl::RetrieveUniformLocation(const std::string& uniformName)
   {
+    PP_PROFILE_FUNCTION();
     if (uniform_locations.contains(uniformName))
       return uniform_locations.at(uniformName);
 

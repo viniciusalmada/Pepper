@@ -52,16 +52,24 @@ namespace Pepper
     pimp->last_frame_time = 0;
   }
 
-  Application::~Application() = default;
+  Application::~Application()
+  {
+    PP_PROFILE_FUNCTION();
+    Renderer::Shutdown();
+  }
 
   void Application::PushLayer(Ref<Layer> layer)
   {
+    PP_PROFILE_FUNCTION();
     pimp->layer_stack.PushLayer(layer);
+    layer->OnAttach();
   }
 
   void Application::PushOverlay(Ref<Layer> overlay)
   {
+    PP_PROFILE_FUNCTION();
     pimp->layer_stack.PushOverlay(overlay);
+    overlay->OnAttach();
   }
 
   Window& Application::GetWindow()
@@ -76,6 +84,7 @@ namespace Pepper
 
   void Application::OnEvent(Event& e)
   {
+    PP_PROFILE_FUNCTION();
     EventDispatcher dispatcher{ e };
     dispatcher.Dispatch<WindowCloseEvent>(
       std::bind(&Application::Impl::OnWindowClose, pimp.get(), std::placeholders::_1));
@@ -93,21 +102,29 @@ namespace Pepper
 
   void Application::Run()
   {
+    PP_PROFILE_FUNCTION();
     while (pimp->running)
     {
+      PP_PROFILE_SCOPE("RunLoopStep");
       float time_sec = static_cast<float>(glfwGetTime()); // Platform::GetTime
       TimeStep timeStep{ time_sec - pimp->last_frame_time };
       pimp->last_frame_time = time_sec;
 
       if (!pimp->minimized)
       {
-        for (Ref<Layer> layer : pimp->layer_stack)
-          layer->OnUpdate(timeStep);
+        {
+          PP_PROFILE_SCOPE("LayerStack Update");
+          for (Ref<Layer> layer : pimp->layer_stack)
+            layer->OnUpdate(timeStep);
+        }
+        pimp->imGuiLayer->Begin();
+        {
+          PP_PROFILE_SCOPE("LayerStack ImGuiRender");
+          for (Ref<Layer> layer : pimp->layer_stack)
+            layer->OnImGuiRender();
+        }
+        pimp->imGuiLayer->End();
       }
-      pimp->imGuiLayer->Begin();
-      for (Ref<Layer> layer : pimp->layer_stack)
-        layer->OnImGuiRender();
-      pimp->imGuiLayer->End();
 
       pimp->window->OnUpdate();
     }
@@ -121,6 +138,7 @@ namespace Pepper
 
   bool Application::Impl::OnWindowResize(WindowResizeEvent& e)
   {
+    PP_PROFILE_FUNCTION();
     if (e.GetWidth() == 0 || e.GetHeight() == 0)
     {
       minimized = true;

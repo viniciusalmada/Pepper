@@ -28,6 +28,7 @@ namespace Pepper
       position({ 0.0f, 0.0f, 0.0f }),
       rotation_deg(0.0f)
   {
+    PP_PROFILE_FUNCTION();
     view_proj_matrix = proj_matrix * view_matrix;
   }
 
@@ -37,6 +38,7 @@ namespace Pepper
 
   void OrthoCamera::SetProjection(const CameraLimits&& lim)
   {
+    PP_PROFILE_FUNCTION();
     pimp->proj_matrix = glm::ortho(lim.left, lim.right, lim.bottom, lim.top, -1.0f, 1.0f);
     pimp->view_proj_matrix = pimp->proj_matrix * pimp->view_matrix;
   }
@@ -80,6 +82,7 @@ namespace Pepper
 
   void OrthoCamera::Impl::RecalculateViewMatrix()
   {
+    PP_PROFILE_FUNCTION();
     glm::mat4 pos_translated = glm::translate(glm::mat4(1.0f), position);
     glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotation_deg), glm::vec3(0, 0, 1));
     glm::mat4 transform = pos_translated * rotation;

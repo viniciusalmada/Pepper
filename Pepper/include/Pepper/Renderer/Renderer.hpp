@@ -10,6 +10,8 @@ namespace Pepper
   {
   public:
     static void Init();
+    static void Shutdown();
+
     static void OnViewportResize(uint32_t width, uint32_t height);
 
     static void BeginScene(const OrthoCamera& camera);

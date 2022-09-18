@@ -44,16 +44,19 @@ namespace Pepper
 
   OpenGLVertexArray::OpenGLVertexArray() : pimp(CreateScope<Impl>())
   {
+    PP_PROFILE_FUNCTION();
     glCreateVertexArrays(1, &pimp->renderer_id);
   }
 
   OpenGLVertexArray::~OpenGLVertexArray()
   {
+    PP_PROFILE_FUNCTION();
     glDeleteVertexArrays(1, &pimp->renderer_id);
   }
 
   void OpenGLVertexArray::Bind() const
   {
+    PP_PROFILE_FUNCTION();
     glBindVertexArray(pimp->renderer_id);
     for (auto& vbo : pimp->vertex_buffers)
       vbo->Bind();
@@ -63,11 +66,13 @@ namespace Pepper
 
   void OpenGLVertexArray::Unbind() const
   {
+    PP_PROFILE_FUNCTION();
     glBindVertexArray(0);
   }
 
   void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buffer)
   {
+    PP_PROFILE_FUNCTION();
     const auto& layout = buffer->GetLayout();
     PP_CORE_ASSERT(!layout.IsEmpty(), "Layout is empty!");
 

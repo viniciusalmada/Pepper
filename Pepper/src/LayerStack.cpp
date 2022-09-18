@@ -27,13 +27,11 @@ namespace Pepper
   {
     pimp->layers.emplace(pimp->layers.begin() + pimp->layer_index, layer);
     pimp->layer_index++;
-    layer->OnAttach();
   }
 
   void LayerStack::PushOverlay(Ref<Layer> overlay)
   {
     pimp->layers.emplace_back(overlay);
-    overlay->OnAttach();
   }
 
   void LayerStack::PopLayer(Ref<Layer> layer)

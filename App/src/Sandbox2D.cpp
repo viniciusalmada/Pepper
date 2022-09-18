@@ -18,18 +18,20 @@ Sandbox2D::Sandbox2D() :
 
 void Sandbox2D::OnAttach()
 {
+  PP_PROFILE_FUNCTION();
+  
   texture = Pepper::Texture2D::Create(R"(assets/textures/checkerboard.png)");
 }
 
-void Sandbox2D::OnDetach() {}
+void Sandbox2D::OnDetach()
+{
+  PP_PROFILE_FUNCTION();
+}
 
 void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION();
-  {
-    PP_PROFILE_SCOPE("CameraController");
-    camera_controller.OnUpdate(ts);
-  }
+  camera_controller.OnUpdate(ts);
 
   {
     PP_PROFILE_SCOPE("Clear");
@@ -42,32 +44,14 @@ void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
     Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
 
     Pepper::Renderer2D::DrawQuad({ 0.0, 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
-    Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.1 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
-    Pepper::Renderer2D::DrawQuad({ .0, .0, 0.2 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
-    Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.3 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
+    // Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.1 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
+    // Pepper::Renderer2D::DrawQuad({ .0, .0, 0.2 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
+    // Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.3 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
 
-    Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture);
+    // Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture);
     // Pepper::Renderer2D::DrawQuad({ 0.f, 0.f }, { 0.2, 0.2 }, { 0.0f, 0.2f, 0.3f, 1.0f });
 
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
-    DrawRuler();
+    // DrawRuler();
 
     Pepper::Renderer2D::EndScene();
   }
@@ -75,9 +59,9 @@ void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
 
 void Sandbox2D::OnImGuiRender()
 {
+  PP_PROFILE_FUNCTION();
   ImGui::Begin("Settings");
   ImGui::ColorEdit3("Square Color", glm::value_ptr(square_color));
-
   ImGui::End();
 }
 

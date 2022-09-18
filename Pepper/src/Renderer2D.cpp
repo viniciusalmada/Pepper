@@ -23,6 +23,7 @@ namespace Pepper
 
   void Renderer2D::Init()
   {
+    PP_PROFILE_FUNCTION();
     data = CreateScope<RendererData>();
     data->quad_vertex_array = VertexArray::Create();
     data->quad_vertex_array->Bind();
@@ -52,19 +53,25 @@ namespace Pepper
 
   void Renderer2D::Shutdown()
   {
+    PP_PROFILE_FUNCTION();
     data.reset();
   }
 
   void Renderer2D::BeginScene(const OrthoCamera& camera)
   {
+    PP_PROFILE_FUNCTION();
     data->shader->Bind();
     data->shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
   }
 
-  void Renderer2D::EndScene() {}
+  void Renderer2D::EndScene()
+  {
+    PP_PROFILE_FUNCTION();
+  }
 
   void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
   {
+    PP_PROFILE_FUNCTION();
     data->shader->SetFloat4("u_color", color);
     data->white_texture->Bind();
 
@@ -83,6 +90,7 @@ namespace Pepper
 
   void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex)
   {
+    PP_PROFILE_FUNCTION();
     tex->Bind();
     data->shader->SetFloat4("u_color", { 1.0f, 1.0f, 1.0f, 1.0f });
 
