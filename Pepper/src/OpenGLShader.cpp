@@ -370,12 +370,15 @@ namespace Pepper
 
   bool OpenGLShader::Impl::CheckIsBound() const
   {
-    uint32_t curr_program = 0;
-    glGetIntegerv(GL_CURRENT_PROGRAM, (int*)&curr_program);
+    int curr_program = -1;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &curr_program);
     if (curr_program == 0)
       return false;
 
-    return curr_program == renderer_id;
+    if (curr_program <= 0)
+      return false;
+
+    return static_cast<uint32_t>(curr_program) == renderer_id;
   }
 
   uint32_t OpenGLShader::Impl::RetrieveUniformLocation(const std::string& uniformName)
