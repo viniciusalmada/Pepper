@@ -74,10 +74,10 @@ void Sandbox2D::OnEvent(Pepper::Event& e)
 void Sandbox2D::DrawRuler() const
 {
   // Draw y axis
-  for (int i : std::views::iota(-25, 25))
+  for (const int i : std::ranges::iota_view{ -25, 25 })
     Pepper::Renderer2D::DrawQuad({ 0.0, -0.1 * i }, { 0.01, 0.01 }, { 1.0f, 1.0f, 1.0f, 1.0f });
 
-  // Draw x axis
-  for (int i : std::views::iota(-25, 25))
+  // // Draw x axis
+  for (const int i : std::ranges::iota_view{ -25, 25 })
     Pepper::Renderer2D::DrawQuad({ -0.1 * i, 0.0 }, { 0.01, 0.01 }, { 1.0f, 1.0f, 1.0f, 1.0f });
 }
