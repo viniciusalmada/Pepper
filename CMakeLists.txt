@@ -25,6 +25,8 @@ add_subdirectory(${PP_VENDOR_DIR}/glm)
 if(WIN32)
   # disable warning C4201: nonstandard extension used: nameless struct/union
   target_compile_options(glm INTERFACE /wd4201)
+else()
+  target_compile_options(glm INTERFACE -Wno-effc++)
 endif(WIN32)
 
 # #############################################################################
@@ -43,6 +45,10 @@ add_library(ImGui STATIC ${PP_VENDOR_DIR}/imgui/imgui_demo.cpp
 )
 
 target_compile_features(ImGui PRIVATE ${CXX_STANDARD})
+
+if(UNIX)
+  target_compile_options(ImGui PUBLIC -Wno-old-style-cast)
+endif()
 
 if(WIN32)
   set_property(TARGET ImGui PROPERTY
@@ -93,7 +99,7 @@ target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
 if(WIN32)
   target_compile_options(Pepper PRIVATE /MP /W4 /WX>)
 elseif(UNIX)
-  target_compile_options(Pepper PRIVATE -Wall -Wextra -Werror)
+  target_compile_options(Pepper PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
 endif(WIN32)
 
 if(WIN32)
@@ -130,10 +136,10 @@ elseif(UNIX)
 endif(WIN32)
 
 target_link_libraries(Pepper
-  PRIVATE GLAD
-  PRIVATE glfw
-  PRIVATE ImGui
-  PRIVATE glm
+  PUBLIC GLAD
+  PUBLIC glfw
+  PUBLIC ImGui
+  PUBLIC glm
 )
 
 if(WIN32)
@@ -152,6 +158,12 @@ add_executable(App
   App/src/Sandbox2D.cpp
   App/src/IO.cpp
 )
+
+if(WIN32)
+  target_compile_options(App PRIVATE /MP /W4 /WX>)
+elseif(UNIX)
+  target_compile_options(App PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
+endif(WIN32)
 
 target_compile_features(App PRIVATE ${CXX_STANDARD})
 
