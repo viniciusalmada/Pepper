@@ -14,6 +14,8 @@ namespace Pepper
     friend class EventDispatcher;
 
   public:
+    virtual ~Event() = default;
+
     virtual EventInfo GetEventInfo() const = 0;
 
     virtual std::string ToString() const { return GetName(); };
