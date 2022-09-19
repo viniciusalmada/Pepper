@@ -14,12 +14,13 @@ Sandbox2D::Sandbox2D() :
     camera_controller(1280.0f / 720.0f, true),
     square_color({ 0.2f, 0.3f, 0.8f })
 {
+  PP_PROFILE_FUNCTION();
 }
 
 void Sandbox2D::OnAttach()
 {
   PP_PROFILE_FUNCTION();
-  
+
   texture = Pepper::Texture2D::Create(R"(assets/textures/checkerboard.png)");
 }
 
