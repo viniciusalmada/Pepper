@@ -30,10 +30,12 @@ namespace Pepper
       return 4 * 4 * 4;
     case ShaderDataType::Bool:
       return 1;
-    default:
+    case ShaderDataType::None:
       PP_CORE_ASSERT(false, "Unknown ShaderDataType");
       return 0;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return 0;
   }
 
   struct BufferElement
@@ -76,10 +78,12 @@ namespace Pepper
         return 3 * 3;
       case ShaderDataType::Mat4:
         return 4 * 4;
-      default:
+      case ShaderDataType::None:
         PP_CORE_ASSERT(false, "Unknown ShaderDataType");
         return 0;
       }
+      PP_CORE_ASSERT(false, "Unreachable code");
+      return 0;
     }
   };
 }

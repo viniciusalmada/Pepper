@@ -15,10 +15,12 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return CreateRef<OpenGLTexture2D>(width, height, data, size);
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 
   Ref<Texture2D> Texture2D::Create(const std::filesystem::path& path)
@@ -27,9 +29,11 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return CreateRef<OpenGLTexture2D>(path);
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 }

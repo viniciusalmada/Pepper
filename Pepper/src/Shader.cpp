@@ -15,10 +15,12 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return std::make_shared<OpenGLShader>(filepath);
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 
   Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
@@ -27,9 +29,11 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 }

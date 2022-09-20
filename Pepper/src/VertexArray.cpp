@@ -15,9 +15,11 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return std::make_shared<OpenGLVertexArray>();
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 }

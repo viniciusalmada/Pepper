@@ -27,10 +27,12 @@ namespace Pepper
       return GL_INT;
     case ShaderDataType::Bool:
       return GL_BOOL;
-    default:
+    case ShaderDataType::None:
       PP_CORE_ASSERT(false, "Unknown ShaderDataType!");
       return 0;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return 0;
   }
 
   class OpenGLVertexArray::Impl

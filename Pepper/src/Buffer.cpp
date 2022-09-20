@@ -16,10 +16,12 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return std::make_shared<OpenGLVertexBuffer>(vertices, parent);
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 
   Ref<IndexBuffer> IndexBuffer::Create(const std::vector<uint32_t>& indices, uint32_t parent)
@@ -28,9 +30,11 @@ namespace Pepper
     {
     case RendererAPI::API::OPEN_GL:
       return std::make_shared<OpenGLIndexBuffer>(indices, parent);
-    default:
+    case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
     }
+    PP_CORE_ASSERT(false, "Unreachable code");
+    return nullptr;
   }
 }
