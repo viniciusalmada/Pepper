@@ -31,7 +31,11 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION();
     glfwMakeContextCurrent(pimp->native_window);
-    int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    auto loader = [](const char* name)
+    {
+      return reinterpret_cast<void*>(glfwGetProcAddress(name));
+    };
+    int status = gladLoadGLLoader(loader);
     PP_CORE_ASSERT(status, "Failed to initialize Glad!");
     if (!status)
       return;
