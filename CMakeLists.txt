@@ -97,7 +97,7 @@ add_library(Pepper STATIC
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
 
 if(WIN32)
-  target_compile_options(Pepper PRIVATE /MP /W4 /WX>)
+  target_compile_options(Pepper PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287)
 elseif(UNIX)
   target_compile_options(Pepper PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
 endif(WIN32)
@@ -160,7 +160,7 @@ add_executable(App
 )
 
 if(WIN32)
-  target_compile_options(App PRIVATE /MP /W4 /WX>)
+  target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287)
 elseif(UNIX)
   target_compile_options(App PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
 endif(WIN32)
