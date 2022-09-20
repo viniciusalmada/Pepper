@@ -3,7 +3,9 @@
 #include "Core.hpp"
 
 #ifdef PP_PLATFORM_WINDOWS
-  #pragma warning(disable : 4189)
+  #pragma warning(disable : 4189) // 'identifier' : local variable is initialized but not referenced
+  #pragma warning(disable : 4061) // enumerator 'identifier' in a switch of enum 'enumeration' is not explicitly handled
+                                  // by a case label
 #endif
 // clang-format off
 #include <spdlog/spdlog.h>
@@ -11,6 +13,7 @@
 // clang-format on
 #ifdef PP_PLATFORM_WINDOWS
   #pragma warning(default : 4189)
+  #pragma warning(default : 4061)
 #endif
 
 namespace Pepper
