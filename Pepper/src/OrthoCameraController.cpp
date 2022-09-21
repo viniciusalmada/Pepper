@@ -86,6 +86,8 @@ namespace Pepper
         rot_deg += 360.0f;
       pimp->camera.SetRotationDeg(rot_deg);
     }
+
+    pimp->camera_move_speed = pimp->zoom_level;
   }
 
   void OrthoCameraController::OnEvent(Event& e)
