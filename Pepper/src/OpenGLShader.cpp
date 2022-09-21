@@ -112,6 +112,11 @@ namespace Pepper
     this->pimp->UploadUniformMat4(uniformName, matrix);
   }
 
+  void OpenGLShader::SetFloat(const std::string& name, const float value) {
+    PP_PROFILE_FUNCTION();
+    this->pimp->UploadUniformFloat(name, value);
+  }
+
   void OpenGLShader::SetFloat4(const std::string& uniformName, const glm::vec4& vec)
   {
     PP_PROFILE_FUNCTION();

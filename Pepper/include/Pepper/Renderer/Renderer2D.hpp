@@ -18,7 +18,7 @@ namespace Pepper
     static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
     static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 
-    static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex);
-    static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& tex);
+    static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex, float tilingFac = 1.0f);
+    static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& tex, float tilingFac = 1.0f);
   };
 }

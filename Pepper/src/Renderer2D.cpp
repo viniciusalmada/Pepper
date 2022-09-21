@@ -73,6 +73,7 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION();
     data->shader->SetFloat4("u_color", color);
+    data->shader->SetFloat("u_tiling_factor", 1.0);
     data->white_texture->Bind();
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
@@ -88,11 +89,12 @@ namespace Pepper
     DrawQuad({ position.x, position.y, 0.0f }, size, color);
   }
 
-  void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex)
+  void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex, float tilingFac)
   {
     PP_PROFILE_FUNCTION();
     tex->Bind();
     data->shader->SetFloat4("u_color", { 1.0f, 1.0f, 1.0f, 1.0f });
+    data->shader->SetFloat("u_tiling_factor", tilingFac);
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
                           glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
@@ -102,9 +104,9 @@ namespace Pepper
     RenderCommand::DrawIndexed(data->quad_vertex_array);
   }
 
-  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& tex)
+  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& tex, float tilingFac)
   {
-    DrawQuad({ position.x, position.y, 0.0f }, size, tex);
+    DrawQuad({ position.x, position.y, 0.0f }, size, tex, tilingFac);
   }
 
 }

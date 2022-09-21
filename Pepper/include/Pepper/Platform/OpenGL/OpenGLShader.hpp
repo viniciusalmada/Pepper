@@ -24,6 +24,7 @@ namespace Pepper
     void SetBoolean(const std::string& name, bool value) override;
     void SetInt(const std::string& name, const int& number) override;
     void SetMat4(const std::string& name, const glm::mat4& matrix) override;
+    void SetFloat(const std::string& name, const float) override;
     void SetFloat4(const std::string& name, const glm::vec4& matrix) override;
     
   private:
