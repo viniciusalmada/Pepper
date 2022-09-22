@@ -61,7 +61,7 @@ void GameLayer::CreateCamera(uint32_t width, uint32_t height)
   const float top = camera_height / 2.0f;
   const float bot = -camera_height / 2.0f;
 
-  m_camera = Pepper::CreateScope<Pepper::OrthoCamera>(Pepper::CameraLimits{ left, right, top, bot });
+  m_camera = Pepper::CreateScope<Pepper::OrthoCamera>(Pepper::CameraLimits{ left, right, bot, top });
 }
 
 //---------------------------------------------------------------------------------------------------------------------
