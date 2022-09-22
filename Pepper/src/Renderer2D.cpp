@@ -89,11 +89,15 @@ namespace Pepper
     DrawQuad({ position.x, position.y, 0.0f }, size, color);
   }
 
-  void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& tex, float tilingFac)
+  void Renderer2D::DrawQuad(const glm::vec3& position,
+                            const glm::vec2& size,
+                            const Ref<Texture2D>& tex,
+                            float tilingFac,
+                            const glm::vec4& tintColor)
   {
     PP_PROFILE_FUNCTION();
     tex->Bind();
-    data->shader->SetFloat4("u_color", { 1.0f, 1.0f, 1.0f, 1.0f });
+    data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
@@ -104,9 +108,71 @@ namespace Pepper
     RenderCommand::DrawIndexed(data->quad_vertex_array);
   }
 
-  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& tex, float tilingFac)
+  void Renderer2D::DrawQuad(const glm::vec2& position,
+                            const glm::vec2& size,
+                            const Ref<Texture2D>& tex,
+                            float tilingFac,
+                            const glm::vec4& tintColor)
   {
-    DrawQuad({ position.x, position.y, 0.0f }, size, tex, tilingFac);
+    DrawQuad({ position.x, position.y, 0.0f }, size, tex, tilingFac, tintColor);
+  }
+
+  void Renderer2D::DrawRotatedQuad(const glm::vec3& position,
+                                   const glm::vec2& size,
+                                   float rotationDeg,
+                                   const glm::vec4& color)
+  {
+    PP_PROFILE_FUNCTION();
+    data->shader->SetFloat4("u_color", color);
+    data->shader->SetFloat("u_tiling_factor", 1.0);
+    data->white_texture->Bind();
+
+    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
+                          glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+    data->shader->SetMat4("u_transform", transform);
+
+    data->quad_vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->quad_vertex_array);
+  }
+
+  void Renderer2D::DrawRotatedQuad(const glm::vec2& position,
+                                   const glm::vec2& size,
+                                   float rotationDeg,
+                                   const glm::vec4& color)
+  {
+    DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotationDeg, color);
+  }
+
+  void Renderer2D::DrawRotatedQuad(const glm::vec3& position,
+                                   const glm::vec2& size,
+                                   float rotationDeg,
+                                   const Ref<Texture2D>& tex,
+                                   float tilingFac,
+                                   const glm::vec4& tintColor)
+  {
+    PP_PROFILE_FUNCTION();
+    tex->Bind();
+    data->shader->SetFloat4("u_color", tintColor);
+    data->shader->SetFloat("u_tiling_factor", tilingFac);
+
+    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
+                          glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+    data->shader->SetMat4("u_transform", transform);
+
+    data->quad_vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->quad_vertex_array);
+  }
+
+  void Renderer2D::DrawRotatedQuad(const glm::vec2& position,
+                                   const glm::vec2& size,
+                                   float rotationDeg,
+                                   const Ref<Texture2D>& tex,
+                                   float tilingFac,
+                                   const glm::vec4& tintColor)
+  {
+    DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotationDeg, tex, tilingFac, tintColor);
   }
 
 }
