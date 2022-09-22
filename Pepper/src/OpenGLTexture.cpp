@@ -57,7 +57,6 @@ namespace Pepper
     PP_PROFILE_FUNCTION();
     int w{}, h{};
     int channels{};
-    stbi_set_flip_vertically_on_load(1);
     stbi_uc* data;
     {
       PP_PROFILE_SCOPE("stbi_load");

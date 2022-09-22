@@ -4,23 +4,18 @@
 
 #include "ClientApp.hpp"
 
-#include "ExampleLayer.hpp"
-#include "Sandbox2D.hpp"
+#include "GameLayer.hpp"
 
 #include <Pepper/Core/EntryPoint.hpp>
 
 ClientApp::ClientApp()
 {
-  // PushLayer(Pepper::CreateRef<ExampleLayer>());
-  PP_PROFILE_FUNCTION();
-  PushLayer(Pepper::CreateRef<Sandbox2D>());
+  PushLayer(Pepper::CreateRef<GameLayer>());
 }
 
 ClientApp::~ClientApp() {}
 
 Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
 {
-  PP_PROFILE_FUNCTION();
-  
   return CreateScope<ClientApp>();
 }
