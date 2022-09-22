@@ -143,9 +143,9 @@ target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 # The client application
 add_executable(App
   App/src/ClientApp.cpp
-  App/src/ExampleLayer.cpp
-  App/src/Sandbox2D.cpp
-  App/src/IO.cpp
+  App/src/GameLayer.cpp
+  App/src/Level.cpp
+  App/src/Player.cpp
 )
 
 if(WIN32)
