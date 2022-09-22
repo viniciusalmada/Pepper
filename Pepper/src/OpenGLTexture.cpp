@@ -60,6 +60,7 @@ namespace Pepper
     stbi_uc* data;
     {
       PP_PROFILE_SCOPE("stbi_load");
+      stbi_set_flip_vertically_on_load(true);
       data = stbi_load(path.string().c_str(), &w, &h, &channels, 0);
       PP_CORE_ASSERT(data, "Failed to load image!");
     }
