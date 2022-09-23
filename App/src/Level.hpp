@@ -12,6 +12,7 @@ class Level
 {
 public:
   Level();
+  ~Level();
 
   void Init();
 
@@ -24,11 +25,16 @@ public:
   const glm::vec2& GetPlayerPosition() const;
 
 private:
+  void CheckObstacles();
+
   void UpdateObstacle(Obstacle& obs);
 
   Player m_player;
-  std::array<Obstacle, 5> m_obstacles;
+  std::array<Obstacle, 3> m_obstacles;
   float m_obs_x_pos = 5.0f;
+  std::jthread m_obstacles_updater;
+  bool do_update = false;
+  bool finish = false;
 
   static const float OBSTACLE_HIDDEN;
 };
