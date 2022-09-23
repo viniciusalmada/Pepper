@@ -16,6 +16,8 @@ public:
 
   void OnRendererCall();
 
+  const glm::vec2& GetPosition() const;
+
 private:
   glm::vec2 m_position = { 0.0f, 0.0f };
   glm::vec2 m_velocity = { 0.0f, 0.0f };
