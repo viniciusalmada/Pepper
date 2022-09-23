@@ -23,7 +23,7 @@ private:
   glm::vec2 m_velocity = { 0.0f, 0.0f };
   float m_rotation_deg = 0.0f;
   float m_flame_alpha = 1.0f;
-  bool m_move = true;
+  bool m_move = false;
 
   Pepper::Ref<Pepper::Texture2D> m_rocket_tex;
   Pepper::Ref<Pepper::Texture2D> m_flame_tex;

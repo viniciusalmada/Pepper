@@ -58,7 +58,7 @@ void Player::OnImGuiLayer()
 {
   ImGui::Checkbox("Move rocket", &m_move);
   ImGui::DragFloat("Engine Power", &m_engine_power, 0.05f, 0.05f, 20.0f);
-  ImGui::DragFloat("Gravity", &m_gravity, 0.05f, 0.05f, 20.0f);
+  ImGui::DragFloat("PositionY", &m_position.y);
   ImGui::DragFloat("Rotation", &m_rotation_deg, 1.f, -180.f, 0.0f);
 }
 
@@ -70,6 +70,7 @@ void Player::OnRendererCall()
                                       m_rotation_deg,
                                       m_flame_tex,
                                       1.0f,
+                                      { 1.0f, 1.0f, 1.0f, m_flame_alpha*2 });
 }
 
 const glm::vec2& Player::GetPosition() const {
