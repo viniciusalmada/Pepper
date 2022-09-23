@@ -31,6 +31,6 @@ private:
   
   float m_engine_power = 0.5f;
   float m_gravity = 0.4f;
-  glm::vec2 m_rocket_size = { 0.25f, 0.46875f };
-  glm::vec2 m_flames_size = { 0.25f, 0.96875f };
+  glm::vec2 m_rocket_size = { 0.25f, 0.4375f };
+  glm::vec2 m_flames_size = { 0.25f, 1.0f };
 };
