@@ -28,6 +28,9 @@ void GameLayer::OnUpdate(Pepper::TimeStep ts)
 {
   m_level.OnUpdate(ts);
 
+  const auto& ref_pos = m_level.GetPlayerPosition();
+  m_camera->SetPosition({ ref_pos.x, 0.0f, 0.0f });
+
   Pepper::RenderCommand::SetClearColor({ 1.0f, 1.f, 1.f, 1.0f });
   Pepper::RenderCommand::Clear();
 

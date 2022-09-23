@@ -32,3 +32,8 @@ void Level::OnRendererCall()
 
   m_player.OnRendererCall();
 }
+
+const glm::vec2& Level::GetPlayerPosition() const
+{
+  return m_player.GetPosition();
+}
