@@ -15,6 +15,8 @@ public:
 
   void OnRendererCall();
 
+  const glm::vec2& GetPlayerPosition() const;
+
 private:
   Player m_player;
 };

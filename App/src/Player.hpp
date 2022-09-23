@@ -20,7 +20,7 @@ public:
 
 private:
   glm::vec2 m_position = { 0.0f, 0.0f };
-  glm::vec2 m_velocity = { 0.0f, 0.0f };
+  glm::vec2 m_velocity = { 1.0f, 0.0f };
   float m_rotation_deg = 0.0f;
   float m_flame_alpha = 1.0f;
   bool m_move = false;
