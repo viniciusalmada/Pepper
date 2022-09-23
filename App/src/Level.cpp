@@ -8,36 +8,41 @@
 
 Level::Level() {}
 
+Level::~Level()
+{
+  finish = true;
+  m_obstacles_updater.join();
+}
+
 void Level::Init()
 {
+  PP_PROFILE_FUNCTION();
   m_player.LoadAssets();
 
   for (auto& obs : m_obstacles)
   {
     UpdateObstacle(obs);
   }
+
+  m_obstacles_updater = std::jthread{ std::bind(&Level::CheckObstacles, this) };
 }
 
 void Level::OnUpdate(Pepper::TimeStep ts)
 {
+  PP_PROFILE_FUNCTION();
   m_player.OnUpdate(ts);
-
-  for (auto& obs : m_obstacles)
-  {
-    if (m_player.GetPosition().x - 15.0f > obs.m_position.x)
-    {
-      UpdateObstacle(obs);
-    }
-  }
+  do_update = true;
 }
 
 void Level::OnImGuiRender()
 {
+  PP_PROFILE_FUNCTION();
   m_player.OnImGuiLayer();
 }
 
 void Level::OnRendererCall()
 {
+  PP_PROFILE_FUNCTION();
   const auto& player_pos = m_player.GetPosition();
 
   Pepper::Renderer2D::DrawQuad({ player_pos.x, -5.3125, 0.11 }, { 20.0, 0.625 }, Color::BLACK);
@@ -53,11 +58,32 @@ void Level::OnRendererCall()
 
 const glm::vec2& Level::GetPlayerPosition() const
 {
+  PP_PROFILE_FUNCTION();
   return m_player.GetPosition();
+}
+
+void Level::CheckObstacles()
+{
+  PP_PROFILE_FUNCTION();
+  while (!finish)
+  {
+    if (!do_update)
+      continue;
+
+    for (auto& obs : m_obstacles)
+    {
+      if (m_player.GetPosition().x - 15.0f > obs.m_position.x)
+      {
+        UpdateObstacle(obs);
+      }
+    }
+    do_update = false;
+  }
 }
 
 void Level::UpdateObstacle(Obstacle& obs)
 {
+  PP_PROFILE_FUNCTION();
   obs.m_position.x = m_obs_x_pos;
   if (rand() % 2 == 0) // random
   {
