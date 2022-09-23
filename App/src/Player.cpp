@@ -34,8 +34,10 @@ void Player::OnUpdate(Pepper::TimeStep ts)
     m_velocity.y -= m_gravity;
     m_rotation_deg -= 2.5f;
   }
+
   m_rotation_deg = std::clamp(m_rotation_deg, -180.0f, 0.0f);
   m_flame_alpha = Utils::Interpol(-20.0f, 20.0f, 0.0, 1.0f, m_velocity.y);
+
   if (m_flame_alpha == std::clamp(m_flame_alpha, 0.0f, 0.3f))
   {
     m_flame_tex = m_flame1_tex;
@@ -48,6 +50,7 @@ void Player::OnUpdate(Pepper::TimeStep ts)
   {
     m_flame_tex = m_flame3_tex;
   }
+  
   m_velocity.y = std::clamp(m_velocity.y, -20.0f, 20.0f);
   m_position += m_velocity * (float)ts;
 
