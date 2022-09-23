@@ -77,7 +77,7 @@ namespace Pepper
     data->white_texture->Bind();
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -101,7 +101,7 @@ namespace Pepper
     data->shader->SetFloat("u_tiling_factor", tilingFac);
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -129,7 +129,7 @@ namespace Pepper
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
                           glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -158,7 +158,7 @@ namespace Pepper
 
     glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
                           glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x * 2.0f, size.y * 2.0f, 1.0f });
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
