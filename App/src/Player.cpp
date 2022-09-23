@@ -70,5 +70,8 @@ void Player::OnRendererCall()
                                       m_rotation_deg,
                                       m_flame_tex,
                                       1.0f,
-                                      { 1.0f, 1.0f, 1.0f, m_flame_alpha });
+}
+
+const glm::vec2& Player::GetPosition() const {
+  return m_position;
 }
