@@ -20,7 +20,7 @@ public:
 
 private:
   glm::vec2 m_position = { 0.0f, 0.0f };
-  glm::vec2 m_velocity = { 1.0f, 0.0f };
+  glm::vec2 m_velocity = { 2.0f, 0.0f };
   float m_rotation_deg = 0.0f;
   float m_flame_alpha = 1.0f;
   bool m_move = false;
@@ -33,6 +33,6 @@ private:
   
   float m_engine_power = 0.5f;
   float m_gravity = 0.4f;
-  glm::vec2 m_rocket_size = { 0.25f, 0.4375f };
-  glm::vec2 m_flames_size = { 0.25f, 1.0f };
+  glm::vec2 m_rocket_size = { 0.5f, 0.875f };
+  glm::vec2 m_flames_size = { 0.5f, 2.0f };
 };
