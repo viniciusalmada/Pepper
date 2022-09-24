@@ -22,7 +22,7 @@ public:
 
   void OnRendererCall();
 
-  const glm::vec2& GetPlayerPosition() const;
+  const glm::vec3& GetPlayerPosition() const;
 
 private:
   void CheckObstacles();

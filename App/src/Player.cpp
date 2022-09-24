@@ -74,7 +74,7 @@ void Player::OnRendererCall()
 {
   PP_PROFILE_FUNCTION();
   Pepper::Renderer2D::DrawRotatedQuad(m_position, m_rocket_size, m_rotation_deg, m_rocket_tex);
-  Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, 0.1 },
+  Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, 0.8 },
                                       m_flames_size,
                                       m_rotation_deg,
                                       m_flame_tex,
@@ -82,8 +82,8 @@ void Player::OnRendererCall()
                                       { 1.0f, 1.0f, 1.0f, m_flame_alpha * 2 });
 }
 
-const glm::vec2& Player::GetPosition() const
+const glm::vec3& Player::GetPosition() const
 {
   PP_PROFILE_FUNCTION();
-  return m_position;
+  return m_position;   
 }

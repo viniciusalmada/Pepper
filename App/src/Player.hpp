@@ -16,10 +16,10 @@ public:
 
   void OnRendererCall();
 
-  const glm::vec2& GetPosition() const;
+  const glm::vec3& GetPosition() const;
 
 private:
-  glm::vec2 m_position = { 0.0f, 0.0f };
+  glm::vec3 m_position = { 0.0f, 0.0f, 0.7f };
   glm::vec2 m_velocity = { 2.0f, 0.0f };
   float m_rotation_deg = 0.0f;
   float m_flame_alpha = 1.0f;

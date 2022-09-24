@@ -64,7 +64,7 @@ void Level::OnRendererCall()
   m_player.OnRendererCall();
 }
 
-const glm::vec2& Level::GetPlayerPosition() const
+const glm::vec3& Level::GetPlayerPosition() const
 {
   PP_PROFILE_FUNCTION();
   return m_player.GetPosition();
