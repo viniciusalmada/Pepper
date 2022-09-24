@@ -87,7 +87,7 @@ namespace Pepper
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_ID);
     glTextureStorage2D(renderer_ID, 1, internal_format, width, height);
 
-    glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glTextureParameteri(renderer_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
