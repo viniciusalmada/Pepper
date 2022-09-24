@@ -55,6 +55,7 @@ void Level::OnUpdate(Pepper::TimeStep ts)
 void Level::OnImGuiRender()
 {
   PP_PROFILE_FUNCTION();
+  ImGui::Checkbox("DrawObstacles", &m_draw_obs);
   m_player.OnImGuiLayer();
 }
 
@@ -66,6 +67,11 @@ void Level::OnRendererCall()
   Pepper::Renderer2D::DrawQuad({ player_pos.x, -5.3125, 0.11 }, { 20.0, 0.625 }, Color::BLACK);
   Pepper::Renderer2D::DrawQuad({ player_pos.x, +5.3125, 0.11 }, { 20.0, 0.625 }, Color::BLACK);
 
+  m_player.OnRendererCall();
+
+  if (!m_draw_obs)
+    return;
+
   for (auto& obs : m_obstacles)
   {
     if (obs.m_is_top)
@@ -76,8 +82,6 @@ void Level::OnRendererCall()
                                            obs.m_texture,
                                            obs.m_size.x * 10.0f);
   }
-
-  m_player.OnRendererCall();
 }
 
 const glm::vec3& Level::GetPlayerPosition() const
@@ -91,6 +95,9 @@ void Level::CheckObstacles()
   PP_PROFILE_FUNCTION();
   while (!finish)
   {
+    if (!m_draw_obs)
+      continue;
+
     if (!do_update)
       continue;
 

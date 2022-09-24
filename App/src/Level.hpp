@@ -40,6 +40,7 @@ private:
   std::jthread m_obstacles_updater;
   bool do_update = false;
   bool finish = false;
+  bool m_draw_obs = true;
 
   std::array<Pepper::Ref<Pepper::Texture2D>, 8> m_planets_textures;
 };
