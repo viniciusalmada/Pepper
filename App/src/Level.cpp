@@ -71,7 +71,10 @@ void Level::OnRendererCall()
     if (obs.m_is_top)
       Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, obs.m_size, obs.m_texture, obs.m_size.x * 10.0f);
     else
-      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, { obs.m_size.x, -obs.m_size.y }, obs.m_texture, obs.m_size.x * 10.0f);
+      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position,
+                                           { obs.m_size.x, -obs.m_size.y },
+                                           obs.m_texture,
+                                           obs.m_size.x * 10.0f);
   }
 
   m_player.OnRendererCall();
@@ -105,11 +108,11 @@ void Level::UpdateObstacle(Obstacle& obs)
 {
   PP_PROFILE_FUNCTION();
   obs.m_position.x = m_obs_x_pos;
-  obs.m_texture = m_planets_textures[rand() % 8];
-  obs.m_size.y = static_cast<float>((rand() % 8) + 1);
+  obs.m_texture = m_planets_textures[Random::Int(0, 7)];
+  obs.m_size.y = Random::Float(1.0f, 10.0f);
   obs.m_size.x = obs.m_size.y;
   PP_TRACE("Obs height = {0}", obs.m_size.y);
-  if (rand() % 2 == 0) // random - down
+  if (Random::Int(0, 1) % 2 == 0) // random - down
   {
     obs.m_position.y = Y_LOWER_LIMIT;
     obs.m_is_top = true;

@@ -146,6 +146,7 @@ add_executable(App
   App/src/GameLayer.cpp
   App/src/Level.cpp
   App/src/Player.cpp
+  App/src/Random.cpp
 )
 
 if(WIN32)

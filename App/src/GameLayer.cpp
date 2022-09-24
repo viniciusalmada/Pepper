@@ -3,6 +3,7 @@
 // clang-format on
 
 #include "GameLayer.hpp"
+#include "Random.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -14,6 +15,8 @@ GameLayer::GameLayer() : Layer("GameLayer"), m_camera(), m_ts(0.0f)
   PP_PROFILE_FUNCTION();
   auto& window = Pepper::Application::Get().GetWindow();
   CreateCamera(window.GetWidth(), window.GetHeight());
+
+  Random::Init();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
