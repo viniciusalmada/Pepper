@@ -2,10 +2,15 @@
 
 #include "Player.hpp"
 
+#include <Pepper.hpp>
+
 struct Obstacle
 {
   glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
   glm::vec2 m_size{ 1.0, 10.0f };
+  Pepper::Ref<Pepper::Texture2D> m_texture;
+  glm::vec4 m_color;
+  bool m_is_top = true;
 };
 
 class Level
@@ -36,5 +41,5 @@ private:
   bool do_update = false;
   bool finish = false;
 
-  static const float OBSTACLE_HIDDEN;
+  std::array<Pepper::Ref<Pepper::Texture2D>, 8> m_planets_textures;
 };

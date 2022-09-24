@@ -27,8 +27,18 @@ void Level::Init()
   PP_PROFILE_FUNCTION();
   m_player.LoadAssets();
 
+  m_planets_textures[0] = Pepper::Texture2D::Create("assets/textures/plan-earth.png");
+  m_planets_textures[1] = Pepper::Texture2D::Create("assets/textures/plan-jupiter.png");
+  m_planets_textures[2] = Pepper::Texture2D::Create("assets/textures/plan-mars.png");
+  m_planets_textures[3] = Pepper::Texture2D::Create("assets/textures/plan-mercury.png");
+  m_planets_textures[4] = Pepper::Texture2D::Create("assets/textures/plan-moon-phase.png");
+  m_planets_textures[5] = Pepper::Texture2D::Create("assets/textures/plan-neptune.png");
+  m_planets_textures[6] = Pepper::Texture2D::Create("assets/textures/plan-pluto.png");
+  m_planets_textures[7] = Pepper::Texture2D::Create("assets/textures/plan-uranus.png");
+
   for (auto& obs : m_obstacles)
   {
+    obs.m_color = Color::RandColor();
     UpdateObstacle(obs);
   }
 
@@ -58,7 +68,10 @@ void Level::OnRendererCall()
 
   for (auto& obs : m_obstacles)
   {
-    Pepper::Renderer2D::DrawQuad(obs.m_position, obs.m_size, Color::RED);
+    if (obs.m_is_top)
+      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, obs.m_size, obs.m_texture, obs.m_size.x * 10.0f);
+    else
+      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, { obs.m_size.x, -obs.m_size.y }, obs.m_texture, obs.m_size.x * 10.0f);
   }
 
   m_player.OnRendererCall();
@@ -88,23 +101,26 @@ void Level::CheckObstacles()
     do_update = false;
   }
 }
-
 void Level::UpdateObstacle(Obstacle& obs)
 {
   PP_PROFILE_FUNCTION();
   obs.m_position.x = m_obs_x_pos;
-  obs.m_size.y = static_cast<float>(rand() % 6);
-  obs.m_size.x = obs.m_size.y * 2;
+  obs.m_texture = m_planets_textures[rand() % 8];
+  obs.m_size.y = static_cast<float>((rand() % 8) + 1);
+  obs.m_size.x = obs.m_size.y;
   PP_TRACE("Obs height = {0}", obs.m_size.y);
   if (rand() % 2 == 0) // random - down
   {
-    obs.m_position.y = Y_LOWER_LIMIT + obs.m_size.y / 2.0f;
+    obs.m_position.y = Y_LOWER_LIMIT;
+    obs.m_is_top = true;
   }
   else
   {
-    obs.m_position.y = Y_UPPER_LIMIT - obs.m_size.y / 2.0f;
+    obs.m_position.y = Y_UPPER_LIMIT;
+    obs.m_is_top = false;
   }
   obs.m_position.z = 0.15f;
+  obs.m_color = Color::RandColor();
 
   m_obs_x_pos += 10.f;
 }
