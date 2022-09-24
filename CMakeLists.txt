@@ -22,13 +22,6 @@ endif(WIN32)
 # glm library
 add_subdirectory(${PP_VENDOR_DIR}/glm)
 
-if(WIN32)
-  # disable warning C4201: nonstandard extension used: nameless struct/union
-  target_compile_options(glm INTERFACE /wd4201)
-else()
-  target_compile_options(glm INTERFACE -Wno-effc++)
-endif(WIN32)
-
 # #############################################################################
 # GLAD library
 add_subdirectory(${PP_VENDOR_DIR}/GLAD)
@@ -45,10 +38,6 @@ add_library(ImGui STATIC ${PP_VENDOR_DIR}/imgui/imgui_demo.cpp
 )
 
 target_compile_features(ImGui PRIVATE ${CXX_STANDARD})
-
-if(UNIX)
-  target_compile_options(ImGui PUBLIC -Wno-old-style-cast)
-endif()
 
 if(WIN32)
   set_property(TARGET ImGui PROPERTY
@@ -97,7 +86,7 @@ add_library(Pepper STATIC
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
 
 if(WIN32)
-  target_compile_options(Pepper PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287)
+  target_compile_options(Pepper PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)
 elseif(UNIX)
   target_compile_options(Pepper PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
 endif(WIN32)
@@ -107,8 +96,8 @@ if(WIN32)
     MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif(WIN32)
 
-target_include_directories(Pepper PRIVATE
-  ${PP_INCLUDE_DIR}
+target_include_directories(Pepper PRIVATE ${PP_INCLUDE_DIR})
+target_include_directories(Pepper SYSTEM PUBLIC
   ${PP_VENDOR_DIR}/spdlog/include
   ${PP_VENDOR_DIR}/GLFW/include
   ${PP_VENDOR_DIR}/GLAD/include
@@ -160,15 +149,15 @@ add_executable(App
 )
 
 if(WIN32)
-  target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287)
+  target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)
 elseif(UNIX)
   target_compile_options(App PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
 endif(WIN32)
 
 target_compile_features(App PRIVATE ${CXX_STANDARD})
 
-target_include_directories(App PRIVATE
-  App/src
+target_include_directories(App PRIVATE App/src)
+target_include_directories(App PRIVATE SYSTEM
   ${PP_INCLUDE_DIR}
   ${PP_VENDOR_DIR}/spdlog/include
   ${PP_VENDOR_DIR}/glm/
