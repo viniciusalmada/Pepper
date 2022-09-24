@@ -6,6 +6,7 @@
 
 #include "Utilities.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
 Player::Player() {}
@@ -59,6 +60,8 @@ void Player::OnUpdate(Pepper::TimeStep ts)
   m_position.x += m_velocity.x * (float)ts;
 
   m_position.y = std::clamp(m_position.y, -5.625f - m_rocket_size.y, 5.625f + m_rocket_size.y);
+
+  UpdateBoundingBox();
 }
 
 void Player::OnImGuiLayer()
@@ -85,5 +88,25 @@ void Player::OnRendererCall()
 const glm::vec3& Player::GetPosition() const
 {
   PP_PROFILE_FUNCTION();
-  return m_position;   
+  return m_position;
+}
+
+void Player::UpdateBoundingBox()
+{
+  static const glm::vec4 top_left = glm::vec4{ -m_rocket_size.x / 2.0f, m_rocket_size.y / 2.0f, 1.0f, 1.0f };
+  static const glm::vec4 top_right = top_left + glm::vec4{ m_rocket_size.x, 0.0f, 1.0f, 1.0f };
+  static const glm::vec4 bot_right = top_right + glm::vec4{ 0.0f, -m_rocket_size.y, 1.0f, 1.0f };
+  static const glm::vec4 bot_left = bot_right + glm::vec4{ -m_rocket_size.x, 0.0f, 1.0f, 1.0f };
+
+  auto calc_rot = [&](const glm::vec4& ref)
+  {
+    glm::mat4 rot_mat = glm::rotate(glm::mat4{ 1.0f }, glm::radians(m_rotation_deg), glm::vec3{ 0.0f, 0.0f, 1.0f });
+
+    return rot_mat * glm::vec4{ ref.x, ref.y, 1.0f, 1.0f };
+  };
+
+  m_bounding_box[0] = calc_rot(top_left) + glm::vec4{ m_position.x, m_position.y, 1.0f, 1.0f };
+  m_bounding_box[1] = calc_rot(top_right) + glm::vec4{ m_position.x, m_position.y, 1.0f, 1.0f };
+  m_bounding_box[2] = calc_rot(bot_right) + glm::vec4{ m_position.x, m_position.y, 1.0f, 1.0f };
+  m_bounding_box[3] = calc_rot(bot_left) + glm::vec4{ m_position.x, m_position.y, 1.0f, 1.0f };
 }
