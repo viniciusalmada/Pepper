@@ -5,7 +5,7 @@
 struct Obstacle
 {
   glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
-  glm::vec2 m_size{ 1.0, 4.0f };
+  glm::vec2 m_size{ 1.0, 10.0f };
 };
 
 class Level

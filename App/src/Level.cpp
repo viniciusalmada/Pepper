@@ -6,6 +6,14 @@
 
 #include "Color.hpp"
 
+#include <imgui.h>
+
+namespace
+{
+  const float Y_LOWER_LIMIT = -5.0f;
+  const float Y_UPPER_LIMIT = +5.0f;
+}
+
 Level::Level() {}
 
 Level::~Level()
@@ -85,13 +93,16 @@ void Level::UpdateObstacle(Obstacle& obs)
 {
   PP_PROFILE_FUNCTION();
   obs.m_position.x = m_obs_x_pos;
-  if (rand() % 2 == 0) // random
+  obs.m_size.y = static_cast<float>(rand() % 6);
+  obs.m_size.x = obs.m_size.y * 2;
+  PP_TRACE("Obs height = {0}", obs.m_size.y);
+  if (rand() % 2 == 0) // random - down
   {
-    obs.m_position.y = -5.0f + obs.m_size.y / 2.0f;
+    obs.m_position.y = Y_LOWER_LIMIT + obs.m_size.y / 2.0f;
   }
   else
   {
-    obs.m_position.y = 5.0f - obs.m_size.y / 2.0f;
+    obs.m_position.y = Y_UPPER_LIMIT - obs.m_size.y / 2.0f;
   }
   obs.m_position.z = 0.15f;
 
