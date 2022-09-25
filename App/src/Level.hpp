@@ -34,10 +34,13 @@ private:
 
   void UpdateObstacle(Obstacle& obs);
 
+  void CheckCollision();
+
   Player m_player;
   std::array<Obstacle, 3> m_obstacles;
   float m_obs_x_pos = 5.0f;
   std::jthread m_obstacles_updater;
+  std::jthread m_collider_updater;
   bool do_update = false;
   bool finish = false;
   bool m_draw_obs = true;

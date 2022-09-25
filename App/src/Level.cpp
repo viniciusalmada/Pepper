@@ -20,6 +20,7 @@ Level::~Level()
 {
   finish = true;
   m_obstacles_updater.join();
+  m_collider_updater.join();
 }
 
 void Level::Init()
@@ -43,6 +44,7 @@ void Level::Init()
   }
 
   m_obstacles_updater = std::jthread{ std::bind(&Level::CheckObstacles, this) };
+  m_collider_updater = std::jthread{ std::bind(&Level::CheckCollision, this) };
 }
 
 void Level::OnUpdate(Pepper::TimeStep ts)
@@ -133,4 +135,54 @@ void Level::UpdateObstacle(Obstacle& obs)
   obs.m_color = Color::RandColor();
 
   m_obs_x_pos += 10.f;
+}
+
+void Level::CheckCollision()
+{
+  while (!finish)
+  {
+    bool player_touched = false;
+    // Check collision player [rectangle] and obstacle [circle]
+    const auto& player_bbox = m_player.GetBoundingBox();
+    for (const auto& obs : m_obstacles)
+    {
+      float radius = obs.m_size.x / 2.0f;
+      const glm::vec3& center = obs.m_position;
+
+      for (const auto& corner : player_bbox)
+      {
+        float dist = glm::distance(glm::vec3{ corner }, center);
+        if (dist <= radius)
+        {
+          player_touched = true;
+          break;
+        }
+      }
+
+      if (player_touched)
+      {
+        PP_WARN("Player touched! - corner touched");
+        return;
+      }
+
+      for (auto i : std::ranges::iota_view{ 0u, player_bbox.size() })
+      {
+        uint32_t j = i + 1 == player_bbox.size() ? 0 : i + 1;
+        const glm::vec2 p1{ player_bbox[i] };
+        const glm::vec2 p2{ player_bbox[j] };
+
+        if (Utils::LineIntersectCircle(p1, p2, radius, glm::vec2{ obs.m_position }))
+        {
+          player_touched = true;
+          break;
+        }
+      }
+
+      if (player_touched)
+      {
+        PP_WARN("Player touched! - line touched");
+        return;
+      }
+    }
+  }
 }
