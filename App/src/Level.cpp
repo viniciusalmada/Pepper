@@ -143,11 +143,11 @@ void Level::CheckCollision()
 {
   while (!finish)
   {
-    bool player_touched = false;
     // Check collision player [rectangle] and obstacle [circle]
     const auto& player_bbox = m_player.GetBoundingBox();
     for (const auto& obs : m_obstacles)
     {
+      bool player_touched = false;
       float radius = obs.m_size.x / 2.0f;
       const glm::vec3& center = obs.m_position;
 
@@ -164,7 +164,7 @@ void Level::CheckCollision()
       if (player_touched)
       {
         PP_WARN("Player touched! - corner touched");
-        return;
+        break;
       }
 
       for (auto i : std::ranges::iota_view{ 0u, player_bbox.size() })
@@ -183,7 +183,7 @@ void Level::CheckCollision()
       if (player_touched)
       {
         PP_WARN("Player touched! - line touched");
-        return;
+        break;
       }
     }
   }
