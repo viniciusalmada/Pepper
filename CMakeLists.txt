@@ -148,6 +148,7 @@ add_executable(App
   App/src/Level.cpp
   App/src/Player.cpp
   App/src/Random.cpp
+  App/src/Utilities.cpp
 )
 
 if(WIN32)
