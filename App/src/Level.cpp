@@ -5,6 +5,8 @@
 #include "Level.hpp"
 
 #include "Color.hpp"
+#include "Random.hpp"
+#include "Utilities.hpp"
 
 #include <imgui.h>
 
@@ -64,10 +66,6 @@ void Level::OnImGuiRender()
 void Level::OnRendererCall()
 {
   PP_PROFILE_FUNCTION();
-  const auto& player_pos = m_player.GetPosition();
-
-  Pepper::Renderer2D::DrawQuad({ player_pos.x, -5.3125, 0.11 }, { 20.0, 0.625 }, Color::BLACK);
-  Pepper::Renderer2D::DrawQuad({ player_pos.x, +5.3125, 0.11 }, { 20.0, 0.625 }, Color::BLACK);
 
   m_player.OnRendererCall();
 
@@ -77,12 +75,16 @@ void Level::OnRendererCall()
   for (auto& obs : m_obstacles)
   {
     if (obs.m_is_top)
-      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, obs.m_size, obs.m_texture, obs.m_size.x * 10.0f);
+    {
+      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, obs.m_size, obs.m_texture, obs.m_size.x * 20.0f);
+    }
     else
+    {
       Pepper::Renderer2D::DrawPixelateQuad(obs.m_position,
                                            { obs.m_size.x, -obs.m_size.y },
                                            obs.m_texture,
-                                           obs.m_size.x * 10.0f);
+                                           obs.m_size.x * 20.0f);
+    }
   }
 }
 
@@ -131,7 +133,7 @@ void Level::UpdateObstacle(Obstacle& obs)
     obs.m_position.y = Y_UPPER_LIMIT;
     obs.m_is_top = false;
   }
-  obs.m_position.z = 0.15f;
+  obs.m_position.z = 0.81f;
   obs.m_color = Color::RandColor();
 
   m_obs_x_pos += 10.f;
