@@ -30,12 +30,10 @@ void Player::OnUpdate(Pepper::TimeStep ts)
   if (Pepper::Input::IsKeyPressed(PP_KEY_SPACE))
   {
     m_velocity.y += m_engine_power * ts;
-    // m_rotation_deg += 3.5f * ts;
   }
   else
   {
     m_velocity.y -= m_gravity * ts;
-    // m_rotation_deg -= 2.5f * ts;
   }
 
   m_rotation_deg = Utils::Interpol(-20.0f, 20.0f, -180.0, 0.0, m_velocity.y);
@@ -91,7 +89,8 @@ const glm::vec3& Player::GetPosition() const
   return m_position;
 }
 
-const std::array<glm::vec4, 4>& Player::GetBoundingBox() const {
+const std::array<glm::vec4, 4>& Player::GetBoundingBox() const
+{
   return m_bounding_box;
 }
 

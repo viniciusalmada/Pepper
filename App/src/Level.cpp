@@ -20,9 +20,9 @@ Level::Level() {}
 
 Level::~Level()
 {
-  finish = true;
-  m_obstacles_updater.join();
-  m_collider_updater.join();
+  m_is_shutdown = true;
+  m_planets_updater.join();
+  m_collision_detector.join();
 }
 
 void Level::Init()
@@ -39,27 +39,25 @@ void Level::Init()
   m_planets_textures[6] = Pepper::Texture2D::Create("assets/textures/plan-pluto.png");
   m_planets_textures[7] = Pepper::Texture2D::Create("assets/textures/plan-uranus.png");
 
-  for (auto& obs : m_obstacles)
+  for (auto& planet : m_planets)
   {
-    obs.m_color = Color::RandColor();
-    UpdateObstacle(obs);
+    UpdatePlanet(planet);
   }
 
-  m_obstacles_updater = std::jthread{ std::bind(&Level::CheckObstacles, this) };
-  m_collider_updater = std::jthread{ std::bind(&Level::CheckCollision, this) };
+  m_planets_updater = std::jthread{ std::bind(&Level::CheckPlanetsPosition, this) };
+  m_collision_detector = std::jthread{ std::bind(&Level::CheckCollision, this) };
 }
 
 void Level::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION();
   m_player.OnUpdate(ts);
-  do_update = true;
+  m_is_planet_passed = true;
 }
 
 void Level::OnImGuiRender()
 {
   PP_PROFILE_FUNCTION();
-  ImGui::Checkbox("DrawObstacles", &m_draw_obs);
   m_player.OnImGuiLayer();
 }
 
@@ -69,22 +67,9 @@ void Level::OnRendererCall()
 
   m_player.OnRendererCall();
 
-  if (!m_draw_obs)
-    return;
-
-  for (auto& obs : m_obstacles)
+  for (const auto& planet : m_planets)
   {
-    if (obs.m_is_top)
-    {
-      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position, obs.m_size, obs.m_texture, obs.m_size.x * 20.0f);
-    }
-    else
-    {
-      Pepper::Renderer2D::DrawPixelateQuad(obs.m_position,
-                                           { obs.m_size.x, -obs.m_size.y },
-                                           obs.m_texture,
-                                           obs.m_size.x * 20.0f);
-    }
+    planet.OnRendererCall();
   }
 }
 
@@ -94,62 +79,43 @@ const glm::vec3& Level::GetPlayerPosition() const
   return m_player.GetPosition();
 }
 
-void Level::CheckObstacles()
+void Level::CheckPlanetsPosition()
 {
   PP_PROFILE_FUNCTION();
-  while (!finish)
+  while (!m_is_shutdown)
   {
-    if (!m_draw_obs)
+    if (!m_is_planet_passed)
       continue;
 
-    if (!do_update)
-      continue;
-
-    for (auto& obs : m_obstacles)
+    for (auto& planet : m_planets)
     {
-      if (m_player.GetPosition().x - 15.0f > obs.m_position.x)
+      if (m_player.GetPosition().x - 15.0f > planet.GetPosition().x)
       {
-        UpdateObstacle(obs);
+        UpdatePlanet(planet);
+        m_is_planet_passed = true;
+        break;
       }
     }
-    do_update = false;
   }
 }
-void Level::UpdateObstacle(Obstacle& obs)
+void Level::UpdatePlanet(Planet& planet)
 {
   PP_PROFILE_FUNCTION();
-  obs.m_position.x = m_obs_x_pos;
-  obs.m_texture = m_planets_textures[Random::Int(0, 7)];
-  obs.m_size.y = Random::Float(1.0f, 10.0f);
-  obs.m_size.x = obs.m_size.y;
-  PP_TRACE("Obs height = {0}", obs.m_size.y);
-  if (Random::Int(0, 1) % 2 == 0) // random - down
-  {
-    obs.m_position.y = Y_LOWER_LIMIT;
-    obs.m_is_top = true;
-  }
-  else
-  {
-    obs.m_position.y = Y_UPPER_LIMIT;
-    obs.m_is_top = false;
-  }
-  obs.m_position.z = 0.81f;
-  obs.m_color = Color::RandColor();
+  planet.Update(m_planet_new_position, m_planets_textures[Random::Int(0, 7)]);
 
-  m_obs_x_pos += 10.f;
+  m_planet_new_position += 10.f;
 }
 
 void Level::CheckCollision()
 {
-  while (!finish)
+  while (!m_is_shutdown)
   {
-    // Check collision player [rectangle] and obstacle [circle]
     const auto& player_bbox = m_player.GetBoundingBox();
-    for (const auto& obs : m_obstacles)
+    bool player_touched = false;
+    for (const auto& planet : m_planets)
     {
-      bool player_touched = false;
-      float radius = obs.m_size.x / 2.0f;
-      const glm::vec3& center = obs.m_position;
+      float radius = planet.GetRadius();
+      const glm::vec3& center = planet.GetPosition();
 
       for (const auto& corner : player_bbox)
       {
@@ -164,6 +130,7 @@ void Level::CheckCollision()
       if (player_touched)
       {
         PP_WARN("Player touched! - corner touched");
+        GameOver();
         break;
       }
 
@@ -173,7 +140,7 @@ void Level::CheckCollision()
         const glm::vec2 p1{ player_bbox[i] };
         const glm::vec2 p2{ player_bbox[j] };
 
-        if (Utils::LineIntersectCircle(p1, p2, radius, glm::vec2{ obs.m_position }))
+        if (Utils::LineIntersectCircle(p1, p2, radius, glm::vec2{ planet.GetPosition() }))
         {
           player_touched = true;
           break;
@@ -183,6 +150,7 @@ void Level::CheckCollision()
       if (player_touched)
       {
         PP_WARN("Player touched! - line touched");
+        GameOver();
         break;
       }
     }
