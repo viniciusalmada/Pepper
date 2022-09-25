@@ -91,6 +91,10 @@ const glm::vec3& Player::GetPosition() const
   return m_position;
 }
 
+const std::array<glm::vec4, 4>& Player::GetBoundingBox() const {
+  return m_bounding_box;
+}
+
 void Player::UpdateBoundingBox()
 {
   static const glm::vec4 top_left = glm::vec4{ -m_rocket_size.x / 2.0f, m_rocket_size.y / 2.0f, 1.0f, 1.0f };

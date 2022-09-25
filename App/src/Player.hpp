@@ -17,6 +17,8 @@ public:
   void OnRendererCall();
 
   const glm::vec3& GetPosition() const;
+  
+  const std::array<glm::vec4, 4>& GetBoundingBox() const;
 
 private:
   void UpdateBoundingBox();
