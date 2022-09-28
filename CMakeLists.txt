@@ -177,6 +177,7 @@ endif(WIN32)
 target_compile_definitions(App
   PRIVATE APP_WORKING_DIR="${PROJECT_SOURCE_DIR}"
   PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>
+  PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
 )
 
 if(WIN32)
