@@ -3,6 +3,7 @@
 // clang-format on
 
 #include "GameLayer.hpp"
+
 #include "Random.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -37,14 +38,15 @@ void GameLayer::OnUpdate(Pepper::TimeStep ts)
 
   float fps = 1000.0f / ts.GetMilliSeconds();
   m_FPSs[m_FPS_id++] = fps;
-  if (m_FPS_id == m_FPSs.size()) m_FPS_id = 0;
+  if (m_FPS_id == m_FPSs.size())
+    m_FPS_id = 0;
 
   m_level.OnUpdate(ts);
 
   const auto& ref_pos = m_level.GetPlayerPosition();
   m_camera->SetPosition({ ref_pos.x, 0.0f, 0.0f });
 
-  Pepper::RenderCommand::SetClearColor({ 0.7f, 0.7f,  0.7f, 1.0f });
+  Pepper::RenderCommand::SetClearColor({ 0.7f, 0.7f, 0.7f, 1.0f });
   Pepper::RenderCommand::Clear();
 
   Pepper::Renderer2D::BeginScene(*m_camera.get());
@@ -58,7 +60,7 @@ void GameLayer::OnImGuiRender()
   PP_PROFILE_FUNCTION();
   ImGui::LabelText("Timeframe", "%1.3fms", m_ts.GetMilliSeconds());
   ImGui::LabelText("FPS", "%3.2f", 1000.0f / m_ts.GetMilliSeconds());
-  ImGui::LabelText("FPS average", "%3.0f", std::accumulate(m_FPSs.begin(),m_FPSs.end(),0.0) / m_FPSs.size());
+  ImGui::LabelText("FPS average", "%3.0f", std::accumulate(m_FPSs.begin(), m_FPSs.end(), 0.0) / m_FPSs.size());
   m_level.OnImGuiRender();
 }
 

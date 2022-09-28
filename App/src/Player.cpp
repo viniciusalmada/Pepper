@@ -4,8 +4,8 @@
 
 #include "Player.hpp"
 
-#include "Utilities.hpp"
 #include "Constants.hpp"
+#include "Utilities.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
