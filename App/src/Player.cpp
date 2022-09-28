@@ -5,11 +5,23 @@
 #include "Player.hpp"
 
 #include "Utilities.hpp"
+#include "Constants.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
 Player::Player() {}
+
+void Player::Init()
+{
+  m_position = { 0.0f, 0.0f, Constants::Z_ROCKET };
+  m_velocity = { 2.0f, 0.0f };
+  m_rotation_deg = 0.0f;
+  m_flame_alpha = 1.0f;
+  m_move = false;
+
+  LoadAssets();
+}
 
 void Player::LoadAssets()
 {
@@ -66,8 +78,6 @@ void Player::OnImGuiLayer()
 {
   PP_PROFILE_FUNCTION();
   ImGui::Checkbox("Move rocket", &m_move);
-  ImGui::DragFloat("Engine Power", &m_engine_power, 1.0f, 1.0f, 50.0f);
-  ImGui::DragFloat("Gravity", &m_gravity, 1.0f, 1.0f, 50.0f);
   ImGui::DragFloat("Rotation", &m_rotation_deg, 1.f, -180.f, 0.0f);
 }
 
@@ -75,7 +85,7 @@ void Player::OnRendererCall()
 {
   PP_PROFILE_FUNCTION();
   Pepper::Renderer2D::DrawRotatedQuad(m_position, m_rocket_size, m_rotation_deg, m_rocket_tex);
-  Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, 0.8 },
+  Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, Constants::Z_ENGINE },
                                       m_flames_size,
                                       m_rotation_deg,
                                       m_flame_tex,
@@ -92,6 +102,15 @@ const glm::vec3& Player::GetPosition() const
 const std::array<glm::vec4, 4>& Player::GetBoundingBox() const
 {
   return m_bounding_box;
+}
+
+void Player::Reset()
+{
+  m_position = { 0.0f, 0.0f, Constants::Z_ROCKET };
+  m_velocity = { 2.0f, 0.0f };
+  m_rotation_deg = 0.0f;
+  m_flame_alpha = 1.0f;
+  m_move = false;
 }
 
 void Player::UpdateBoundingBox()
