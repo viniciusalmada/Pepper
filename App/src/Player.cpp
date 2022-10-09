@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
-Player::Player() {}
+Player::Player() = default;
 
 void Player::Init()
 {
@@ -25,7 +25,7 @@ void Player::Init()
 
 void Player::LoadAssets()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   m_rocket_tex = Pepper::Texture2D::Create("assets/textures/rocket.png");
   m_flame1_tex = Pepper::Texture2D::Create("assets/textures/flame1.png");
   m_flame2_tex = Pepper::Texture2D::Create("assets/textures/flame2.png");
@@ -35,7 +35,7 @@ void Player::LoadAssets()
 
 void Player::OnUpdate(Pepper::TimeStep ts)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   if (!m_move)
     return;
 
@@ -76,14 +76,14 @@ void Player::OnUpdate(Pepper::TimeStep ts)
 
 void Player::OnImGuiLayer()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   ImGui::Checkbox("Move rocket", &m_move);
   ImGui::DragFloat("Rotation", &m_rotation_deg, 1.f, -180.f, 0.0f);
 }
 
 void Player::OnRendererCall()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   Pepper::Renderer2D::DrawRotatedQuad(m_position, m_rocket_size, m_rotation_deg, m_rocket_tex);
   Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, Constants::Z_ENGINE },
                                       m_flames_size,
@@ -95,7 +95,7 @@ void Player::OnRendererCall()
 
 const glm::vec3& Player::GetPosition() const
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   return m_position;
 }
 

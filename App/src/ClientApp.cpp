@@ -13,7 +13,7 @@ ClientApp::ClientApp()
   PushLayer(Pepper::CreateRef<GameLayer>());
 }
 
-ClientApp::~ClientApp() {}
+ClientApp::~ClientApp() = default;
 
 Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
 {

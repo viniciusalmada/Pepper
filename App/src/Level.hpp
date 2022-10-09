@@ -19,7 +19,7 @@ public:
 
   void OnRendererCall();
 
-  const glm::vec3& GetPlayerPosition() const;
+  [[nodiscard]] const glm::vec3& GetPlayerPosition() const;
 
 private:
   void CheckPlanetsPosition();

@@ -10,7 +10,7 @@
 
 #include <imgui.h>
 
-Level::Level() {}
+Level::Level() = default;
 
 Level::~Level()
 {
@@ -21,7 +21,7 @@ Level::~Level()
 
 void Level::Init()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   m_player.Init();
 
   m_planets_textures[0] = Pepper::Texture2D::Create("assets/textures/plan-earth.png");
@@ -38,19 +38,19 @@ void Level::Init()
     UpdatePlanet(planet);
   }
 
-  m_planets_updater = std::jthread{ std::bind(&Level::CheckPlanetsPosition, this) };
-  m_collision_detector = std::jthread{ std::bind(&Level::CheckCollision, this) };
+  m_planets_updater = std::jthread([this] { CheckPlanetsPosition(); });
+  m_collision_detector = std::jthread([this] { CheckCollision(); });
 }
 
 void Level::OnUpdate(Pepper::TimeStep ts)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   m_player.OnUpdate(ts);
 }
 
 void Level::OnImGuiRender()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   if (ImGui::Button("Restart"))
   {
     GameOver();
@@ -61,7 +61,7 @@ void Level::OnImGuiRender()
 
 void Level::OnRendererCall()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   for (const auto& planet : m_planets)
   {
     planet.OnRendererCall();
@@ -72,13 +72,13 @@ void Level::OnRendererCall()
 
 const glm::vec3& Level::GetPlayerPosition() const
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   return m_player.GetPosition();
 }
 
 void Level::CheckPlanetsPosition()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   while (!m_is_shutdown)
   {
     for (auto& planet : m_planets)
@@ -93,7 +93,7 @@ void Level::CheckPlanetsPosition()
 }
 void Level::UpdatePlanet(Planet& planet)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   planet.Update(m_planet_new_position, m_planets_textures[Random::Int(0, 7)]);
 
   m_planet_new_position += 10.f;

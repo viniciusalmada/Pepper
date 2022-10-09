@@ -2,11 +2,13 @@
 
 #include "Random.hpp"
 
+#include <utility>
+
 void Planet::Update(float newXPosition, Pepper::Ref<Pepper::Texture2D> newTexture)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   m_position.x = newXPosition;
-  m_texture = newTexture;
+  m_texture = std::move(newTexture);
   m_size.y = Random::Float(1.0f, 10.0f);
   m_size.x = m_size.y;
   m_position.y = Random::Float(-5.0f, 5.0f);

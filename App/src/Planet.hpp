@@ -10,11 +10,11 @@ class Planet
 public:
   void Update(float newXPosition, Pepper::Ref<Pepper::Texture2D> newTexture);
 
-  const glm::vec3& GetPosition() const;
+  [[nodiscard]] const glm::vec3& GetPosition() const;
 
   void OnRendererCall() const;
 
-  float GetRadius() const;
+  [[nodiscard]] float GetRadius() const;
 
 private:
   glm::vec3 m_position{ 0.0f, 0.0f, Constants::Z_PLANETS };

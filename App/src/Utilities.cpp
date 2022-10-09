@@ -50,9 +50,7 @@ Utils::LineIntersectCircle(const glm::vec2& p1, const glm::vec2& p2, float radiu
     return { false, {} };
 
   auto sig = [](float x)
-  {
-    return x < 0.0f ? -1 : 1;
-  };
+  { return x < 0.0f ? -1.0f : 1.0f; };
 
   if (dist_p1 <= radius || dist_p2 <= radius)
   {

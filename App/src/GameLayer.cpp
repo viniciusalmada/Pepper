@@ -4,26 +4,21 @@
 
 #include "GameLayer.hpp"
 
-#include "Random.hpp"
-
-#include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
 #include <numeric>
 
 //---------------------------------------------------------------------------------------------------------------------
 GameLayer::GameLayer() : Layer("GameLayer"), m_camera(), m_ts(0.0f)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   auto& window = Pepper::Application::Get().GetWindow();
   CreateCamera(window.GetWidth(), window.GetHeight());
-
-  Random::Init();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void GameLayer::OnAttach()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   m_level.Init();
 }
 
@@ -33,7 +28,7 @@ void GameLayer::OnDetach() {}
 //---------------------------------------------------------------------------------------------------------------------
 void GameLayer::OnUpdate(Pepper::TimeStep ts)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   m_ts = ts;
 
   float fps = 1000.0f / ts.GetMilliSeconds();
@@ -57,25 +52,26 @@ void GameLayer::OnUpdate(Pepper::TimeStep ts)
 //---------------------------------------------------------------------------------------------------------------------
 void GameLayer::OnImGuiRender()
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   ImGui::LabelText("Timeframe", "%1.3fms", m_ts.GetMilliSeconds());
   ImGui::LabelText("FPS", "%3.2f", 1000.0f / m_ts.GetMilliSeconds());
-  ImGui::LabelText("FPS average", "%3.0f", std::accumulate(m_FPSs.begin(), m_FPSs.end(), 0.0) / m_FPSs.size());
+  ImGui::LabelText("FPS average", "%3.0f", std::accumulate(m_FPSs.begin(), m_FPSs.end(), 0.0) / (double)m_FPSs.size());
   m_level.OnImGuiRender();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void GameLayer::OnEvent(Pepper::Event& e)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   Pepper::EventDispatcher disp{ e };
-  disp.Dispatch<Pepper::WindowResizeEvent>(std::bind(&GameLayer::OnWindowResize, this, std::placeholders::_1));
+  disp.Dispatch<Pepper::WindowResizeEvent>([this](auto&& PH1) -> bool
+                                           { return OnWindowResize(std::forward<decltype(PH1)>(PH1)); });
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 void GameLayer::CreateCamera(uint32_t width, uint32_t height)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   const float aspect_ratio = (float)width / (float)height;
   const float camera_width = 20.0f;
   const float camera_height = camera_width / aspect_ratio;
@@ -91,7 +87,9 @@ void GameLayer::CreateCamera(uint32_t width, uint32_t height)
 //---------------------------------------------------------------------------------------------------------------------
 bool GameLayer::OnWindowResize(Pepper::WindowResizeEvent& e)
 {
-  PP_PROFILE_FUNCTION();
+  PP_PROFILE_FUNCTION()
   CreateCamera(e.GetWidth(), e.GetHeight());
-  return false;
+  if (e.GetHeight() != 0 || e.GetWidth() != 0)
+    return false;
+  return true;
 }
