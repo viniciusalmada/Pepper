@@ -15,6 +15,10 @@
 #include "Pepper/Input/MouseButtonCodes.hpp"
 // -------------------------------------
 
+// --Events-----------------------
+#include "Pepper/Events/Event.hpp"
+#include "Pepper/Events/EventDispatcher.hpp"
+
 // --Renderer------------------------
 #include "Pepper/Renderer/OrthoCamera.hpp"
 #include "Pepper/Renderer/RenderCommand.hpp"
