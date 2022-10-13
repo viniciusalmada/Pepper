@@ -12,7 +12,7 @@ set(CXX_STANDARD cxx_std_20)
 # #############################################################################
 # Configuration types
 if(CMAKE_CONFIGURATION_TYPES)
-  set(CMAKE_CONFIGURATION_TYPES Debug Release Profiling)
+  set(CMAKE_CONFIGURATION_TYPES Debug Release Profiling ProfDebug)
   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
     "Reset the configurations to what we need"
     FORCE)
@@ -21,6 +21,10 @@ endif()
 set(CMAKE_CXX_FLAGS_PROFILING "${CMAKE_CXX_FLAGS_RELEASE}")
 set(CMAKE_EXE_LINKER_FLAGS_PROFILING "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 set(CMAKE_SHARED_LINKER_FLAGS_PROFILING "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
+
+set(CMAKE_CXX_FLAGS_PROFDEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+set(CMAKE_EXE_LINKER_FLAGS_PROFDEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+set(CMAKE_SHARED_LINKER_FLAGS_PROFDEBUG "${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
 
 # #############################################################################
 # GLFW library
@@ -82,6 +86,7 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/OrthoCamera.cpp
   ${PP_SRC_DIR}/OrthoCameraController.cpp
   ${PP_SRC_DIR}/Profiler.cpp
+  ${PP_SRC_DIR}/ProfilerData.cpp
   ${PP_SRC_DIR}/RenderCommand.cpp
   ${PP_SRC_DIR}/Renderer.cpp
   ${PP_SRC_DIR}/Renderer2D.cpp
@@ -123,8 +128,10 @@ target_compile_definitions(Pepper
   PRIVATE GLFW_INCLUDE_NONE # Not include gl
   PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE> # Configurations flags
   PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
+  PRIVATE $<$<CONFIG:ProfDebug>:PP_ENABLE_ASSERTS> # Debug defines
   PRIVATE PP_CORE
   PRIVATE $<$<CONFIG:Profiling>:PROFILING>
+  PRIVATE $<$<CONFIG:ProfDebug>:PROFILING>
   )
 
 if(WIN32)
@@ -188,6 +195,7 @@ target_compile_definitions(App
   PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>
   PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
   PRIVATE $<$<CONFIG:Profiling>:PROFILING>
+  PRIVATE $<$<CONFIG:ProfDebug>:PROFILING>
   )
 
 if(WIN32)

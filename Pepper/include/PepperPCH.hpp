@@ -13,6 +13,7 @@
 #include <memory>
 #include <mutex>
 #include <ranges>
+#include <set>
 #include <sstream>
 #include <string>
 #include <thread>

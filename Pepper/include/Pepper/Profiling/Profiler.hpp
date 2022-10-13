@@ -18,9 +18,13 @@ namespace Pepper
 
     void EndSession();
 
-    void WriteTimer(ProfilerData&& data);
+    void EnqueueTimer(Scope<ProfilerData>&& data);
+
+    [[nodiscard]] bool IsActive() const;
 
     static Profiler& Get();
+
+    int GetThreadNum(uint64_t threadID) const;
 
   private:
     DECLARE_PIMPL

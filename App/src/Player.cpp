@@ -14,6 +14,7 @@ Player::Player() = default;
 
 void Player::Init()
 {
+  PP_PROFILE_FUNCTION()
   m_position = { 0.0f, 0.0f, Constants::Z_ROCKET };
   m_velocity = { 2.0f, 0.0f };
   m_rotation_deg = 0.0f;

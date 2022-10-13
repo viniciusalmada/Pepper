@@ -10,6 +10,7 @@
 
 ClientApp::ClientApp()
 {
+  PP_PROFILE_FUNCTION()
   PushLayer(Pepper::CreateRef<GameLayer>());
 }
 
@@ -17,5 +18,6 @@ ClientApp::~ClientApp() = default;
 
 Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
 {
+  PP_PROFILE_FUNCTION()
   return CreateScope<ClientApp>();
 }

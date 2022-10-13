@@ -32,13 +32,13 @@ PointerAlignment: Left
 Standard: c++20
 AlignAfterOpenBracket: Align
 AlignOperands: Align
-AllowShortLambdasOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: All
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: false
 BinPackArguments: false
 BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine: false
-ForEachMacros: [TEST_CLASS, TEST_METHOD]
+ForEachMacros: [ TEST_CLASS, TEST_METHOD ]
 IndentPPDirectives: BeforeHash
 AlwaysBreakTemplateDeclarations: Yes
 BreakConstructorInitializers: AfterColon

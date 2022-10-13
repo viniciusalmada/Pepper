@@ -8,10 +8,11 @@ namespace Pepper
   class Timer
   {
   public:
-    Timer(std::string&& title);
+    explicit Timer(std::string&& title);
     ~Timer();
-
     void Stop();
+
+    bool operator<(const Timer& other) const;
 
   private:
     DECLARE_PIMPL

@@ -23,10 +23,12 @@ public:
 
 private:
   void CheckPlanetsPosition();
+  void PlanetsPositionChecker();
 
   void UpdatePlanet(Planet& obs);
 
   void CheckCollision();
+  void CollisionChecker();
 
   void GameOver();
 
