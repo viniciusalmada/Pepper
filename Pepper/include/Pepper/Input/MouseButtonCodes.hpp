@@ -6,6 +6,8 @@ struct PPMouseBt
 
   friend std::ostream& operator<<(std::ostream& os, PPMouseBt ppBt) { return os << ppBt.button; }
 
+  bool operator==(const PPMouseBt& other) const { return button == other.button; }
+
   static PPMouseBt FromGLFWMouse(int glfwMouseBt) { return PPMouseBt{ glfwMouseBt }; }
 
   static int ToGLFWMouse(PPMouseBt ppBt) { return ppBt.button; }
