@@ -20,7 +20,7 @@ namespace VoronoiGenerator
     Edge(std::shared_ptr<Vertex> v0, std::shared_ptr<Vertex> v1, Line line) :
         m_v0(std::move(v0)),
         m_v1(std::move(v1)),
-        m_unit_line(std::move(line))
+        m_line(std::move(line))
     {
     }
 
@@ -30,33 +30,42 @@ namespace VoronoiGenerator
       return reg == m_region_0 ? m_region_1 : m_region_0;
     }
 
-    [[nodiscard]] const glm::dvec2& First() const
-    {
-      if (m_v0 != nullptr)
-        return *m_v0;
-      return m_unit_line.first;
-    }
-
-    [[nodiscard]] const glm::dvec2& Second() const
-    {
-      if (m_v1 != nullptr)
-        return *m_v1;
-      return m_unit_line.second;
-    }
-
     [[nodiscard]] std::shared_ptr<Vertex> GetFirstVertex() const { return m_v0; }
     [[nodiscard]] std::shared_ptr<Vertex> GetSecondVertex() const { return m_v1; }
 
     void SetRegion0(std::shared_ptr<Region> region) { m_region_0 = std::move(region); }
     void SetRegion1(std::shared_ptr<Region> region) { m_region_1 = std::move(region); }
 
-    Line GetDrawableEdge(const glm::dvec2& limits) const;
-    auto GetMidPoint() const { return m_unit_line.first + (m_unit_line.second - m_unit_line.first) / 2.0; };
+    [[nodiscard]] Line GetFinityFormEdge(const glm::dvec2& botLeft, const glm::dvec2& topRight) const;
+    [[nodiscard]] auto GetMidPoint() const { return m_line.first + (m_line.second - m_line.first) / 2.0; };
+
+    [[nodiscard]] const Line& GetLine() const { return m_line; };
+
+    [[nodiscard]] bool IsInf() const { return m_v0 == nullptr && m_v1 == nullptr; }
+    [[nodiscard]] bool IsSemiInf() const { return m_v0 == nullptr || m_v1 == nullptr; }
+
+    [[nodiscard]] std::shared_ptr<Vertex> GetNearVertex(const Vertex& reference) const
+    {
+      if (IsInf())
+        return nullptr;
+      if (m_v0 != nullptr && m_v1 == nullptr)
+        return m_v0;
+      if (m_v0 == nullptr && m_v1 != nullptr)
+        return m_v1;
+      auto dist_0 = glm::distance(reference, *m_v0);
+      auto dist_1 = glm::distance(reference, *m_v1);
+      if (dist_0 < dist_1)
+        return m_v0;
+      return m_v1;
+    }
+
+    void SetVertex0(std::shared_ptr<Vertex> vtx) { m_v0 = std::move(vtx); }
+    void SetVertex1(std::shared_ptr<Vertex> vtx) { m_v1 = std::move(vtx); }
 
   private:
     std::shared_ptr<Vertex> m_v0;
     std::shared_ptr<Vertex> m_v1;
-    Line m_unit_line;
+    Line m_line;
 
     std::shared_ptr<Region> m_region_0 = nullptr;
     std::shared_ptr<Region> m_region_1 = nullptr;
@@ -77,6 +86,21 @@ namespace VoronoiGenerator
       if (lhs->source.x == rhs->source.x)
       {
         if (lhs->source.y < rhs->source.y)
+          return true;
+      }
+      return false;
+    }
+  };
+
+  struct VertexSorter
+  {
+    bool operator()(const std::shared_ptr<Vertex>& lhs, const std::shared_ptr<Vertex>& rhs) const
+    {
+      if (lhs->x < rhs->x)
+        return true;
+      if (lhs->x == rhs->x)
+      {
+        if (lhs->y < rhs->y)
           return true;
       }
       return false;
@@ -114,6 +138,7 @@ namespace VoronoiGenerator
 
     [[nodiscard]] const auto& Regions() const { return m_regions; }
     [[nodiscard]] const auto& Edges() const { return m_all_edges; }
+    [[nodiscard]] const auto& Vertices() const { return m_all_vertices; }
 
     void Clear()
     {
@@ -124,7 +149,7 @@ namespace VoronoiGenerator
   private:
     std::set<std::shared_ptr<Region>, RegionsSorter> m_regions{};
     std::set<std::shared_ptr<Edge>> m_all_edges{};
-    std::set<std::shared_ptr<Vertex>> m_all_vertices{};
+    std::set<std::shared_ptr<Vertex>, VertexSorter> m_all_vertices{};
   };
 
   void UpdateDiagram(const glm::dvec2& pt, Diagram& diagram);

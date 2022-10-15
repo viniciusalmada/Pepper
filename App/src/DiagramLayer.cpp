@@ -51,7 +51,7 @@ void DiagramLayer::OnUpdate(Pepper::TimeStep /*step*/)
     Pepper::Renderer2D::DrawQuad(region->source, { 5.0f, 5.0f }, { 0.0f, 0.0f, 0.0f, 1.0f });
     for (const auto& edge : region->edges)
     {
-      auto drawable = edge->GetDrawableEdge({ 1280.0, 720.0 });
+      auto drawable = edge->GetFinityFormEdge({ 0.0, 0.0 }, { 1280.0, 720.0 });
       auto mid_pt = drawable.first + (drawable.second - drawable.first) / 2.0;
       auto length = glm::length(drawable.second - drawable.first);
       auto angle = glm::atan((drawable.second.y - drawable.first.y) / (drawable.second.x - drawable.first.x));
@@ -109,19 +109,21 @@ void DiagramLayer::OnEvent(Pepper::Event& event)
       //      m_dots_position.emplace_back(450,230);
       //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
 
-      //      m_dots_position.emplace_back(338, 149);
-      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      //      m_dots_position.emplace_back(1038, 204);
-      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      //      m_dots_position.emplace_back(686, 563);
-      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      m_dots_position.emplace_back(338, 149);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      m_dots_position.emplace_back(1038, 204);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      m_dots_position.emplace_back(686, 563);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      m_dots_position.emplace_back(820, 160);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
 
-      m_dots_position.emplace_back(1036, 117);
-      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      m_dots_position.emplace_back(838, 254);
-      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      m_dots_position.emplace_back(450, 505);
-      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      //      m_dots_position.emplace_back(1036, 117);
+      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      //      m_dots_position.emplace_back(838, 254);
+      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      //      m_dots_position.emplace_back(450, 505);
+      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
 
       return true;
     });
