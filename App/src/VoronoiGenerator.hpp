@@ -113,6 +113,7 @@ namespace VoronoiGenerator
     auto end() { return m_regions.end(); }
 
     [[nodiscard]] const auto& Regions() const { return m_regions; }
+    [[nodiscard]] const auto& Edges() const { return m_all_edges; }
 
     void Clear()
     {

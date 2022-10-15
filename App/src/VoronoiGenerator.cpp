@@ -320,10 +320,12 @@ namespace VoronoiGenerator
     auto [new_edge, next_region] = GetBisector(region_container, new_region);
     diagram.AddEdge(new_edge);
     // From the bisector edge node (e0_n0), find the new bisector (e1) on the mate region (e0_reg != Rc)
-    while (next_region != region_container || next_region != nullptr)
+    while (next_region != region_container)
     {
       std::tie(new_edge, next_region) = GetBisector(next_region, new_region);
       diagram.AddEdge(new_edge);
+      if (next_region == nullptr)
+        break;
     }
     // Recalculate the new bisector (en) until encounter the other edge node (e0_n1) or
   }
@@ -339,6 +341,28 @@ namespace VoronoiGenerator
       return { inter_top, inter_bot };
     }
 
-    return VoronoiGenerator::Line();
+    if ((m_v0 != nullptr && m_v1 == nullptr) || (m_v0 == nullptr && m_v1 != nullptr))
+    {
+      auto& existing_v = m_v0 == nullptr ? *m_v1 : *m_v0;
+
+      // Get a perpendicular line from unit line
+      auto perp_unit_line = GetPerpendicular(m_unit_line.first, m_unit_line.second);
+
+      // Calculates three intersections - top, bottom, perpendicular v0
+      auto [_0, inter_top] =
+        Intersect({ 0.0, limits.y }, { limits.x, limits.y }, m_unit_line.first, m_unit_line.second, true);
+      auto [_1, inter_bot] = Intersect({ 0.0, 0.0 }, { limits.x, 0.0 }, m_unit_line.first, m_unit_line.second, true);
+
+      auto top_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, inter_top);
+      auto bot_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, inter_bot);
+      auto v0_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, existing_v);
+      if (v0_orient == top_orient)
+        return { existing_v, inter_bot };
+
+      if (v0_orient == bot_orient)
+        return { existing_v, inter_top };
+    }
+
+    return { *m_v0, *m_v1 };
   }
 }
