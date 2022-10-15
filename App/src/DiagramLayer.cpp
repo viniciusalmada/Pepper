@@ -109,14 +109,20 @@ void DiagramLayer::OnEvent(Pepper::Event& event)
       //      m_dots_position.emplace_back(450,230);
       //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
 
-      m_dots_position.emplace_back(338, 149);
-      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      m_dots_position.emplace_back(1038, 204);
-      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      m_dots_position.emplace_back(686, 563);
-      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
-      //      m_dots_position.emplace_back(450,230);
+      //      m_dots_position.emplace_back(338, 149);
       //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      //      m_dots_position.emplace_back(1038, 204);
+      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      //      m_dots_position.emplace_back(686, 563);
+      //      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+
+      m_dots_position.emplace_back(1036, 117);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      m_dots_position.emplace_back(838, 254);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+      m_dots_position.emplace_back(450, 505);
+      VoronoiGenerator::UpdateDiagram(m_dots_position.back(), s_diagram);
+
       return true;
     });
 }

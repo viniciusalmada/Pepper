@@ -244,6 +244,12 @@ namespace VoronoiGenerator
     }
 
     std::shared_ptr<Edge> new_edge = nullptr;
+    if (intersections.empty())
+    {
+      new_edge = std::make_shared<Edge>(nullptr, nullptr, perpendicular_bisector);
+      return { new_edge, nullptr };
+    }
+
     if (intersections.size() == 1)
     {
       auto [intercepted_edge, inter_pt] = intersections[0];
@@ -291,11 +297,12 @@ namespace VoronoiGenerator
     diagram.AddRegion(new_region);
     // Find the bisector edge (e0) between new point and next region to search
     auto [new_edge, next_region] = GetBisector(region_container, new_region);
-    neighbor_regions.insert(next_region);
+    if (next_region != nullptr)
+      neighbor_regions.insert(next_region);
     diagram.AddEdge(new_edge);
     new_region->edges.insert(new_edge);
     // From the next bisector edge until returns to first region or get a null region
-    while (next_region != region_container)
+    while (next_region != nullptr && next_region != region_container)
     {
       std::tie(new_edge, next_region) = GetBisector(next_region, new_region);
       diagram.AddEdge(new_edge);
