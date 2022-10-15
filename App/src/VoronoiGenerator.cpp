@@ -33,7 +33,8 @@ std::tuple<bool, glm::dvec2> Intersect(const glm::dvec2& A,
                                        const glm::dvec2& B,
                                        const glm::dvec2& C,
                                        const glm::dvec2& D,
-                                       bool ignoreSegment = false)
+                                       bool ignoreFirstSegment,
+                                       bool ignoreAllSegments)
 {
   auto orientABC = CalcOrient(A, B, C);
   auto orientABD = CalcOrient(A, B, D);
@@ -43,8 +44,41 @@ std::tuple<bool, glm::dvec2> Intersect(const glm::dvec2& A,
       return { false, {} };
   }
 
-  if (ignoreSegment)
+  if (ignoreAllSegments)
   {
+    // Calculate the intersection
+    auto t_CD = Area2D(A, B, C) / (Area2D(A, B, C) - Area2D(A, B, D));
+    return { true, C + (t_CD * (D - C)) };
+  }
+
+  if (ignoreFirstSegment)
+  {
+    // Check second segment is on left or right of the first segment
+    {
+      if ((C.x > A.x) && (C.x > B.x) && (D.x > A.x) && (D.x > B.x))
+        return { false, {} };
+
+      if ((C.x < A.x) && (C.x < B.x) && (D.x < A.x) && (D.x < B.x))
+        return { false, {} };
+    }
+    // Check second segment is on top or bottom of the first segment
+    {
+      if ((C.y > A.y) && (C.y > B.y) && (D.y > A.y) && (D.y > B.y))
+        return { false, {} };
+
+      if ((C.y < A.y) && (C.y < B.y) && (D.y < A.y) && (D.y < B.y))
+        return { false, {} };
+    }
+
+    // Check second segment on the same side of first segment
+    {
+      if (orientABC == Orient::POSITIVE && orientABD == Orient::POSITIVE)
+        return { false, {} };
+
+      if (orientABC == Orient::NEGATIVE && orientABD == Orient::NEGATIVE)
+        return { false, {} };
+    }
+
     // Calculate the intersection
     auto t_CD = Area2D(A, B, C) / (Area2D(A, B, C) - Area2D(A, B, D));
     return { true, C + (t_CD * (D - C)) };
@@ -191,14 +225,18 @@ namespace VoronoiGenerator
   }
 
   std::tuple<std::shared_ptr<Edge>, std::shared_ptr<Region>> GetBisector(const std::shared_ptr<Region>& region0,
-                                                                         const std::shared_ptr<Region>& region1)
+                                                                         const std::shared_ptr<Region>& newRegion)
   {
-    const Line perpendicular_bisector = GetPerpendicular(region0->source, region1->source);
+    const Line perpendicular_bisector = GetPerpendicular(region0->source, newRegion->source);
     std::vector<std::pair<std::shared_ptr<Edge>, Vertex>> intersections{};
     for (const auto& edge : region0->edges)
     {
-      auto [found, inter_pt] =
-        Intersect(perpendicular_bisector.first, perpendicular_bisector.second, edge->First(), edge->Second(), true);
+      auto [found, inter_pt] = Intersect(perpendicular_bisector.first,
+                                         perpendicular_bisector.second,
+                                         edge->First(),
+                                         edge->Second(),
+                                         true,
+                                         false);
       if (found)
       {
         intersections.emplace_back(edge, inter_pt);
@@ -225,73 +263,6 @@ namespace VoronoiGenerator
     }
 
     return { nullptr, nullptr };
-
-    //    glm::dvec2 edge_n0 = edge_inf_pt_0;
-    //    glm::dvec2 edge_n1 = edge_inf_pt_1;
-    //    glm::dvec2 inter_pt_0{};
-    //    glm::dvec2 inter_pt_1{};
-    //    bool found_inter = false;
-    //    std::shared_ptr<Edge> edge0_intersected = nullptr;
-    //    std::shared_ptr<Edge> edge1_intersected = nullptr;
-    //    // Find intersection infinity edge and one or two edges from region
-    //    for (const auto& edge : region0->edges)
-    //    {
-    //      // Find inter from semi-edge (inf_0 -> mid_pt)
-    //      std::tie(found_inter, inter_pt_0) = Intersect(edge->v0, edge->v1, edge_inf_pt_0, mid_pt, true);
-    //      if (found_inter)
-    //      {
-    //        edge_n0 = inter_pt_0;
-    //        edge0_intersected = edge;
-    //        continue;
-    //      }
-    //
-    //      // Find inter from other semi-edge (mid_pt -> inf_1)
-    //      std::tie(found_inter, inter_pt_1) = Intersect(edge->v0, edge->v1, mid_pt, edge_inf_pt_1, true);
-    //      if (found_inter)
-    //      {
-    //        edge_n1 = inter_pt_1;
-    //        edge1_intersected = edge;
-    //        continue;
-    //      }
-    //    }
-    //
-    //    // Build the new edge
-    //    auto bisector_edge = std::make_shared<Edge>(Edge{ edge_n0, edge_n1 });
-    //
-    //    // Set regions pointers of edge
-    //    if (CalcOrient(bisector_edge->v0, bisector_edge->v1, region0->source) == Orient::POSITIVE)
-    //    {
-    //      bisector_edge->region_left = region0;
-    //      bisector_edge->region_right = region1;
-    //    }
-    //    else
-    //    {
-    //      bisector_edge->region_left = region1;
-    //      bisector_edge->region_right = region0;
-    //    }
-    //
-    //    // Update edges intersected nodes
-    //    if (edge0_intersected != nullptr)
-    //    {
-    //      auto orient_pt = CalcOrient(bisector_edge->v0, bisector_edge->v1, region1->source);
-    //      auto orient_edge0_n0 = CalcOrient(bisector_edge->v0, bisector_edge->v1, edge0_intersected->v0);
-    //      if (orient_pt == orient_edge0_n0) // Update n0
-    //        edge0_intersected->v0 = inter_pt_0;
-    //      else
-    //        edge0_intersected->v1 = inter_pt_0;
-    //    }
-    //    if (edge1_intersected != nullptr)
-    //    {
-    //      auto orient_pt = CalcOrient(bisector_edge->v0, bisector_edge->v1, region1->source);
-    //      auto orient_edge0_n0 = CalcOrient(bisector_edge->v0, bisector_edge->v1, edge1_intersected->v0);
-    //      if (orient_pt == orient_edge0_n0) // Update n0
-    //        edge1_intersected->v0 = inter_pt_1;
-    //      else
-    //        edge1_intersected->v1 = inter_pt_1;
-    //    }
-    //
-    //    // Return the bisector and the edges intersected
-    //    return { bisector_edge, edge0_intersected, edge1_intersected };
   }
 
   void UpdateDiagram(const glm::dvec2& pt, Diagram& diagram)
@@ -312,12 +283,15 @@ namespace VoronoiGenerator
 
     // Generic algorithm
     // Find the region (Rc) that contain the new point (pt)
+    std::set<std::shared_ptr<Region>> neighbor_regions{};
     std::shared_ptr<Region> region_container = GetRegionContainPt(pt, diagram);
+    neighbor_regions.insert(region_container);
     // Create the new empty region
     auto new_region = std::make_shared<Region>(Region{ pt, {} });
     diagram.AddRegion(new_region);
     // Find the bisector edge (e0) between new point and next region to search
     auto [new_edge, next_region] = GetBisector(region_container, new_region);
+    neighbor_regions.insert(next_region);
     diagram.AddEdge(new_edge);
     new_region->edges.insert(new_edge);
     // From the next bisector edge until returns to first region or get a null region
@@ -328,7 +302,10 @@ namespace VoronoiGenerator
       new_region->edges.insert(new_edge);
       if (next_region == nullptr)
         break;
+      neighbor_regions.insert(next_region);
     }
+
+    // Update the edges based on new edges from new region
   }
 
   Line Edge::GetDrawableEdge(const glm::dvec2& limits) const
@@ -337,8 +314,9 @@ namespace VoronoiGenerator
     {
       // Intersection with top line [(0, limits.y), (limits.x, limits.y)]
       auto [_0, inter_top] =
-        Intersect({ 0.0, limits.y }, { limits.x, limits.y }, m_unit_line.first, m_unit_line.second, true);
-      auto [_1, inter_bot] = Intersect({ 0.0, 0.0 }, { limits.x, 0.0 }, m_unit_line.first, m_unit_line.second, true);
+        Intersect({ 0.0, limits.y }, { limits.x, limits.y }, m_unit_line.first, m_unit_line.second, false, true);
+      auto [_1, inter_bot] =
+        Intersect({ 0.0, 0.0 }, { limits.x, 0.0 }, m_unit_line.first, m_unit_line.second, false, true);
       return { inter_top, inter_bot };
     }
 
@@ -351,8 +329,9 @@ namespace VoronoiGenerator
 
       // Calculates three intersections - top, bottom, perpendicular v0
       auto [_0, inter_top] =
-        Intersect({ 0.0, limits.y }, { limits.x, limits.y }, m_unit_line.first, m_unit_line.second, true);
-      auto [_1, inter_bot] = Intersect({ 0.0, 0.0 }, { limits.x, 0.0 }, m_unit_line.first, m_unit_line.second, true);
+        Intersect({ 0.0, limits.y }, { limits.x, limits.y }, m_unit_line.first, m_unit_line.second, false, true);
+      auto [_1, inter_bot] =
+        Intersect({ 0.0, 0.0 }, { limits.x, 0.0 }, m_unit_line.first, m_unit_line.second, false, true);
 
       auto top_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, inter_top);
       auto bot_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, inter_bot);
