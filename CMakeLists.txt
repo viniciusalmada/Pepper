@@ -144,6 +144,7 @@ target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 add_executable(App
   App/src/VoronoiApp.cpp
   App/src/DiagramLayer.cpp
+  App/src/VoronoiGenerator.cpp
   )
 
 if(WIN32)
