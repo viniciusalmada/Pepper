@@ -60,15 +60,15 @@ void DiagramLayer::OnUpdate(Pepper::TimeStep /*step*/)
     }
   }
 
-  for (const auto& edge : s_diagram.Edges())
-  {
-    auto drawable = edge->GetDrawableEdge({ 1280.0, 720.0 });
-    auto mid_pt = drawable.first + (drawable.second - drawable.first) / 2.0;
-    auto length = glm::length(drawable.second - drawable.first);
-    auto angle = glm::atan((drawable.second.y - drawable.first.y) / (drawable.second.x - drawable.first.x));
-    auto angle_deg = static_cast<float>(glm::degrees(angle));
-    Pepper::Renderer2D::DrawRotatedQuad(mid_pt, { length, 2.5f }, angle_deg, { 1.0f, 0.2f, 0.2f, 1.0f });
-  }
+  //  for (const auto& edge : s_diagram.Edges())
+  //  {
+  //    auto drawable = edge->GetDrawableEdge({ 1280.0, 720.0 });
+  //    auto mid_pt = drawable.first + (drawable.second - drawable.first) / 2.0;
+  //    auto length = glm::length(drawable.second - drawable.first);
+  //    auto angle = glm::atan((drawable.second.y - drawable.first.y) / (drawable.second.x - drawable.first.x));
+  //    auto angle_deg = static_cast<float>(glm::degrees(angle));
+  //    Pepper::Renderer2D::DrawRotatedQuad(mid_pt, { length, 2.5f }, angle_deg, { 1.0f, 0.2f, 0.2f, 1.0f });
+  //  }
 
   Pepper::Renderer2D::EndScene();
 }

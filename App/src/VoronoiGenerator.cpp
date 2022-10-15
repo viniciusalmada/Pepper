@@ -316,18 +316,19 @@ namespace VoronoiGenerator
     // Create the new empty region
     auto new_region = std::make_shared<Region>(Region{ pt, {} });
     diagram.AddRegion(new_region);
-    // Find the bisector edge (e0) between new point and region source node (Rc_n)
+    // Find the bisector edge (e0) between new point and next region to search
     auto [new_edge, next_region] = GetBisector(region_container, new_region);
     diagram.AddEdge(new_edge);
-    // From the bisector edge node (e0_n0), find the new bisector (e1) on the mate region (e0_reg != Rc)
+    new_region->edges.insert(new_edge);
+    // From the next bisector edge until returns to first region or get a null region
     while (next_region != region_container)
     {
       std::tie(new_edge, next_region) = GetBisector(next_region, new_region);
       diagram.AddEdge(new_edge);
+      new_region->edges.insert(new_edge);
       if (next_region == nullptr)
         break;
     }
-    // Recalculate the new bisector (en) until encounter the other edge node (e0_n1) or
   }
 
   Line Edge::GetDrawableEdge(const glm::dvec2& limits) const
