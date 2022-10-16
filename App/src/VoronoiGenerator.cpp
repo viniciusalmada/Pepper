@@ -322,7 +322,26 @@ namespace VoronoiGenerator
     if (intersections.size() == 2)
     {
       auto [first_intercepted_edge, first_inter_pt] = intersections[0];
-      auto [_, second_inter_pt] = intersections[1];
+      auto [second_intercepted_edge, second_inter_pt] = intersections[1];
+      // Find the next region from intercepted edges
+      std::shared_ptr<Edge> edge_adj_next_region;
+      {
+        auto first_mate = first_intercepted_edge->GetMate(existingRegion);
+        auto second_mate = second_intercepted_edge->GetMate(existingRegion);
+        for (auto& new_region_edge : newRegion->edges)
+        {
+          if (new_region_edge->GetMate(newRegion) == first_mate)
+          {
+            edge_adj_next_region = second_intercepted_edge;
+            continue;
+          }
+          if (new_region_edge->GetMate(newRegion) == second_mate)
+          {
+            edge_adj_next_region = first_intercepted_edge;
+            continue;
+          }
+        }
+      }
 
       auto first_vertex_found = std::find_if(vertices.begin(),
                                              vertices.end(),
@@ -344,7 +363,7 @@ namespace VoronoiGenerator
       new_edge = std::make_shared<Edge>(new_first_vertex, new_second_vertex, perpendicular_bisector);
       new_edge->SetRegion0(newRegion);
       new_edge->SetRegion1(existingRegion);
-      return { new_edge, first_intercepted_edge->GetMate(existingRegion) };
+      return { new_edge, edge_adj_next_region->GetMate(existingRegion) };
     }
 
     return { nullptr, nullptr };
@@ -368,7 +387,9 @@ namespace VoronoiGenerator
 
     // Generic algorithm
     // Find the region (Rc) that contain the new point (pt)
+    std::vector<std::shared_ptr<Region>> regions_visited;
     std::shared_ptr<Region> region_container = GetRegionContainPt(pt, diagram);
+    regions_visited.push_back(region_container);
 
     // Create the new empty region
     auto new_region = std::make_shared<Region>(Region{ pt, {} });
@@ -378,6 +399,7 @@ namespace VoronoiGenerator
     auto [new_edge, next_region] = GetBisector(region_container, new_region, diagram.Vertices());
     diagram.AddEdge(new_edge);
     new_region->edges.insert(new_edge);
+    regions_visited.push_back(next_region);
 
     // From the next bisector edge until returns to first region or get a null region
     while (next_region != nullptr && next_region != region_container)
@@ -387,6 +409,9 @@ namespace VoronoiGenerator
       new_region->edges.insert(new_edge);
       if (next_region == nullptr)
         break;
+      if (std::find(regions_visited.begin(), regions_visited.end(), next_region) != regions_visited.end())
+        break;
+      regions_visited.push_back(next_region);
     }
 
     // Update the edges based on new edges from new region
