@@ -31,6 +31,17 @@ Orient CalcOrient(const glm::dvec2& p1, const glm::dvec2& p2, const glm::dvec2& 
   return Orient::NEGATIVE;
 }
 
+std::pair<glm::dvec2, glm::dvec2> GetPerpendicular(const glm::dvec2& p0, const glm::dvec2& p1)
+{
+  const glm::dvec2 line_seg = p1 - p0;
+  const glm::dvec2 mid_point = p0 + line_seg / 2.0;
+
+  const glm::dvec2 line_normal{ -line_seg.y, line_seg.x };
+  const glm::dvec2 perpend_0 = mid_point - line_normal / 2.0;
+  const glm::dvec2 perpend_1 = mid_point + line_normal / 2.0;
+  return { perpend_0, perpend_1 };
+}
+
 bool IsCollinear(const glm::dvec2& A, const glm::dvec2& B, const glm::dvec2& C, const glm::dvec2& D)
 {
   auto orientABC = CalcOrient(A, B, C);
@@ -154,23 +165,25 @@ std::tuple<bool, glm::dvec2> Intersect(const glm::dvec2& A,
     return { true, inter_pt };
   }
 
-  auto inter_pt = GetInterPoint(C, D, A, B);
-  return { true, inter_pt };
+  if (firstExt == Ext::SEMI && secondExt == Ext::INFIN)
+  {
+    auto [_, inter_pt] = Intersect(A, B, C, D, Ext::INFIN, Ext::INFIN);
+    auto mid_pt = B + (A - B) / 2.0;
+    auto displacement_to_A = mid_pt - A;
+    auto vtx_perpend = GetPerpendicular(A, B);
+    vtx_perpend.first -= displacement_to_A;
+    vtx_perpend.second -= displacement_to_A;
+    auto side_B = CalcOrient(vtx_perpend.first, vtx_perpend.second, B);
+    auto side_inter_pt = CalcOrient(vtx_perpend.first, vtx_perpend.second, inter_pt);
+    if (side_B == side_inter_pt)
+      return { true, inter_pt };
+  }
+
+  return { false, {} };
 }
 
 namespace VoronoiGenerator
 {
-  Line GetPerpendicular(const glm::dvec2& p0, const glm::dvec2& p1)
-  {
-    const glm::dvec2 line_seg = p1 - p0;
-    const glm::dvec2 mid_point = p0 + line_seg / 2.0;
-
-    const glm::dvec2 line_normal{ -line_seg.y, line_seg.x };
-    const glm::dvec2 perpend_0 = mid_point - line_normal / 2.0;
-    const glm::dvec2 perpend_1 = mid_point + line_normal / 2.0;
-    return { perpend_0, perpend_1 };
-  }
-
   void InsertFirstRegion(const Sample& pt, Diagram& diagram)
   {
     std::shared_ptr<Region> region = std::make_shared<Region>(Region{ pt, {} });
@@ -249,8 +262,10 @@ namespace VoronoiGenerator
       else if (edge->IsSemiInf())
       {
         auto vtx = edge->GetFirstVertex();
-        std::tie(found, inter_pt) =
-          Intersect(edge_line.first, edge_line.second, line.first, line.second, Ext::SEMI, Ext::INFIN);
+        auto dist_vtx_line_first = glm::distance(edge_line.first, *vtx);
+        auto dist_vtx_line_second = glm::distance(edge_line.second, *vtx);
+        auto line_pt = dist_vtx_line_first > dist_vtx_line_second ? edge_line.first : edge_line.second;
+        std::tie(found, inter_pt) = Intersect(*vtx, line_pt, line.first, line.second, Ext::SEMI, Ext::INFIN);
       }
       else
       {
@@ -354,13 +369,16 @@ namespace VoronoiGenerator
     // Generic algorithm
     // Find the region (Rc) that contain the new point (pt)
     std::shared_ptr<Region> region_container = GetRegionContainPt(pt, diagram);
+
     // Create the new empty region
     auto new_region = std::make_shared<Region>(Region{ pt, {} });
     diagram.AddRegion(new_region);
+
     // Find the bisector edge (e0) between new point and next region to search
     auto [new_edge, next_region] = GetBisector(region_container, new_region, diagram.Vertices());
     diagram.AddEdge(new_edge);
     new_region->edges.insert(new_edge);
+
     // From the next bisector edge until returns to first region or get a null region
     while (next_region != nullptr && next_region != region_container)
     {

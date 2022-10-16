@@ -42,7 +42,10 @@ namespace VoronoiGenerator
     [[nodiscard]] const Line& GetLine() const { return m_line; };
 
     [[nodiscard]] bool IsInf() const { return m_v0 == nullptr && m_v1 == nullptr; }
-    [[nodiscard]] bool IsSemiInf() const { return m_v0 == nullptr || m_v1 == nullptr; }
+    [[nodiscard]] bool IsSemiInf() const
+    {
+      return (m_v0 != nullptr && m_v1 == nullptr) || (m_v0 == nullptr && m_v1 != nullptr);
+    }
 
     [[nodiscard]] std::shared_ptr<Vertex> GetNearVertex(const Vertex& reference) const
     {
