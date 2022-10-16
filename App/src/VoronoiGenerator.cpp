@@ -11,7 +11,7 @@ enum class Ext { FINIT, INFIN, SEMI };
 
 enum class Orient { ZERO, POSITIVE, NEGATIVE };
 
-auto Area2D(const glm::dvec2& p1, const glm::dvec2& p2, const glm::dvec2& p3)
+auto Area2D(const Point& p1, const Point& p2, const Point& p3)
 {
   auto AB = p2 - p1;
   auto AC = p3 - p1;
@@ -20,7 +20,7 @@ auto Area2D(const glm::dvec2& p1, const glm::dvec2& p2, const glm::dvec2& p3)
   return AB.x * AC.y - AC.x * AB.y;
 }
 
-Orient CalcOrient(const glm::dvec2& p1, const glm::dvec2& p2, const glm::dvec2& p3)
+Orient CalcOrient(const Point& p1, const Point& p2, const Point& p3)
 {
   auto d = Area2D(p1, p2, p3);
   if (std::abs(d) < TOLERANCE)
@@ -31,32 +31,32 @@ Orient CalcOrient(const glm::dvec2& p1, const glm::dvec2& p2, const glm::dvec2& 
   return Orient::NEGATIVE;
 }
 
-std::pair<glm::dvec2, glm::dvec2> GetPerpendicular(const glm::dvec2& p0, const glm::dvec2& p1)
+std::pair<Point, Point> GetPerpendicular(const Point& p0, const Point& p1)
 {
-  const glm::dvec2 line_seg = p1 - p0;
-  const glm::dvec2 mid_point = p0 + line_seg / 2.0;
+  const Point line_seg = p1 - p0;
+  const Point mid_point = p0 + line_seg / 2.0;
 
-  const glm::dvec2 line_normal{ -line_seg.y, line_seg.x };
-  const glm::dvec2 perpend_0 = mid_point - line_normal / 2.0;
-  const glm::dvec2 perpend_1 = mid_point + line_normal / 2.0;
+  const Point line_normal{ -line_seg.y, line_seg.x };
+  const Point perpend_0 = mid_point - line_normal / 2.0;
+  const Point perpend_1 = mid_point + line_normal / 2.0;
   return { perpend_0, perpend_1 };
 }
 
-bool IsCollinear(const glm::dvec2& A, const glm::dvec2& B, const glm::dvec2& C, const glm::dvec2& D)
+bool IsCollinear(const Point& A, const Point& B, const Point& C, const Point& D)
 {
   auto orientABC = CalcOrient(A, B, C);
   auto orientABD = CalcOrient(A, B, D);
   return orientABC == Orient::ZERO && orientABD == Orient::ZERO;
 }
 
-glm::dvec2 GetInterPoint(const glm::dvec2& A, const glm::dvec2& B, const glm::dvec2& C, const glm::dvec2& D)
+Point GetInterPoint(const Point& A, const Point& B, const Point& C, const Point& D)
 {
   // Calculate the intersection
   auto t_CD = Area2D(A, B, C) / (Area2D(A, B, C) - Area2D(A, B, D));
   return C + (t_CD * (D - C));
 }
 
-bool SecondLineIsOutOfFirstLineBox(const glm::dvec2& A, const glm::dvec2& B, const glm::dvec2& C, const glm::dvec2& D)
+bool SecondLineIsOutOfFirstLineBox(const Point& A, const Point& B, const Point& C, const Point& D)
 {
   if ((C.x > A.x) && (C.x > B.x) && (D.x > A.x) && (D.x > B.x))
     return true;
@@ -69,7 +69,7 @@ bool SecondLineIsOutOfFirstLineBox(const glm::dvec2& A, const glm::dvec2& B, con
   return false;
 }
 
-bool SecondLineOnLeftOrRightOfFirst(const glm::dvec2& A, const glm::dvec2& B, const glm::dvec2& C, const glm::dvec2& D)
+bool SecondLineOnLeftOrRightOfFirst(const Point& A, const Point& B, const Point& C, const Point& D)
 {
   auto orientABC = CalcOrient(A, B, C);
   auto orientABD = CalcOrient(A, B, D);
@@ -80,7 +80,7 @@ bool SecondLineOnLeftOrRightOfFirst(const glm::dvec2& A, const glm::dvec2& B, co
   return false;
 }
 
-bool SecondLineTouchesFirstLine(const glm::dvec2& A, const glm::dvec2& B, const glm::dvec2& C, const glm::dvec2& D)
+bool SecondLineTouchesFirstLine(const Point& A, const Point& B, const Point& C, const Point& D)
 {
   auto orientABC = CalcOrient(A, B, C);
   auto orientABD = CalcOrient(A, B, D);
@@ -101,12 +101,8 @@ bool SecondLineTouchesFirstLine(const glm::dvec2& A, const glm::dvec2& B, const 
  * @param secondExt
  * @return
  */
-std::tuple<bool, glm::dvec2> Intersect(const glm::dvec2& A,
-                                       const glm::dvec2& B,
-                                       const glm::dvec2& C,
-                                       const glm::dvec2& D,
-                                       Ext firstExt,
-                                       Ext secondExt)
+std::tuple<bool, Point>
+Intersect(const Point& A, const Point& B, const Point& C, const Point& D, Ext firstExt, Ext secondExt)
 {
   if (IsCollinear(A, B, C, D))
     return { false, {} };
@@ -184,16 +180,16 @@ std::tuple<bool, glm::dvec2> Intersect(const glm::dvec2& A,
 
 namespace VoronoiGenerator
 {
-  void InsertFirstRegion(const Sample& pt, Diagram& diagram)
+  void InsertFirstRegion(const Point& pt, Diagram& diagram)
   {
     std::shared_ptr<Region> region = std::make_shared<Region>(Region{ pt, {} });
     diagram.AddRegion(region);
   }
 
-  void InsertSecondRegion(const glm::dvec2& pt, Diagram& diagram)
+  void InsertSecondRegion(const Point& pt, Diagram& diagram)
   {
     auto region0 = diagram.GetFirst();
-    const glm::dvec2& p0 = region0->source;
+    const Point& p0 = region0->source;
     const Line perpend = GetPerpendicular(p0, pt);
 
     auto edge = std::make_shared<Edge>(Edge{ nullptr, nullptr, perpend });
@@ -218,7 +214,7 @@ namespace VoronoiGenerator
     //    }
   }
 
-  std::shared_ptr<Region> GetRegionContainPt(const glm::dvec2& pt, Diagram& diagram)
+  std::shared_ptr<Region> GetRegionContainPt(const Point& pt, Diagram& diagram)
   {
     std::shared_ptr<Region> region_container = nullptr;
     for (const auto& region : diagram)
@@ -245,15 +241,15 @@ namespace VoronoiGenerator
     return region_container;
   }
 
-  std::vector<std::pair<std::shared_ptr<Edge>, Vertex>>
+  std::vector<std::pair<std::shared_ptr<Edge>, Point>>
   GetEdgeIntersections(const Line& line, const std::set<std::shared_ptr<Edge>>& edges_set)
   {
-    std::vector<std::pair<std::shared_ptr<Edge>, Vertex>> intersections{};
+    std::vector<std::pair<std::shared_ptr<Edge>, Point>> intersections{};
     for (const auto& edge : edges_set)
     {
       auto edge_line = edge->GetLine();
       bool found = false;
-      glm::dvec2 inter_pt{};
+      Point inter_pt{};
       if (edge->IsInf())
       {
         std::tie(found, inter_pt) =
@@ -262,15 +258,19 @@ namespace VoronoiGenerator
       else if (edge->IsSemiInf())
       {
         auto vtx = edge->GetFirstVertex();
-        auto dist_vtx_line_first = glm::distance(edge_line.first, *vtx);
-        auto dist_vtx_line_second = glm::distance(edge_line.second, *vtx);
+        auto dist_vtx_line_first = glm::distance(edge_line.first, vtx->pt);
+        auto dist_vtx_line_second = glm::distance(edge_line.second, vtx->pt);
         auto line_pt = dist_vtx_line_first > dist_vtx_line_second ? edge_line.first : edge_line.second;
-        std::tie(found, inter_pt) = Intersect(*vtx, line_pt, line.first, line.second, Ext::SEMI, Ext::INFIN);
+        std::tie(found, inter_pt) = Intersect(vtx->pt, line_pt, line.first, line.second, Ext::SEMI, Ext::INFIN);
       }
       else
       {
-        std::tie(found, inter_pt) =
-          Intersect(*edge->GetFirstVertex(), *edge->GetSecondVertex(), line.first, line.second, Ext::FINIT, Ext::INFIN);
+        std::tie(found, inter_pt) = Intersect(edge->GetFirstVertex()->pt,
+                                              edge->GetSecondVertex()->pt,
+                                              line.first,
+                                              line.second,
+                                              Ext::FINIT,
+                                              Ext::INFIN);
       }
 
       if (found)
@@ -286,9 +286,9 @@ namespace VoronoiGenerator
               const std::shared_ptr<Region>& newRegion,
               const std::set<std::shared_ptr<Vertex>, VertexSorter>& vertices)
   {
-    auto vertices_finder = [](const Vertex& cmp, const std::shared_ptr<Vertex>& vtx)
+    auto vertices_finder = [](const Point& cmp, const std::shared_ptr<Vertex>& vtx)
     {
-      return glm::distance(cmp, *vtx) < TOLERANCE;
+      return glm::distance(cmp, vtx->pt) < TOLERANCE;
     };
 
     const Line perpendicular_bisector = GetPerpendicular(existingRegion->source, newRegion->source);
@@ -310,10 +310,11 @@ namespace VoronoiGenerator
         std::find_if(vertices.begin(), vertices.end(), std::bind(vertices_finder, inter_pt, std::placeholders::_1));
       std::shared_ptr<Vertex> new_vertex;
       if (vertex_found == vertices.end())
-        new_vertex = std::make_shared<Vertex>(inter_pt);
+        new_vertex = std::make_shared<Vertex>(inter_pt, nullptr);
       else
         new_vertex = *vertex_found;
       new_edge = std::make_shared<Edge>(new_vertex, nullptr, perpendicular_bisector);
+      new_vertex->edge = new_vertex->edge == nullptr ? new_edge : new_vertex->edge;
       new_edge->SetRegion0(newRegion);
       new_edge->SetRegion1(existingRegion);
       return { new_edge, intercepted_edge->GetMate(existingRegion) };
@@ -348,7 +349,7 @@ namespace VoronoiGenerator
                                              std::bind(vertices_finder, first_inter_pt, std::placeholders::_1));
       std::shared_ptr<Vertex> new_first_vertex;
       if (first_vertex_found == vertices.end())
-        new_first_vertex = std::make_shared<Vertex>(first_inter_pt);
+        new_first_vertex = std::make_shared<Vertex>(first_inter_pt, nullptr);
       else
         new_first_vertex = *first_vertex_found;
 
@@ -357,10 +358,13 @@ namespace VoronoiGenerator
                                               std::bind(vertices_finder, second_inter_pt, std::placeholders::_1));
       std::shared_ptr<Vertex> new_second_vertex;
       if (second_vertex_found == vertices.end())
-        new_second_vertex = std::make_shared<Vertex>(second_inter_pt);
+        new_second_vertex = std::make_shared<Vertex>(second_inter_pt, nullptr);
       else
         new_second_vertex = *second_vertex_found;
       new_edge = std::make_shared<Edge>(new_first_vertex, new_second_vertex, perpendicular_bisector);
+      new_first_vertex->edge = new_first_vertex->edge == nullptr ? new_edge : new_first_vertex->edge;
+      new_second_vertex->edge = new_second_vertex->edge == nullptr ? new_edge : new_second_vertex->edge;
+
       new_edge->SetRegion0(newRegion);
       new_edge->SetRegion1(existingRegion);
       return { new_edge, edge_adj_next_region->GetMate(existingRegion) };
@@ -369,7 +373,7 @@ namespace VoronoiGenerator
     return { nullptr, nullptr };
   }
 
-  void UpdateDiagram(const glm::dvec2& pt, Diagram& diagram)
+  void UpdateDiagram(const Point& pt, Diagram& diagram)
   {
     // Empty diagram - insert infinity region
     if (diagram.Empty())
@@ -423,12 +427,17 @@ namespace VoronoiGenerator
       // Recalculate the intersections between new edge and the visited region
       auto intersections = GetEdgeIntersections(edge_of_new_region->GetLine(), visited_region->edges);
       // For each
-      for (auto [intersected_edge, vertex] : intersections)
+      for (auto [intersected_edge, point] : intersections)
       {
         // If is infinity, a vertex will be set up
         if (intersected_edge->IsInf())
         {
-          auto inter_vtx = edge_of_new_region->GetNearVertex(vertex);
+          auto inter_vtx = edge_of_new_region->GetNearVertex(point);
+          intersected_edge->SetVertex0(inter_vtx);
+        }
+        else if (intersected_edge->IsSemiInf())
+        {
+          auto inter_vtx = edge_of_new_region->GetNearVertex(point);
           intersected_edge->SetVertex0(inter_vtx);
         }
       }
@@ -440,7 +449,7 @@ namespace VoronoiGenerator
     PP_INFO("Vertices: {0}", diagram.Vertices().size());
   }
 
-  Line Edge::GetFinityFormEdge(const glm::dvec2& botLeft, const glm::dvec2& topRight) const
+  Line Edge::GetFinityFormEdge(const Point& botLeft, const Point& topRight) const
   {
     auto [_0, inter_top] =
       Intersect({ botLeft.x, topRight.y }, topRight, m_line.first, m_line.second, Ext::INFIN, Ext::INFIN);
@@ -452,7 +461,7 @@ namespace VoronoiGenerator
 
     if ((m_v0 != nullptr && m_v1 == nullptr) || (m_v0 == nullptr && m_v1 != nullptr))
     {
-      auto& existing_v = m_v0 == nullptr ? *m_v1 : *m_v0;
+      Point& existing_v = m_v0 == nullptr ? m_v1->pt : m_v0->pt;
 
       // Get a perpendicular line from unit line
       auto perp_unit_line = GetPerpendicular(m_line.first, m_line.second);
@@ -467,6 +476,6 @@ namespace VoronoiGenerator
         return { existing_v, inter_top };
     }
 
-    return { *m_v0, *m_v1 };
+    return { m_v0->pt, m_v1->pt };
   }
 }

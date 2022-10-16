@@ -5,15 +5,27 @@
 #include <set>
 #include <utility>
 
+using Point = glm::dvec2;
+using Line = std::pair<glm::dvec2, glm::dvec2>;
+
 namespace VoronoiGenerator
 {
-  using Line = std::pair<glm::dvec2, glm::dvec2>;
 
-  using Sample = glm::dvec2;
+  class Edge;
 
-  using Vertex = glm::dvec2;
+  struct Vertex
+  {
+    Vertex(const Point& point, const std::shared_ptr<Edge>& e) : pt(point), edge(e) {}
+    Point pt;
+    std::shared_ptr<Edge> edge;
+  };
 
   struct Region;
+
+  // Using edge to guide the DCEL data structure
+  // DCEL - Doubly Connected Edge List
+  // Region - [Sample, Edge]
+  // Vertex - [Vertex, Edge]
   class Edge
   {
   public:
@@ -24,7 +36,7 @@ namespace VoronoiGenerator
     {
     }
 
-    [[nodiscard]] auto Length() const { return glm::length(*m_v1 - *m_v0); }
+    [[nodiscard]] auto Length() const { return glm::length(m_v1->pt - m_v0->pt); }
     [[nodiscard]] std::shared_ptr<Region> GetMate(const std::shared_ptr<Region>& reg) const
     {
       return reg == m_region_0 ? m_region_1 : m_region_0;
@@ -47,7 +59,7 @@ namespace VoronoiGenerator
       return (m_v0 != nullptr && m_v1 == nullptr) || (m_v0 == nullptr && m_v1 != nullptr);
     }
 
-    [[nodiscard]] std::shared_ptr<Vertex> GetNearVertex(const Vertex& reference) const
+    [[nodiscard]] std::shared_ptr<Vertex> GetNearVertex(const Point& reference) const
     {
       if (IsInf())
         return nullptr;
@@ -55,8 +67,8 @@ namespace VoronoiGenerator
         return m_v0;
       if (m_v0 == nullptr && m_v1 != nullptr)
         return m_v1;
-      auto dist_0 = glm::distance(reference, *m_v0);
-      auto dist_1 = glm::distance(reference, *m_v1);
+      auto dist_0 = glm::distance(reference, m_v0->pt);
+      auto dist_1 = glm::distance(reference, m_v1->pt);
       if (dist_0 < dist_1)
         return m_v0;
       return m_v1;
@@ -66,17 +78,19 @@ namespace VoronoiGenerator
     void SetVertex1(std::shared_ptr<Vertex> vtx) { m_v1 = std::move(vtx); }
 
   private:
-    std::shared_ptr<Vertex> m_v0;
-    std::shared_ptr<Vertex> m_v1;
+    std::shared_ptr<Vertex> m_v0; // vB
+    std::shared_ptr<Vertex> m_v1; // vE
     Line m_line;
 
-    std::shared_ptr<Region> m_region_0 = nullptr;
-    std::shared_ptr<Region> m_region_1 = nullptr;
+    std::shared_ptr<Region> m_region_0 = nullptr; // fL
+    std::shared_ptr<Region> m_region_1 = nullptr; // fR
+    std::shared_ptr<Edge> m_next = nullptr;       // eN
+    std::shared_ptr<Edge> m_prev = nullptr;       // eP
   };
 
   struct Region
   {
-    Sample source;
+    Point source;
     std::set<std::shared_ptr<Edge>> edges;
   };
 
@@ -99,11 +113,11 @@ namespace VoronoiGenerator
   {
     bool operator()(const std::shared_ptr<Vertex>& lhs, const std::shared_ptr<Vertex>& rhs) const
     {
-      if (lhs->x < rhs->x)
+      if (lhs->pt.x < rhs->pt.x)
         return true;
-      if (lhs->x == rhs->x)
+      if (lhs->pt.x == rhs->pt.x)
       {
-        if (lhs->y < rhs->y)
+        if (lhs->pt.y < rhs->pt.y)
           return true;
       }
       return false;
