@@ -70,10 +70,6 @@ bool VoronoiDiagramGenerator::GenerateVoronoi(float* xValues,
   minDistanceBetweenSites = minDist;
 
   nsites = numPoints;
-  plot = 0;
-  triangulate = 0;
-  debug = 1;
-  sorted = 0;
   freeinit(&sfl, sizeof(Site));
 
   sites = (Site*)myalloc(nsites * sizeof(*sites));
@@ -90,7 +86,6 @@ bool VoronoiDiagramGenerator::GenerateVoronoi(float* xValues,
   {
     sites[i].coord.x = xValues[i];
     sites[i].coord.y = yValues[i];
-    sites[i].sitenbr = i;
     sites[i].refcnt = 0;
 
     if (xValues[i] < xmin)
@@ -334,8 +329,6 @@ Edge* VoronoiDiagramGenerator::bisect(Site* s1, Site* s2)
     newedge->c /= dy; // set formula of line, with y fixed to 1
   }
 
-  newedge->edgenbr = nedges;
-
   // printf("\nbisect(%d) ((%f,%f) and (%f,%f)",nedges,s1->coord.x,s1->coord.y,s2->coord.x,s2->coord.y);
 
   nedges += 1;
@@ -469,9 +462,8 @@ float VoronoiDiagramGenerator::dist(Site* s, Site* t)
   return (float)(sqrt(dx * dx + dy * dy));
 }
 
-void VoronoiDiagramGenerator::makevertex(Site* v)
+void VoronoiDiagramGenerator::makevertex()
 {
-  v->sitenbr = nvertices;
   nvertices += 1;
 }
 
@@ -898,7 +890,7 @@ bool VoronoiDiagramGenerator::voronoi()
       top = rightreg(rbnd);  // get the Site to the right of the right HE which it bisects
 
       v = lbnd->vertex; // get the vertex that caused this event
-      makevertex(v); // set the vertex number - couldn't do this earlier since we didn't know when it would be processed
+      makevertex(); // set the vertex number - couldn't do this earlier since we didn't know when it would be processed
       endpoint(lbnd->ELedge, lbnd->ELpm, v); // set the endpoint of the left HalfEdge to be this vector
       endpoint(rbnd->ELedge, rbnd->ELpm, v); // set the endpoint of the right HalfEdge to be this vector
       ELdelete(

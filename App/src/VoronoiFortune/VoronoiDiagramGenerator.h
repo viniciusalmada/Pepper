@@ -63,7 +63,6 @@ struct Point
 struct Site
 {
   Point coord;
-  int sitenbr;
   int refcnt;
 };
 
@@ -72,7 +71,6 @@ struct Edge
   float a, b, c;
   Site* ep[2];
   Site* reg[2];
-  int edgenbr;
 };
 
 struct GraphEdge
@@ -131,7 +129,6 @@ private:
   int PQempty();
 
   Halfedge** ELhash;
-  Halfedge *HEcreate(), *ELleft(), *ELright(), *ELleftbnd();
   Halfedge* HEcreate(Edge* e, bool pm);
 
   Point PQ_min();
@@ -147,8 +144,7 @@ private:
   void ELdelete(Halfedge* he);
   Halfedge* ELleftbnd(Point* p);
   Halfedge* ELright(Halfedge* he);
-  void makevertex(Site* v);
-  void out_triple(Site* s1, Site* s2, Site* s3);
+  void makevertex();
 
   void PQinsert(Halfedge* he, Site* v, float offset);
   void PQdelete(Halfedge* he);
@@ -157,7 +153,6 @@ private:
   Halfedge* ELgethash(int b);
   Halfedge* ELleft(Halfedge* he);
   Site* leftreg(Halfedge* he);
-  void out_site(Site* s);
   bool PQinitialize();
   int PQbucket(Halfedge* he);
   void clip_line(Edge* e);
@@ -169,19 +164,16 @@ private:
   float dist(Site* s, Site* t);
   Site* intersect(Halfedge* el1, Halfedge* el2);
 
-  void out_vertex(Site* v);
   Site* nextone();
 
   void pushGraphEdge(float x1, float y1, float x2, float y2);
 
   void line(float x1, float y1, float x2, float y2);
-  void circle(float x, float y, float radius);
 
   Freelist hfl;
   Halfedge *ELleftend, *ELrightend;
   int ELhashsize;
 
-  int triangulate, sorted, plot, debug;
   float xmin, xmax, ymin, ymax, deltax, deltay;
 
   Site* sites;
@@ -200,7 +192,7 @@ private:
   int PQmin;
 
   int ntry, totalsearch;
-  float pxmin, pxmax, pymin, pymax, cradius;
+  float pxmin, pxmax, pymin, pymax;
   int total_alloc;
 
   float borderMinX, borderMaxX, borderMinY, borderMaxY;
