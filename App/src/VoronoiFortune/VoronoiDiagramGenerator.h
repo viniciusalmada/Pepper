@@ -96,8 +96,8 @@ public:
   VoronoiDiagramGenerator();
   ~VoronoiDiagramGenerator();
 
-  bool GenerateVoronoi(float* xValues,
-                       float* yValues,
+  bool GenerateVoronoi(std::vector<float> xValues,
+                       std::vector<float> yValues,
                        int numPoints,
                        float minX,
                        float maxX,
@@ -109,7 +109,7 @@ public:
 
   bool getNext(float& x1, float& y1, float& x2, float& y2)
   {
-    if (iteratorEdges == 0)
+    if (iteratorEdges == nullptr)
       return false;
 
     x1 = iteratorEdges->x1;
@@ -126,42 +126,42 @@ private:
   void cleanup();
   void cleanupEdges();
   char* getfree(Freelist* fl);
-  int PQempty();
+  [[nodiscard]] bool PQempty() const;
 
-  Halfedge** ELhash;
+  Halfedge** ELhash{};
   Halfedge* HEcreate(Edge* e, bool pm);
 
   Point PQ_min();
   Halfedge* PQextractmin();
-  void freeinit(Freelist* fl, int size);
-  void makefree(Freenode* curr, Freelist* fl);
+  static void freeinit(Freelist* fl, int size);
+  static void makefree(Freenode* curr, Freelist* fl);
   void geominit();
   bool voronoi();
-  void ref(Site* v);
+  static void ref(Site* v);
   void deref(Site* v);
   void endpoint(Edge* e, int lr, Site* s);
 
-  void ELdelete(Halfedge* he);
+  static void ELdelete(Halfedge* he);
   Halfedge* ELleftbnd(Point* p);
-  Halfedge* ELright(Halfedge* he);
+  static Halfedge* ELright(Halfedge* he);
   void makevertex();
 
   void PQinsert(Halfedge* he, Site* v, float offset);
   void PQdelete(Halfedge* he);
   bool ELinitialize();
-  void ELinsert(Halfedge* lb, Halfedge* newHe);
+  static void ELinsert(Halfedge* lb, Halfedge* newHe);
   Halfedge* ELgethash(int b);
-  Halfedge* ELleft(Halfedge* he);
+  static Halfedge* ELleft(Halfedge* he);
   Site* leftreg(Halfedge* he);
   bool PQinitialize();
   int PQbucket(Halfedge* he);
   void clip_line(Edge* e);
   char* myalloc(unsigned n);
-  int right_of(Halfedge* el, Point* p);
+  static int right_of(Halfedge* el, Point* p);
 
   Site* rightreg(Halfedge* he);
   Edge* bisect(Site* s1, Site* s2);
-  float dist(Site* s, Site* t);
+  static float dist(Site* s, Site* t);
   Site* intersect(Halfedge* el1, Halfedge* el2);
 
   Site* nextone();
@@ -170,32 +170,31 @@ private:
 
   void line(float x1, float y1, float x2, float y2);
 
-  Freelist hfl;
-  Halfedge *ELleftend, *ELrightend;
-  int ELhashsize;
+  Freelist hfl{};
+  Halfedge *ELleftend{}, *ELrightend{};
+  int ELhashsize{};
 
-  float xmin, xmax, ymin, ymax, deltax, deltay;
+  float xmin{}, xmax{}, ymin{}, ymax{}, deltax{}, deltay{};
 
-  Site* sites;
-  int nsites;
+  std::vector<Site> sites;
+  int nsites{};
   int siteidx;
-  int sqrt_nsites;
-  int nvertices;
-  Freelist sfl;
-  Site* bottomsite;
+  int sqrt_nsites{};
+  int nvertices{};
+  Freelist sfl{};
+  Site* bottomsite{};
 
-  int nedges;
-  Freelist efl;
-  int PQhashsize;
-  Halfedge* PQhash;
-  int PQcount;
-  int PQmin;
+  int nedges{};
+  Freelist efl{};
+  int PQhashsize{};
+  Halfedge* PQhash{};
+  int PQcount{};
+  int PQmin{};
 
-  int ntry, totalsearch;
-  float pxmin, pxmax, pymin, pymax;
-  int total_alloc;
+  int ntry{}, totalsearch{};
+  float pxmin{}, pxmax{}, pymin{}, pymax{};
 
-  float borderMinX, borderMaxX, borderMinY, borderMaxY;
+  float borderMinX{}, borderMaxX{}, borderMinY{}, borderMaxY{};
 
   FreeNodeArrayList* allMemoryList;
   FreeNodeArrayList* currentMemoryBlock;
@@ -205,7 +204,5 @@ private:
 
   float minDistanceBetweenSites;
 };
-
-int scomp(const void* p1, const void* p2);
 
 #endif
