@@ -28,6 +28,7 @@
  */
 
 #include "VoronoiDiagramGenerator.h"
+
 #include <cstdlib>
 
 VoronoiDiagramGenerator::VoronoiDiagramGenerator()
@@ -53,7 +54,7 @@ VoronoiDiagramGenerator::~VoronoiDiagramGenerator()
     delete allMemoryList;
 }
 
-bool VoronoiDiagramGenerator::generateVoronoi(float* xValues,
+bool VoronoiDiagramGenerator::GenerateVoronoi(float* xValues,
                                               float* yValues,
                                               int numPoints,
                                               float minX,
@@ -128,7 +129,7 @@ bool VoronoiDiagramGenerator::generateVoronoi(float* xValues,
   borderMaxY = maxY;
 
   siteidx = 0;
-  voronoi(triangulate);
+  voronoi();
 
   return true;
 }
@@ -157,7 +158,7 @@ bool VoronoiDiagramGenerator::ELinitialize()
   return true;
 }
 
-Halfedge* VoronoiDiagramGenerator::HEcreate(Edge* e, int pm)
+Halfedge* VoronoiDiagramGenerator::HEcreate(Edge* e, bool pm)
 {
   Halfedge* answer;
   answer = (Halfedge*)getfree(&hfl);
@@ -188,7 +189,7 @@ Halfedge* VoronoiDiagramGenerator::ELgethash(int b)
   if (he == (Halfedge*)NULL || he->ELedge != (Edge*)DELETED)
     return (he);
 
-  /* Hash table points to deleted half edge.  Patch as necessary. */
+  /* Hash table points to delete half edge.  Patch as necessary. */
   ELhash[b] = (Halfedge*)NULL;
   if ((he->ELrefcnt -= 1) == 0)
     makefree((Freenode*)he, &hfl);
@@ -252,7 +253,7 @@ Halfedge* VoronoiDiagramGenerator::ELleftbnd(Point* p)
   return (he);
 }
 
-/* This delete routine can't reclaim node, since pointers from hash
+/* This deletes routine can't reclaim node, since pointers from hash
 table may be present.   */
 void VoronoiDiagramGenerator::ELdelete(Halfedge* he)
 {
@@ -343,7 +344,7 @@ Edge* VoronoiDiagramGenerator::bisect(Site* s1, Site* s2)
 
 // create a new site where the HalfEdges el1 and el2 intersect - note that the Point in the argument list is not used,
 // don't know why it's there
-Site* VoronoiDiagramGenerator::intersect(Halfedge* el1, Halfedge* el2, Point* p)
+Site* VoronoiDiagramGenerator::intersect(Halfedge* el1, Halfedge* el2)
 {
   Edge *e1, *e2, *e;
   Halfedge* el;
@@ -472,7 +473,6 @@ void VoronoiDiagramGenerator::makevertex(Site* v)
 {
   v->sitenbr = nvertices;
   nvertices += 1;
-  out_vertex(v);
 }
 
 void VoronoiDiagramGenerator::deref(Site* v)
@@ -690,48 +690,15 @@ char* VoronoiDiagramGenerator::myalloc(unsigned n)
 
 /* for those who don't have Cherry's plot */
 /* #include <plot.h> */
-void VoronoiDiagramGenerator::openpl() {}
 void VoronoiDiagramGenerator::line(float x1, float y1, float x2, float y2)
 {
   pushGraphEdge(x1, y1, x2, y2);
-}
-void VoronoiDiagramGenerator::circle(float x, float y, float radius) {}
-void VoronoiDiagramGenerator::range(float minX, float minY, float maxX, float maxY) {}
-
-void VoronoiDiagramGenerator::out_bisector(Edge* e) {}
-
-void VoronoiDiagramGenerator::out_ep(Edge* e) {}
-
-void VoronoiDiagramGenerator::out_vertex(Site* v) {}
-
-void VoronoiDiagramGenerator::out_site(Site* s)
-{
-  if ((!triangulate) & plot & !debug)
-    circle(s->coord.x, s->coord.y, cradius);
-}
-
-void VoronoiDiagramGenerator::out_triple(Site* s1, Site* s2, Site* s3) {}
-
-void VoronoiDiagramGenerator::plotinit()
-{
-  float dx, dy, d;
-
-  dy = ymax - ymin;
-  dx = xmax - xmin;
-  d = (float)((dx > dy ? dx : dy) * 1.1);
-  pxmin = (float)(xmin - (d - dx) / 2.0);
-  pxmax = (float)(xmax + (d - dx) / 2.0);
-  pymin = (float)(ymin - (d - dy) / 2.0);
-  pymax = (float)(ymax + (d - dy) / 2.0);
-  cradius = (float)((pxmax - pxmin) / 350.0);
-  openpl();
-  range(pxmin, pymin, pxmax, pymax);
 }
 
 void VoronoiDiagramGenerator::clip_line(Edge* e)
 {
   Site *s1, *s2;
-  float x1 = 0, x2 = 0, y1 = 0, y2 = 0, temp = 0;
+  float x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 
   x1 = e->reg[0]->coord.x;
   x2 = e->reg[1]->coord.x;
@@ -869,18 +836,17 @@ deltax, deltay (can all be estimates).
 Performance suffers if they are wrong; better to make nsites,
 deltax, and deltay too big than too small.  (?) */
 
-bool VoronoiDiagramGenerator::voronoi(int triangulate)
+bool VoronoiDiagramGenerator::voronoi()
 {
   Site *newsite, *bot, *top, *temp, *p;
   Site* v;
-  Point newintstar;
+  Point newintstar{};
   int pm;
   Halfedge *lbnd, *rbnd, *llbnd, *rrbnd, *bisector;
   Edge* e;
 
   PQinitialize();
   bottomsite = nextone();
-  out_site(bottomsite);
   bool retval = ELinitialize();
 
   if (!retval)
@@ -897,9 +863,8 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
     // otherwise process the vector intersection
 
     if (newsite != (Site*)NULL && (PQempty() || newsite->coord.y < newintstar.y ||
-                                          (newsite->coord.y == newintstar.y && newsite->coord.x < newintstar.x)))
+                                   (newsite->coord.y == newintstar.y && newsite->coord.x < newintstar.x)))
     {                                      /* new site is smallest - this is a site event*/
-      out_site(newsite);                   // output the site
       lbnd = ELleftbnd(&(newsite->coord)); // get the first HalfEdge to the LEFT of the new site
       rbnd = ELright(lbnd);                // get the first HalfEdge to the RIGHT of the new site
       bot = rightreg(lbnd);                // if this halfedge has no edge, , bot = bottom site (whatever that is)
@@ -907,9 +872,8 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
       bisector = HEcreate(e, le);          // create a new HalfEdge, setting its ELpm field to 0
       ELinsert(lbnd, bisector); // insert this new bisector edge between the left and right vectors in a linked list
 
-      if ((p = intersect(lbnd, bisector)) !=
-          (Site*)NULL) // if the new bisector intersects with the left edge, remove the left edge's vertex, and
-                              // put in the new one
+      if ((p = intersect(lbnd, bisector)) != (Site*)NULL) // if the new bisector intersects with the left edge, remove
+                                                          // the left edge's vertex, and put in the new one
       {
         PQdelete(lbnd);
         PQinsert(lbnd, p, dist(p, newsite));
@@ -932,8 +896,6 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
       rrbnd = ELright(rbnd); // get the HalfEdge to the right of the HE to the right of the lowest HE
       bot = leftreg(lbnd);   // get the Site to the left of the left HE which it bisects
       top = rightreg(rbnd);  // get the Site to the right of the right HE which it bisects
-
-      out_triple(bot, top, rightreg(lbnd)); // output the triple of sites, stating that a circle goes through them
 
       v = lbnd->vertex; // get the vertex that caused this event
       makevertex(v); // set the vertex number - couldn't do this earlier since we didn't know when it would be processed

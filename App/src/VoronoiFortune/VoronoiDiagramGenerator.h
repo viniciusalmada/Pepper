@@ -30,6 +30,8 @@
 #ifndef VORONOI_DIAGRAM_GENERATOR
 #define VORONOI_DIAGRAM_GENERATOR
 
+#include <cstddef>
+
 #define DELETED -2
 
 #define le 0
@@ -84,7 +86,7 @@ struct Halfedge
   Halfedge *ELleft, *ELright;
   Edge* ELedge;
   int ELrefcnt;
-  char ELpm;
+  bool ELpm;
   Site* vertex;
   float ystar;
   Halfedge* PQnext;
@@ -96,7 +98,7 @@ public:
   VoronoiDiagramGenerator();
   ~VoronoiDiagramGenerator();
 
-  bool generateVoronoi(float* xValues,
+  bool GenerateVoronoi(float* xValues,
                        float* yValues,
                        int numPoints,
                        float minX,
@@ -126,20 +128,18 @@ private:
   void cleanup();
   void cleanupEdges();
   char* getfree(Freelist* fl);
-  Halfedge* PQfind();
   int PQempty();
 
   Halfedge** ELhash;
   Halfedge *HEcreate(), *ELleft(), *ELright(), *ELleftbnd();
-  Halfedge* HEcreate(Edge* e, int pm);
+  Halfedge* HEcreate(Edge* e, bool pm);
 
   Point PQ_min();
   Halfedge* PQextractmin();
   void freeinit(Freelist* fl, int size);
   void makefree(Freenode* curr, Freelist* fl);
   void geominit();
-  void plotinit();
-  bool voronoi(int triangulate);
+  bool voronoi();
   void ref(Site* v);
   void deref(Site* v);
   void endpoint(Edge* e, int lr, Site* s);
@@ -167,19 +167,15 @@ private:
   Site* rightreg(Halfedge* he);
   Edge* bisect(Site* s1, Site* s2);
   float dist(Site* s, Site* t);
-  Site* intersect(Halfedge* el1, Halfedge* el2, Point* p = 0);
+  Site* intersect(Halfedge* el1, Halfedge* el2);
 
-  void out_bisector(Edge* e);
-  void out_ep(Edge* e);
   void out_vertex(Site* v);
   Site* nextone();
 
   void pushGraphEdge(float x1, float y1, float x2, float y2);
 
-  void openpl();
   void line(float x1, float y1, float x2, float y2);
   void circle(float x, float y, float radius);
-  void range(float minX, float minY, float maxX, float maxY);
 
   Freelist hfl;
   Halfedge *ELleftend, *ELrightend;
