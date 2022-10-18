@@ -52,6 +52,8 @@ public:
 
   void UpdateDiagram(Point pt);
 
+  const std::set<BaseEdge*> Edges();
+
 private:
   Region* NearestRegion(const Point& pt) const;
 
@@ -59,6 +61,9 @@ private:
   std::set<BaseEdge*> m_edges{};
   Line m_limits{};
   double m_radius{};
+  void InsertFirstRegion(const Point& pt);
+  Point GetCenter() const;
+  void InsertSecondRegion(const Point& pt);
 };
 
 #endif // PEPPER_DCEL_HPP

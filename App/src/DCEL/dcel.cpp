@@ -10,7 +10,7 @@
     return true;
 
   // interval ends beyond 2.0
-  if (begin <= 8.0 && end >= 0.0)
+  if (begin > end)
   {
     if (pang > begin && pang <= 8.0)
       return true;
@@ -74,89 +74,186 @@ void Diagram::UpdateDiagram(Point pt)
 {
   if (m_regions.empty())
   {
-    auto* region = new Region{ pt };
-    m_regions.insert(region);
+    InsertFirstRegion(pt);
     return;
   }
 
   if (m_regions.size() == 1)
   {
-    auto* existing_region = m_regions.begin().operator*();
-    auto* new_region = new Region{ pt };
-    auto bisector_dir = GetPerpendicular(existing_region->pt, new_region->pt);
-    auto center = GetMidPoint(m_limits);
-    auto inter_pts = InterCircleLine(center, m_radius, bisector_dir.first, bisector_dir.second);
-
-    auto* vtx0 = new Vertex{ inter_pts.first };
-    auto* vtx1 = new Vertex{ inter_pts.second };
-
-    auto* straight_edge = new StraightEdge{};
-    straight_edge->v_beg = vtx0;
-    straight_edge->v_end = vtx1;
-    auto orient_existing_region = CalcOrient(vtx0->pt, vtx1->pt, existing_region->pt);
-    if (orient_existing_region == Orient::POSITIVE)
-    {
-      straight_edge->r_left = existing_region;
-      straight_edge->r_right = new_region;
-    }
-    else
-    {
-      straight_edge->r_left = new_region;
-      straight_edge->r_right = existing_region;
-    }
-    existing_region->edges.insert(straight_edge);
-    new_region->edges.insert(straight_edge);
-
-    auto p_ang_vtx0 = GetPseudoAngle(center, vtx0->pt); // 2.1
-    auto p_ang_vtx1 = GetPseudoAngle(center, vtx1->pt); // 5.8
-    auto* curve_edge0 = new CurveEdge{};
-    auto* curve_edge1 = new CurveEdge{};
-    if (p_ang_vtx0 < p_ang_vtx1)
-    {
-      curve_edge0->p_angle_begin = p_ang_vtx0;
-      curve_edge0->p_angle_end = p_ang_vtx1;
-      curve_edge0->v_beg = vtx0;
-      curve_edge0->v_end = vtx1;
-
-      curve_edge1->p_angle_begin = p_ang_vtx1;
-      curve_edge1->p_angle_end = p_ang_vtx0;
-      curve_edge1->v_beg = vtx1;
-      curve_edge1->v_end = vtx0;
-    }
-    else
-    {
-      curve_edge0->p_angle_begin = p_ang_vtx1;
-      curve_edge0->p_angle_end = p_ang_vtx0;
-      curve_edge0->v_beg = vtx1;
-      curve_edge0->v_end = vtx0;
-
-      curve_edge1->p_angle_begin = p_ang_vtx0;
-      curve_edge1->p_angle_end = p_ang_vtx1;
-      curve_edge1->v_beg = vtx0;
-      curve_edge1->v_end = vtx1;
-    }
-
-    auto p_ang_existing_region = GetPseudoAngle(center, existing_region->pt);
-    auto p_ang_new_region = GetPseudoAngle(center, new_region->pt);
-    if (IsInsideInterval(curve_edge0->p_angle_begin, curve_edge0->p_angle_end, p_ang_existing_region) &&
-        IsInsideInterval(curve_edge1->p_angle_begin, curve_edge1->p_angle_end, p_ang_new_region))
-    {
-      curve_edge0->r_left = existing_region;
-      existing_region->edges.insert(curve_edge0);
-      curve_edge1->r_left = new_region;
-      new_region->edges.insert(curve_edge1);
-    }
-    else
-    {
-      curve_edge0->r_left = new_region;
-      new_region->edges.insert(curve_edge0);
-      curve_edge1->r_left = existing_region;
-      existing_region->edges.insert(curve_edge1);
-    }
-    this->m_edges.insert(curve_edge0);
-    this->m_edges.insert(curve_edge1);
-    this->m_regions.insert(new_region);
+    InsertSecondRegion(pt);
+    return;
   }
+
+  Point center = GetCenter();
+  auto* region = NearestRegion(pt);
+  auto* new_region = new Region{ pt };
+  m_regions.insert(new_region);
+  auto bisector = GetPerpendicular(region->pt, pt);
+  std::array<Vertex*, 2> new_edge_vertices{ { nullptr, nullptr } };
+  for (auto* base_edge : region->edges)
+  {
+    if (base_edge->IsStraight())
+    {
+      auto [found, inter_pt] =
+        Intersect(bisector.first, bisector.second, base_edge->v_beg->pt, base_edge->v_end->pt, Ext::INFIN, Ext::FINIT);
+      if (!found)
+        continue;
+
+      auto* new_vertex = new Vertex{ inter_pt };
+      if (new_edge_vertices[0] == nullptr)
+        new_edge_vertices[0] = new_vertex;
+      else
+        new_edge_vertices[1] = new_vertex;
+      // change the vertex of edge on the side of the new point based on bisector
+      auto orient_region_edge_v_beg = CalcOrient(bisector.first, bisector.second, base_edge->v_beg->pt);
+      auto orient_new_pt = CalcOrient(bisector.first, bisector.second, pt);
+      if (orient_new_pt == orient_region_edge_v_beg)
+        base_edge->v_beg = new_vertex;
+      else
+        base_edge->v_end = new_vertex;
+      continue;
+    }
+
+    // If curve
+    auto* curve_edge = (CurveEdge*)base_edge;
+    auto inter_pts = InterCircleLine(center, m_radius, bisector.first, bisector.second);
+    // Filter point on curve edge interval
+    auto p_angle_first_inter = GetPseudoAngle(center, inter_pts.first);
+    auto p_angle_second_inter = GetPseudoAngle(center, inter_pts.second);
+    bool use_first = false;
+    if (IsInsideInterval(curve_edge->p_angle_begin, curve_edge->p_angle_end, p_angle_first_inter))
+    {
+      use_first = true;
+    }
+    auto* new_vertex = new Vertex{ use_first ? inter_pts.first : inter_pts.second };
+    if (new_edge_vertices[0] == nullptr)
+      new_edge_vertices[0] = new_vertex;
+    else
+      new_edge_vertices[1] = new_vertex;
+
+    // Split the curve edge
+    auto* new_edge = new CurveEdge{};
+    new_edge->v_beg = new_vertex;
+    new_edge->v_end = curve_edge->v_end;
+    new_edge->p_angle_begin = use_first ? p_angle_first_inter : p_angle_second_inter;
+    new_edge->p_angle_end = curve_edge->p_angle_end;
+    new_edge->r_left = new_region;
+    new_region->edges.insert(new_edge);
+
+    curve_edge->v_end = new_vertex;
+    curve_edge->p_angle_end = use_first ? p_angle_first_inter : p_angle_second_inter;
+    ;
+  }
+  auto* new_str_edge = new StraightEdge{};
+  new_str_edge->v_beg = new_edge_vertices[0];
+  new_str_edge->v_end = new_edge_vertices[1];
+  if (CalcOrient(new_str_edge->v_beg->pt, new_str_edge->v_beg->pt, pt) == Orient::POSITIVE)
+  {
+    new_str_edge->r_left = new_region;
+    new_str_edge->r_right = region;
+  }
+  else
+  {
+    new_str_edge->r_left = region;
+    new_str_edge->r_right = new_region;
+  }
+  new_region->edges.insert(new_str_edge);
+  region->edges.insert(new_str_edge);
+
+  m_edges.insert(new_str_edge);
+}
+void Diagram::InsertSecondRegion(const Point& pt)
+{
+  auto* existing_region = m_regions.begin().operator*();
+  auto* new_region = new Region{ pt };
+  auto bisector_dir = GetPerpendicular(existing_region->pt, new_region->pt);
+  Point center = GetCenter();
+  auto inter_pts = InterCircleLine(center, m_radius, bisector_dir.first, bisector_dir.second);
+
+  auto* vtx0 = new Vertex{ inter_pts.first };
+  auto* vtx1 = new Vertex{ inter_pts.second };
+
+  auto* straight_edge = new StraightEdge{};
+  straight_edge->v_beg = vtx0;
+  straight_edge->v_end = vtx1;
+  auto orient_existing_region = CalcOrient(vtx0->pt, vtx1->pt, existing_region->pt);
+  if (orient_existing_region == Orient::POSITIVE)
+  {
+    straight_edge->r_left = existing_region;
+    straight_edge->r_right = new_region;
+  }
+  else
+  {
+    straight_edge->r_left = new_region;
+    straight_edge->r_right = existing_region;
+  }
+  existing_region->edges.insert(straight_edge);
+  new_region->edges.insert(straight_edge);
+
+  auto p_ang_vtx0 = GetPseudoAngle(center, vtx0->pt); // 2.1
+  auto p_ang_vtx1 = GetPseudoAngle(center, vtx1->pt); // 5.8
+  auto* curve_edge0 = new CurveEdge{};
+  auto* curve_edge1 = new CurveEdge{};
+  if (p_ang_vtx0 < p_ang_vtx1)
+  {
+    curve_edge0->p_angle_begin = p_ang_vtx0;
+    curve_edge0->p_angle_end = p_ang_vtx1;
+    curve_edge0->v_beg = vtx0;
+    curve_edge0->v_end = vtx1;
+
+    curve_edge1->p_angle_begin = p_ang_vtx1;
+    curve_edge1->p_angle_end = p_ang_vtx0;
+    curve_edge1->v_beg = vtx1;
+    curve_edge1->v_end = vtx0;
+  }
+  else
+  {
+    curve_edge0->p_angle_begin = p_ang_vtx1;
+    curve_edge0->p_angle_end = p_ang_vtx0;
+    curve_edge0->v_beg = vtx1;
+    curve_edge0->v_end = vtx0;
+
+    curve_edge1->p_angle_begin = p_ang_vtx0;
+    curve_edge1->p_angle_end = p_ang_vtx1;
+    curve_edge1->v_beg = vtx0;
+    curve_edge1->v_end = vtx1;
+  }
+
+  auto p_ang_existing_region = GetPseudoAngle(center, existing_region->pt);
+  auto p_ang_new_region = GetPseudoAngle(center, new_region->pt);
+  if (IsInsideInterval(curve_edge0->p_angle_begin, curve_edge0->p_angle_end, p_ang_existing_region) &&
+      IsInsideInterval(curve_edge1->p_angle_begin, curve_edge1->p_angle_end, p_ang_new_region))
+  {
+    curve_edge0->r_left = existing_region;
+    existing_region->edges.insert(curve_edge0);
+    curve_edge1->r_left = new_region;
+    new_region->edges.insert(curve_edge1);
+  }
+  else
+  {
+    curve_edge0->r_left = new_region;
+    new_region->edges.insert(curve_edge0);
+    curve_edge1->r_left = existing_region;
+    existing_region->edges.insert(curve_edge1);
+  }
+  m_edges.insert(curve_edge0);
+  m_edges.insert(curve_edge1);
+  m_edges.insert(straight_edge);
+  m_regions.insert(new_region);
+}
+Point Diagram::GetCenter() const
+{
+  auto center = GetMidPoint(m_limits);
+  return center;
+}
+void Diagram::InsertFirstRegion(const Point& pt)
+{
+  auto* region = new Region{ pt };
+  m_regions.insert(region);
+}
+const std::set<BaseEdge*> Diagram::Edges()
+{
+  return m_edges;
 }
 bool StraightEdge::IsStraight() const
 {
