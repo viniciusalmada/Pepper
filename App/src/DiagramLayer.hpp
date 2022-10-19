@@ -3,6 +3,22 @@
 
 #include <Pepper.hpp>
 
+struct PointsCmp
+{
+  bool operator()(const glm::vec2& lhs, const glm::vec2 rhs) const
+  {
+    if (lhs.x < rhs.x)
+      return true;
+
+    if (lhs.x == rhs.x)
+    {
+      if (lhs.y < rhs.y)
+        return true;
+    }
+    return false;
+  }
+};
+
 class DiagramLayer : public Pepper::Layer
 {
 public:
@@ -16,7 +32,7 @@ public:
 
 private:
   Pepper::Scope<Pepper::OrthoCamera> m_camera;
-  std::vector<glm::vec2> m_dots_position;
+  std::set<glm::vec2, PointsCmp> m_dots_position;
 
   Pepper::Ref<Pepper::VertexArray> m_diagram_VAO;
 

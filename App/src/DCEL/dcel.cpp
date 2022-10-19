@@ -84,6 +84,11 @@ void Diagram::UpdateDiagram(Point pt)
     return;
   }
 
+  GenerateNewRegion(pt);
+}
+
+void Diagram::GenerateNewRegion(const Point& pt)
+{
   Point center = GetCenter();
   auto* region = NearestRegion(pt);
   auto* new_region = new Region{ pt };
@@ -142,7 +147,6 @@ void Diagram::UpdateDiagram(Point pt)
 
     curve_edge->v_end = new_vertex;
     curve_edge->p_angle_end = use_first ? p_angle_first_inter : p_angle_second_inter;
-    ;
   }
   auto* new_str_edge = new StraightEdge{};
   new_str_edge->v_beg = new_edge_vertices[0];
@@ -162,6 +166,7 @@ void Diagram::UpdateDiagram(Point pt)
 
   m_edges.insert(new_str_edge);
 }
+
 void Diagram::InsertSecondRegion(const Point& pt)
 {
   auto* existing_region = m_regions.begin().operator*();
@@ -241,24 +246,29 @@ void Diagram::InsertSecondRegion(const Point& pt)
   m_edges.insert(straight_edge);
   m_regions.insert(new_region);
 }
+
 Point Diagram::GetCenter() const
 {
   auto center = GetMidPoint(m_limits);
   return center;
 }
+
 void Diagram::InsertFirstRegion(const Point& pt)
 {
   auto* region = new Region{ pt };
   m_regions.insert(region);
 }
-const std::set<BaseEdge*> Diagram::Edges()
+
+const std::set<BaseEdge*>& Diagram::Edges() const
 {
   return m_edges;
 }
+
 bool StraightEdge::IsStraight() const
 {
   return true;
 }
+
 bool CurveEdge::IsStraight() const
 {
   return false;
