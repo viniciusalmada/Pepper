@@ -37,6 +37,7 @@ void Level::Init()
   {
     UpdatePlanet(planet);
   }
+  m_next_planet = Pepper::CreateRef<Planet>(m_planets[0]);
 
   m_planets_updater = std::jthread([this] { CheckPlanetsPosition(); });
   m_collision_detector = std::jthread([this] { CheckCollision(); });
@@ -46,6 +47,19 @@ void Level::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION()
   m_player.OnUpdate(ts);
+
+  if (m_player.GetPosition().x > m_next_planet->GetPosition().x + m_next_planet->GetRadius())
+  {
+    for (auto i : std::views::iota(0u, m_planets.size()))
+    {
+      if (m_planets[i] == *m_next_planet.get())
+      {
+        m_score++;
+        m_next_planet = Pepper::CreateRef<Planet>(m_planets[i + 1 >= m_planets.size() ? 0 : i + 1]);
+        break;
+      }
+    }
+  }
 }
 
 void Level::OnImGuiRender()
@@ -113,7 +127,8 @@ void Level::CheckCollision()
         const glm::vec2 p1{ player_bbox[i] };
         const glm::vec2 p2{ player_bbox[j] };
 
-        auto [touched, _] = Utils::LineIntersectCircle(p1, p2, planet.GetRadius(), glm::vec2{ planet.GetPosition() });
+        auto [touched, _] =
+          Utils::LineIntersectCircle(p1, p2, planet.GetRadius(), glm::vec2{ planet.GetPosition() });
         if (touched)
         {
           player_touched = true;
@@ -143,4 +158,9 @@ void Level::GameOver()
   {
     UpdatePlanet(planet);
   }
+}
+
+uint32_t Level::GetPlayerScore() const
+{
+  return this->m_score;
 }

@@ -16,6 +16,8 @@ public:
 
   [[nodiscard]] float GetRadius() const;
 
+  bool operator==(const Planet& other) const;
+
 private:
   glm::vec3 m_position{ 0.0f, 0.0f, Constants::Z_PLANETS };
   glm::vec2 m_size{ 1.0, 10.0f };

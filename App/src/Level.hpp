@@ -21,6 +21,8 @@ public:
 
   [[nodiscard]] const glm::vec3& GetPlayerPosition() const;
 
+  [[nodiscard]] uint32_t GetPlayerScore() const;
+
 private:
   void CheckPlanetsPosition();
 
@@ -31,6 +33,8 @@ private:
   void GameOver();
 
   Player m_player;
+  uint32_t m_score = 0;
+  Pepper::Ref<Planet> m_next_planet;
   std::array<Planet, 3> m_planets;
   float m_planet_new_position = 5.0f;
   bool m_is_shutdown = false;

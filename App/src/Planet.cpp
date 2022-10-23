@@ -28,3 +28,8 @@ float Planet::GetRadius() const
 {
   return m_size.x / 2.0f;
 }
+
+bool Planet::operator==(const Planet& other) const
+{
+  return m_size == other.m_size && m_texture == other.m_texture && m_position == other.m_position;
+}
