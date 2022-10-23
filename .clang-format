@@ -32,7 +32,7 @@ PointerAlignment: Left
 Standard: c++20
 AlignAfterOpenBracket: Align
 AlignOperands: Align
-AllowShortLambdasOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: All
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: false
 BinPackArguments: false

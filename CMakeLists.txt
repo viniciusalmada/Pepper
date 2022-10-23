@@ -111,6 +111,7 @@ target_compile_definitions(Pepper
   PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE> # Configurations flags
   PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
   PRIVATE PP_CORE
+#  PUBLIC PROFILING
 )
 
 if(DEFINED ENABLE_PROFILING AND ENABLE_PROFILING STREQUAL yes)
@@ -145,7 +146,10 @@ add_executable(App
   App/src/VoronoiApp.cpp
   App/src/DiagramLayer.cpp
   App/src/VoronoiGenerator.cpp
-  )
+  App/src/DCEL/dcel.cpp
+  App/src/Geom.cpp
+  App/src/Random.cpp
+  App/src/VoronoiFortune/VoronoiDiagramGenerator.cpp App/src/GridVoronoi/GridVoronoi.cpp App/src/GridVoronoi/GridVoronoi.hpp)
 
 if(WIN32)
   target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)

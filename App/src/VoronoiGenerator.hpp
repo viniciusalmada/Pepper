@@ -15,9 +15,8 @@ namespace VoronoiGenerator
 
   struct Vertex
   {
-    Vertex(const Point& point, const std::shared_ptr<Edge>& e) : pt(point), edge(e) {}
+    Vertex(const Point& point) : pt(point) {}
     Point pt;
-    std::shared_ptr<Edge> edge;
   };
 
   struct Region;
@@ -29,29 +28,50 @@ namespace VoronoiGenerator
   class Edge
   {
   public:
-    Edge(std::shared_ptr<Vertex> v0, std::shared_ptr<Vertex> v1, Line line) :
-        m_v0(std::move(v0)),
-        m_v1(std::move(v1)),
-        m_line(std::move(line))
+    static std::shared_ptr<Edge> InfiniteEdge(Point midPoint, Point direction)
     {
+      return std::make_shared<Edge>(Edge(nullptr, nullptr, direction, midPoint));
     }
 
-    [[nodiscard]] auto Length() const { return glm::length(m_v1->pt - m_v0->pt); }
+    static std::shared_ptr<Edge> SemiInfEdge(std::shared_ptr<Vertex> vtx, Point directionFromVtx)
+    {
+      return std::make_shared<Edge>(Edge{ std::move(vtx), nullptr, directionFromVtx, {} });
+    }
+
+    static std::shared_ptr<Edge> FiniteEdge(std::shared_ptr<Vertex> vtx0, std::shared_ptr<Vertex> vtx1)
+    {
+      return std::make_shared<Edge>(Edge{ std::move(vtx0), std::move(vtx1), {}, {} });
+    }
+
     [[nodiscard]] std::shared_ptr<Region> GetMate(const std::shared_ptr<Region>& reg) const
     {
-      return reg == m_region_0 ? m_region_1 : m_region_0;
+      return reg == m_region_L ? m_region_R : m_region_L;
     }
 
     [[nodiscard]] std::shared_ptr<Vertex> GetFirstVertex() const { return m_v0; }
     [[nodiscard]] std::shared_ptr<Vertex> GetSecondVertex() const { return m_v1; }
 
-    void SetRegion0(std::shared_ptr<Region> region) { m_region_0 = std::move(region); }
-    void SetRegion1(std::shared_ptr<Region> region) { m_region_1 = std::move(region); }
+    void SetRegionL(std::shared_ptr<Region> region) { m_region_L = std::move(region); }
+    void SetRegionR(std::shared_ptr<Region> region) { m_region_R = std::move(region); }
 
-    [[nodiscard]] Line GetFinityFormEdge(const glm::dvec2& botLeft, const glm::dvec2& topRight) const;
-    [[nodiscard]] auto GetMidPoint() const { return m_line.first + (m_line.second - m_line.first) / 2.0; };
+    [[nodiscard]] Line GetFiniteFormEdge(const glm::dvec2& botLeft, const glm::dvec2& topRight) const;
 
-    [[nodiscard]] const Line& GetLine() const { return m_line; };
+    [[nodiscard]] Line GetLine() const
+    {
+      if (IsInf())
+      {
+        auto pt0 = m_mid_point + m_direction / 2.0;
+        auto pt1 = m_mid_point - m_direction / 2.0;
+        return { pt0, pt1 };
+      }
+      if (IsSemiInf())
+      {
+        auto pt0 = m_v0->pt;
+        auto pt1 = m_v0->pt + m_direction;
+        return { pt0, pt1 };
+      }
+      return { m_v0->pt, m_v1->pt };
+    };
 
     [[nodiscard]] bool IsInf() const { return m_v0 == nullptr && m_v1 == nullptr; }
     [[nodiscard]] bool IsSemiInf() const
@@ -77,13 +97,24 @@ namespace VoronoiGenerator
     void SetVertex0(std::shared_ptr<Vertex> vtx) { m_v0 = std::move(vtx); }
     void SetVertex1(std::shared_ptr<Vertex> vtx) { m_v1 = std::move(vtx); }
 
+    void UpdateInfToSemiInf();
+
   private:
+    Edge(std::shared_ptr<Vertex> v0, std::shared_ptr<Vertex> v1, Point direction, Point midPoint) :
+        m_v0(std::move(v0)),
+        m_v1(std::move(v1)),
+        m_direction(direction),
+        m_mid_point(midPoint)
+    {
+    }
+
     std::shared_ptr<Vertex> m_v0; // vB
     std::shared_ptr<Vertex> m_v1; // vE
-    Line m_line;
+    Point m_direction;
+    Point m_mid_point;
 
-    std::shared_ptr<Region> m_region_0 = nullptr; // fL
-    std::shared_ptr<Region> m_region_1 = nullptr; // fR
+    std::shared_ptr<Region> m_region_L = nullptr; // fL
+    std::shared_ptr<Region> m_region_R = nullptr; // fR
     std::shared_ptr<Edge> m_next = nullptr;       // eN
     std::shared_ptr<Edge> m_prev = nullptr;       // eP
   };
@@ -153,9 +184,9 @@ namespace VoronoiGenerator
     auto begin() { return m_regions.begin(); }
     auto end() { return m_regions.end(); }
 
-    [[nodiscard]] const auto& Regions() const { return m_regions; }
-    [[nodiscard]] const auto& Edges() const { return m_all_edges; }
-    [[nodiscard]] const auto& Vertices() const { return m_all_vertices; }
+    [[nodiscard]] auto& Regions() { return m_regions; }
+    [[nodiscard]] auto& Edges() { return m_all_edges; }
+    [[nodiscard]] auto& Vertices() { return m_all_vertices; }
 
     void Clear()
     {

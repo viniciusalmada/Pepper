@@ -1,182 +1,11 @@
 #include "VoronoiGenerator.hpp"
 
+#include "Geom.hpp"
+
 #include <set>
 #include <utility>
 
-constexpr auto ZERO_F = 0.0;
-constexpr auto TOLERANCE = 1.0e-7;
 constexpr auto SCALE_FACTOR = 10'000.0;
-
-enum class Ext { FINIT, INFIN, SEMI };
-
-enum class Orient { ZERO, POSITIVE, NEGATIVE };
-
-auto Area2D(const Point& p1, const Point& p2, const Point& p3)
-{
-  auto AB = p2 - p1;
-  auto AC = p3 - p1;
-
-  //  return glm::cross(glm::vec3{ AB.x, AB.y, 0.0 }, glm::vec3{ AC.x, AC.y, 0.0 }).z;
-  return AB.x * AC.y - AC.x * AB.y;
-}
-
-Orient CalcOrient(const Point& p1, const Point& p2, const Point& p3)
-{
-  auto d = Area2D(p1, p2, p3);
-  if (std::abs(d) < TOLERANCE)
-    return Orient::ZERO;
-  if (d > ZERO_F)
-    return Orient::POSITIVE;
-
-  return Orient::NEGATIVE;
-}
-
-std::pair<Point, Point> GetPerpendicular(const Point& p0, const Point& p1)
-{
-  const Point line_seg = p1 - p0;
-  const Point mid_point = p0 + line_seg / 2.0;
-
-  const Point line_normal{ -line_seg.y, line_seg.x };
-  const Point perpend_0 = mid_point - line_normal / 2.0;
-  const Point perpend_1 = mid_point + line_normal / 2.0;
-  return { perpend_0, perpend_1 };
-}
-
-bool IsCollinear(const Point& A, const Point& B, const Point& C, const Point& D)
-{
-  auto orientABC = CalcOrient(A, B, C);
-  auto orientABD = CalcOrient(A, B, D);
-  return orientABC == Orient::ZERO && orientABD == Orient::ZERO;
-}
-
-Point GetInterPoint(const Point& A, const Point& B, const Point& C, const Point& D)
-{
-  // Calculate the intersection
-  auto t_CD = Area2D(A, B, C) / (Area2D(A, B, C) - Area2D(A, B, D));
-  return C + (t_CD * (D - C));
-}
-
-bool SecondLineIsOutOfFirstLineBox(const Point& A, const Point& B, const Point& C, const Point& D)
-{
-  if ((C.x > A.x) && (C.x > B.x) && (D.x > A.x) && (D.x > B.x))
-    return true;
-  if ((C.x < A.x) && (C.x < B.x) && (D.x < A.x) && (D.x < B.x))
-    return true;
-  if ((C.y > A.y) && (C.y > B.y) && (D.y > A.y) && (D.y > B.y))
-    return true;
-  if ((C.y < A.y) && (C.y < B.y) && (D.y < A.y) && (D.y < B.y))
-    return true;
-  return false;
-}
-
-bool SecondLineOnLeftOrRightOfFirst(const Point& A, const Point& B, const Point& C, const Point& D)
-{
-  auto orientABC = CalcOrient(A, B, C);
-  auto orientABD = CalcOrient(A, B, D);
-  if (orientABC == Orient::POSITIVE && orientABD == Orient::POSITIVE)
-    return true;
-  if (orientABC == Orient::NEGATIVE && orientABD == Orient::NEGATIVE)
-    return true;
-  return false;
-}
-
-bool SecondLineTouchesFirstLine(const Point& A, const Point& B, const Point& C, const Point& D)
-{
-  auto orientABC = CalcOrient(A, B, C);
-  auto orientABD = CalcOrient(A, B, D);
-  if (orientABC == Orient::ZERO && orientABD != Orient::ZERO)
-    return true;
-  if (orientABC != Orient::ZERO && orientABD == Orient::ZERO)
-    return true;
-  return false;
-}
-
-/**
- *
- * @param A first node of first line (if is semi-infinite is the finite node)
- * @param B second node of first line (if is semi-infinite is the infinite node)
- * @param C first node of second line (if is semi-infinite is the finite node)
- * @param D second node of second line (if is semi-infinite is the infinite node)
- * @param firstExt
- * @param secondExt
- * @return
- */
-std::tuple<bool, Point>
-Intersect(const Point& A, const Point& B, const Point& C, const Point& D, Ext firstExt, Ext secondExt)
-{
-  if (IsCollinear(A, B, C, D))
-    return { false, {} };
-
-  if (firstExt == Ext::INFIN && secondExt == Ext::INFIN)
-  {
-    auto inter_pt = GetInterPoint(A, B, C, D);
-    return { true, inter_pt };
-  }
-
-  if (firstExt == Ext::INFIN && secondExt == Ext::FINIT)
-  {
-    if (SecondLineIsOutOfFirstLineBox(A, B, C, D))
-      return { false, {} };
-
-    if (SecondLineOnLeftOrRightOfFirst(A, B, C, D))
-      return { false, {} };
-
-    auto inter_pt = GetInterPoint(A, B, C, D);
-    return { true, inter_pt };
-  }
-
-  if (firstExt == Ext::FINIT && secondExt == Ext::INFIN)
-  {
-    if (SecondLineIsOutOfFirstLineBox(C, D, A, B))
-      return { false, {} };
-
-    if (SecondLineOnLeftOrRightOfFirst(C, D, A, B))
-      return { false, {} };
-
-    auto inter_pt = GetInterPoint(C, D, A, B);
-    return { true, inter_pt };
-  }
-
-  if (firstExt == Ext::FINIT && secondExt == Ext::FINIT)
-  {
-    if (SecondLineIsOutOfFirstLineBox(A, B, C, D))
-      return { false, {} };
-
-    if (SecondLineOnLeftOrRightOfFirst(A, B, C, D))
-      return { false, {} };
-
-    if (SecondLineIsOutOfFirstLineBox(C, D, A, B))
-      return { false, {} };
-
-    if (SecondLineOnLeftOrRightOfFirst(C, D, A, B))
-      return { false, {} };
-
-    if (SecondLineTouchesFirstLine(A, B, C, D))
-      return { true, GetInterPoint(A, B, C, D) };
-
-    if (SecondLineTouchesFirstLine(C, D, A, B))
-      return { true, GetInterPoint(C, D, A, B) };
-
-    auto inter_pt = GetInterPoint(C, D, A, B);
-    return { true, inter_pt };
-  }
-
-  if (firstExt == Ext::SEMI && secondExt == Ext::INFIN)
-  {
-    auto [_, inter_pt] = Intersect(A, B, C, D, Ext::INFIN, Ext::INFIN);
-    auto mid_pt = B + (A - B) / 2.0;
-    auto displacement_to_A = mid_pt - A;
-    auto vtx_perpend = GetPerpendicular(A, B);
-    vtx_perpend.first -= displacement_to_A;
-    vtx_perpend.second -= displacement_to_A;
-    auto side_B = CalcOrient(vtx_perpend.first, vtx_perpend.second, B);
-    auto side_inter_pt = CalcOrient(vtx_perpend.first, vtx_perpend.second, inter_pt);
-    if (side_B == side_inter_pt)
-      return { true, inter_pt };
-  }
-
-  return { false, {} };
-}
 
 namespace VoronoiGenerator
 {
@@ -191,27 +20,26 @@ namespace VoronoiGenerator
     auto region0 = diagram.GetFirst();
     const Point& p0 = region0->source;
     const Line perpend = GetPerpendicular(p0, pt);
+    const Point mid_pt = GetMidPoint(perpend);
+    const Point perpend_unit = glm::normalize(perpend.second - perpend.first);
 
-    auto edge = std::make_shared<Edge>(Edge{ nullptr, nullptr, perpend });
+    auto edge = Edge::InfiniteEdge(mid_pt, perpend_unit);
     diagram.AddEdge(edge);
 
     region0->edges.insert(edge);
     auto region1 = std::make_shared<Region>(Region{ pt, { edge } });
     diagram.AddRegion(region1);
 
-    edge->SetRegion0(region0);
-    edge->SetRegion1(region1);
-
-    //    if (CalcOrient(edge->First(), edge->Second(), region0->source) == Orient::POSITIVE)
-    //    {
-    //      edge->region_left = region1;
-    //      edge->region_right = region0;
-    //    }
-    //    else
-    //    {
-    //      edge->region_right = region1;
-    //      edge->region_left = region0;
-    //    }
+    if (CalcOrient(p0, pt, region0->source) == Orient::POSITIVE)
+    {
+      edge->SetRegionL(region0);
+      edge->SetRegionR(region1);
+    }
+    else
+    {
+      edge->SetRegionL(region1);
+      edge->SetRegionR(region0);
+    }
   }
 
   std::shared_ptr<Region> GetRegionContainPt(const Point& pt, Diagram& diagram)
@@ -297,9 +125,12 @@ namespace VoronoiGenerator
     std::shared_ptr<Edge> new_edge = nullptr;
     if (intersections.empty())
     {
-      new_edge = std::make_shared<Edge>(nullptr, nullptr, perpendicular_bisector);
-      new_edge->SetRegion0(newRegion);
-      new_edge->SetRegion1(existingRegion);
+      Point mid_pt = GetMidPoint(perpendicular_bisector);
+      Point direction = glm::normalize(perpendicular_bisector.second - perpendicular_bisector.first);
+
+      new_edge = Edge::InfiniteEdge(mid_pt, direction);
+      new_edge->SetRegionL(newRegion);
+      new_edge->SetRegionR(existingRegion);
       return { new_edge, nullptr };
     }
 
@@ -310,13 +141,13 @@ namespace VoronoiGenerator
         std::find_if(vertices.begin(), vertices.end(), std::bind(vertices_finder, inter_pt, std::placeholders::_1));
       std::shared_ptr<Vertex> new_vertex;
       if (vertex_found == vertices.end())
-        new_vertex = std::make_shared<Vertex>(inter_pt, nullptr);
+        new_vertex = std::make_shared<Vertex>(inter_pt);
       else
         new_vertex = *vertex_found;
-      new_edge = std::make_shared<Edge>(new_vertex, nullptr, perpendicular_bisector);
-      new_vertex->edge = new_vertex->edge == nullptr ? new_edge : new_vertex->edge;
-      new_edge->SetRegion0(newRegion);
-      new_edge->SetRegion1(existingRegion);
+      Point direction = GetMidPoint(perpendicular_bisector) - inter_pt;
+      new_edge = Edge::SemiInfEdge(new_vertex, glm::normalize(direction));
+      new_edge->SetRegionL(newRegion);
+      new_edge->SetRegionR(existingRegion);
       return { new_edge, intercepted_edge->GetMate(existingRegion) };
     }
 
@@ -349,7 +180,7 @@ namespace VoronoiGenerator
                                              std::bind(vertices_finder, first_inter_pt, std::placeholders::_1));
       std::shared_ptr<Vertex> new_first_vertex;
       if (first_vertex_found == vertices.end())
-        new_first_vertex = std::make_shared<Vertex>(first_inter_pt, nullptr);
+        new_first_vertex = std::make_shared<Vertex>(first_inter_pt);
       else
         new_first_vertex = *first_vertex_found;
 
@@ -358,15 +189,13 @@ namespace VoronoiGenerator
                                               std::bind(vertices_finder, second_inter_pt, std::placeholders::_1));
       std::shared_ptr<Vertex> new_second_vertex;
       if (second_vertex_found == vertices.end())
-        new_second_vertex = std::make_shared<Vertex>(second_inter_pt, nullptr);
+        new_second_vertex = std::make_shared<Vertex>(second_inter_pt);
       else
         new_second_vertex = *second_vertex_found;
-      new_edge = std::make_shared<Edge>(new_first_vertex, new_second_vertex, perpendicular_bisector);
-      new_first_vertex->edge = new_first_vertex->edge == nullptr ? new_edge : new_first_vertex->edge;
-      new_second_vertex->edge = new_second_vertex->edge == nullptr ? new_edge : new_second_vertex->edge;
+      new_edge = Edge::FiniteEdge(new_first_vertex, new_second_vertex);
 
-      new_edge->SetRegion0(newRegion);
-      new_edge->SetRegion1(existingRegion);
+      new_edge->SetRegionL(newRegion);
+      new_edge->SetRegionR(existingRegion);
       return { new_edge, edge_adj_next_region->GetMate(existingRegion) };
     }
 
@@ -430,31 +259,65 @@ namespace VoronoiGenerator
       for (auto [intersected_edge, point] : intersections)
       {
         // If is infinity, a vertex will be set up
+        // And a direction will be updated
         if (intersected_edge->IsInf())
         {
           auto inter_vtx = edge_of_new_region->GetNearVertex(point);
           intersected_edge->SetVertex0(inter_vtx);
+          intersected_edge->UpdateInfToSemiInf();
         }
         else if (intersected_edge->IsSemiInf())
         {
           auto inter_vtx = edge_of_new_region->GetNearVertex(point);
+          auto old_v0 = intersected_edge->GetFirstVertex();
+          std::erase_if(visited_region->edges,
+                        [&](const std::shared_ptr<Edge>& reg_edge)
+                        {
+                          if (reg_edge == intersected_edge)
+                            return false;
+                          if (reg_edge->GetFirstVertex() == old_v0)
+                            return true;
+                          if (reg_edge->GetSecondVertex() == old_v0)
+                            return true;
+                          return false;
+                        });
           intersected_edge->SetVertex0(inter_vtx);
         }
       }
       visited_region->edges.insert(edge_of_new_region);
     }
 
+    std::set<std::shared_ptr<Edge>> edges_of_all_regions;
+    for (const auto& region : diagram.Regions())
+    {
+      edges_of_all_regions.insert(region->edges.begin(), region->edges.end());
+    }
+    diagram.Edges() = edges_of_all_regions;
+
+    std::set<std::shared_ptr<Vertex>, VertexSorter> vtx_of_all_edges;
+    for (const auto& edge : edges_of_all_regions)
+    {
+      auto v0 = edge->GetFirstVertex();
+      auto v1 = edge->GetSecondVertex();
+      if (v0)
+        vtx_of_all_edges.insert(v0);
+      if (v1)
+        vtx_of_all_edges.insert(v1);
+    }
+    diagram.Vertices() = vtx_of_all_edges;
+
     PP_INFO("Regions: {0}", diagram.RegionsCount());
     PP_INFO("Edges: {0}", diagram.Edges().size());
     PP_INFO("Vertices: {0}", diagram.Vertices().size());
   }
 
-  Line Edge::GetFinityFormEdge(const Point& botLeft, const Point& topRight) const
+  Line Edge::GetFiniteFormEdge(const Point& botLeft, const Point& topRight) const
   {
+    Line line = GetLine();
     auto [_0, inter_top] =
-      Intersect({ botLeft.x, topRight.y }, topRight, m_line.first, m_line.second, Ext::INFIN, Ext::INFIN);
+      Intersect({ botLeft.x, topRight.y }, topRight, line.first, line.second, Ext::INFIN, Ext::INFIN);
     auto [_1, inter_bot] =
-      Intersect(botLeft, { topRight.x, botLeft.y }, m_line.first, m_line.second, Ext::INFIN, Ext::INFIN);
+      Intersect(botLeft, { topRight.x, botLeft.y }, line.first, line.second, Ext::INFIN, Ext::INFIN);
 
     if (IsInf())
       return { inter_top, inter_bot };
@@ -464,7 +327,7 @@ namespace VoronoiGenerator
       Point& existing_v = m_v0 == nullptr ? m_v1->pt : m_v0->pt;
 
       // Get a perpendicular line from unit line
-      auto perp_unit_line = GetPerpendicular(m_line.first, m_line.second);
+      auto perp_unit_line = GetPerpendicular(line.first, line.second);
 
       auto top_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, inter_top);
       auto bot_orient = CalcOrient(perp_unit_line.first, perp_unit_line.second, inter_bot);
@@ -477,5 +340,19 @@ namespace VoronoiGenerator
     }
 
     return { m_v0->pt, m_v1->pt };
+  }
+
+  void Edge::UpdateInfToSemiInf()
+  {
+    // Update the direction based on adjacent point's regions
+    auto pt_up = m_v0->pt + m_direction;
+    auto pt_down = m_v0->pt - m_direction;
+    auto perpen_v0 = GetPerpendicular(pt_up, pt_down);
+
+    auto orient_region_left = CalcOrient(perpen_v0.first, perpen_v0.second, m_region_L->source);
+    //    auto orient_region_right = CalcOrient(perpen_v0.first, perpen_v0.second, m_region_R->source);
+    auto orient_pt_up = CalcOrient(perpen_v0.first, perpen_v0.second, pt_up);
+    if (orient_region_left != orient_pt_up)
+      m_direction = -m_direction;
   }
 }
