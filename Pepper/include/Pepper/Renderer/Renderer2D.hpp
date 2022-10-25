@@ -51,5 +51,7 @@ namespace Pepper
                                  const Ref<Texture2D>& tex,
                                  float pixelFac,
                                  const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+    static void UploadVec2ToPixelShader(const glm::vec2& data);
   };
 }

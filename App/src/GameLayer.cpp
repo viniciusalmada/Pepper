@@ -5,11 +5,16 @@
 #include "GameLayer.hpp"
 
 #include <GLFW/glfw3.h>
+#include <glm/gtx/color_space.hpp>
 #include <imgui.h>
 #include <numeric>
 
 //---------------------------------------------------------------------------------------------------------------------
-GameLayer::GameLayer() : Layer("GameLayer"), m_camera(), m_ts(0.0f)
+GameLayer::GameLayer() :
+    Layer("GameLayer"),
+    m_camera(),
+    m_ts(0.0f),
+    m_clear_color_hsv({ 0.0f, 0.3f, 0.3f })
 {
   PP_PROFILE_FUNCTION()
   auto& window = Pepper::Application::Get().GetWindow();
@@ -40,9 +45,15 @@ void GameLayer::OnUpdate(Pepper::TimeStep ts)
   m_level.OnUpdate(ts);
 
   const auto& ref_pos = m_level.GetPlayerPosition();
-  m_camera->SetPosition({ ref_pos.x, 0.0f, 0.0f });
+  m_camera->SetPosition({ ref_pos.x, ref_pos.y / 2.0f, 0.0f });
 
-  Pepper::RenderCommand::SetClearColor({ 0.7f, 0.7f, 0.7f, 1.0f });
+  m_clear_color_hsv.x += 0.1f * 360.f * ts;
+  if (m_clear_color_hsv.x > 360.0f)
+    m_clear_color_hsv.x = 0.0f;
+
+  auto clear_color_rgb = glm::rgbColor(m_clear_color_hsv);
+  Pepper::RenderCommand::SetClearColor(
+    { clear_color_rgb.r, clear_color_rgb.g, clear_color_rgb.b, 1.0f });
   Pepper::RenderCommand::Clear();
 
   Pepper::Renderer2D::BeginScene(*m_camera.get());

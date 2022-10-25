@@ -24,6 +24,7 @@ private:
   Level m_level;
   Pepper::Scope<Pepper::OrthoCamera> m_camera;
   Pepper::TimeStep m_ts;
+  glm::vec3 m_clear_color_hsv;
   std::array<float, 100> m_FPSs{};
   unsigned int m_FPS_id = 0;
 };

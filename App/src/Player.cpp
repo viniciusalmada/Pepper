@@ -84,6 +84,9 @@ void Player::OnImGuiLayer()
 void Player::OnRendererCall()
 {
   PP_PROFILE_FUNCTION()
+  auto to_shader = glm::vec2{ 0.0, m_position.y / 11.25f };
+  Pepper::Renderer2D::UploadVec2ToPixelShader(to_shader);
+
   Pepper::Renderer2D::DrawRotatedQuad(m_position, m_rocket_size, m_rotation_deg, m_rocket_tex);
   Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, Constants::Z_ENGINE },
                                       m_flames_size,
@@ -115,14 +118,16 @@ void Player::Reset()
 
 void Player::UpdateBoundingBox()
 {
-  static const glm::vec4 top_left = glm::vec4{ -m_rocket_size.x / 2.0f, m_rocket_size.y / 2.0f, 1.0f, 1.0f };
+  static const glm::vec4 top_left =
+    glm::vec4{ -m_rocket_size.x / 2.0f, m_rocket_size.y / 2.0f, 1.0f, 1.0f };
   static const glm::vec4 top_right = top_left + glm::vec4{ m_rocket_size.x, 0.0f, 1.0f, 1.0f };
   static const glm::vec4 bot_right = top_right + glm::vec4{ 0.0f, -m_rocket_size.y, 1.0f, 1.0f };
   static const glm::vec4 bot_left = bot_right + glm::vec4{ -m_rocket_size.x, 0.0f, 1.0f, 1.0f };
 
   auto calc_rot = [&](const glm::vec4& ref)
   {
-    glm::mat4 rot_mat = glm::rotate(glm::mat4{ 1.0f }, glm::radians(m_rotation_deg), glm::vec3{ 0.0f, 0.0f, 1.0f });
+    glm::mat4 rot_mat =
+      glm::rotate(glm::mat4{ 1.0f }, glm::radians(m_rotation_deg), glm::vec3{ 0.0f, 0.0f, 1.0f });
 
     return rot_mat * glm::vec4{ ref.x, ref.y, 1.0f, 1.0f };
   };

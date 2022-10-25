@@ -198,12 +198,16 @@ namespace Pepper
     data->pixel_shader->SetFloat4("u_color", tintColor);
     data->pixel_shader->SetFloat("u_pixel_fac", pixelFac);
 
-    glm::mat4 transform =
-      glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->pixel_shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
     RenderCommand::DrawIndexed(data->quad_vertex_array);
+  }
+  void Renderer2D::UploadVec2ToPixelShader(const glm::vec2& dataToUpload)
+  {
+    data->pixel_shader->SetFloat2("u_pixel_vec2", dataToUpload);
   }
 
 }
