@@ -12,12 +12,7 @@
 
 Level::Level() = default;
 
-Level::~Level()
-{
-  m_is_shutdown = true;
-  m_planets_updater.join();
-  m_collision_detector.join();
-}
+Level::~Level() = default;
 
 void Level::Init()
 {
@@ -38,14 +33,18 @@ void Level::Init()
     UpdatePlanet(planet);
   }
   m_next_planet = Pepper::CreateRef<Planet>(m_planets[0]);
-
-  m_planets_updater = std::jthread([this] { CheckPlanetsPosition(); });
-  m_collision_detector = std::jthread([this] { CheckCollision(); });
 }
 
 void Level::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION()
+  if (m_call_reset)
+  {
+    m_call_reset = false;
+    GameOver();
+    return;
+  }
+
   m_player.OnUpdate(ts);
 
   if (m_player.GetPosition().x > m_next_planet->GetPosition().x + m_next_planet->GetRadius())
@@ -58,6 +57,42 @@ void Level::OnUpdate(Pepper::TimeStep ts)
         m_next_planet = Pepper::CreateRef<Planet>(m_planets[i + 1 >= m_planets.size() ? 0 : i + 1]);
         break;
       }
+    }
+  }
+
+  for (auto& planet : m_planets)
+  {
+    if (m_player.GetPosition().x - 15.0f > planet.GetPosition().x)
+    {
+      UpdatePlanet(planet);
+      break;
+    }
+  }
+
+  const auto& player_bbox = m_player.GetBoundingBox();
+  bool player_touched = false;
+  for (const auto& planet : m_planets)
+  {
+    for (auto i : std::ranges::iota_view{ 0u, player_bbox.size() })
+    {
+      uint32_t j = i + 1 == player_bbox.size() ? 0 : i + 1;
+      const glm::vec2 p1{ player_bbox[i] };
+      const glm::vec2 p2{ player_bbox[j] };
+
+      auto [touched, _] =
+        Utils::LineIntersectCircle(p1, p2, planet.GetRadius(), glm::vec2{ planet.GetPosition() });
+      if (touched)
+      {
+        player_touched = true;
+        break;
+      }
+    }
+
+    if (player_touched)
+    {
+      PP_WARN("Player touched! - line touched");
+      m_call_reset = true;
+      break;
     }
   }
 }
@@ -90,60 +125,14 @@ const glm::vec3& Level::GetPlayerPosition() const
   return m_player.GetPosition();
 }
 
-void Level::CheckPlanetsPosition()
-{
-  PP_PROFILE_FUNCTION()
-  while (!m_is_shutdown)
-  {
-    for (auto& planet : m_planets)
-    {
-      if (m_player.GetPosition().x - 15.0f > planet.GetPosition().x)
-      {
-        UpdatePlanet(planet);
-        break;
-      }
-    }
-  }
-}
 void Level::UpdatePlanet(Planet& planet)
 {
   PP_PROFILE_FUNCTION()
-  planet.Update(m_planet_new_position, m_planets_textures[Random::Int(0, 7)]);
+  auto plan_tex_id = Random::Int(0, 7);
+  PP_INFO("Next planet: {0}", plan_tex_id);
+  planet.Update(m_planet_new_position, m_planets_textures[plan_tex_id]);
 
   m_planet_new_position += 10.f;
-}
-
-void Level::CheckCollision()
-{
-  while (!m_is_shutdown)
-  {
-    const auto& player_bbox = m_player.GetBoundingBox();
-    bool player_touched = false;
-    for (const auto& planet : m_planets)
-    {
-      for (auto i : std::ranges::iota_view{ 0u, player_bbox.size() })
-      {
-        uint32_t j = i + 1 == player_bbox.size() ? 0 : i + 1;
-        const glm::vec2 p1{ player_bbox[i] };
-        const glm::vec2 p2{ player_bbox[j] };
-
-        auto [touched, _] =
-          Utils::LineIntersectCircle(p1, p2, planet.GetRadius(), glm::vec2{ planet.GetPosition() });
-        if (touched)
-        {
-          player_touched = true;
-          break;
-        }
-      }
-
-      if (player_touched)
-      {
-        PP_WARN("Player touched! - line touched");
-        GameOver();
-        break;
-      }
-    }
-  }
 }
 
 void Level::GameOver()
@@ -151,7 +140,6 @@ void Level::GameOver()
   m_player.Reset();
 
   m_planet_new_position = 5.0f;
-  m_is_shutdown = false;
 
   m_planets = std::array<Planet, 3>{};
   for (auto& planet : m_planets)

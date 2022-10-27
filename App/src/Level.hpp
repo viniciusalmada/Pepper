@@ -24,11 +24,7 @@ public:
   [[nodiscard]] uint32_t GetPlayerScore() const;
 
 private:
-  void CheckPlanetsPosition();
-
   void UpdatePlanet(Planet& obs);
-
-  void CheckCollision();
 
   void GameOver();
 
@@ -37,10 +33,7 @@ private:
   Pepper::Ref<Planet> m_next_planet;
   std::array<Planet, 3> m_planets;
   float m_planet_new_position = 5.0f;
-  bool m_is_shutdown = false;
-
-  std::jthread m_planets_updater;
-  std::jthread m_collision_detector;
+  bool m_call_reset = false;
 
   std::array<Pepper::Ref<Pepper::Texture2D>, 8> m_planets_textures;
 };
