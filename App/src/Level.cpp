@@ -38,12 +38,6 @@ void Level::Init()
 void Level::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION()
-  if (m_call_reset)
-  {
-    m_call_reset = false;
-    GameOver();
-    return;
-  }
 
   m_player.OnUpdate(ts);
 
@@ -54,6 +48,7 @@ void Level::OnUpdate(Pepper::TimeStep ts)
       if (m_planets[i] == *m_next_planet.get())
       {
         m_score++;
+        PP_INFO("Earned 1 point: SCORE={0}", m_score);
         m_next_planet = Pepper::CreateRef<Planet>(m_planets[i + 1 >= m_planets.size() ? 0 : i + 1]);
         break;
       }
@@ -91,7 +86,7 @@ void Level::OnUpdate(Pepper::TimeStep ts)
     if (player_touched)
     {
       PP_WARN("Player touched! - line touched");
-      m_call_reset = true;
+      GameOver();
       break;
     }
   }
@@ -137,6 +132,7 @@ void Level::UpdatePlanet(Planet& planet)
 
 void Level::GameOver()
 {
+  PP_INFO("New round starting!");
   m_player.Reset();
 
   m_planet_new_position = 5.0f;
@@ -146,6 +142,9 @@ void Level::GameOver()
   {
     UpdatePlanet(planet);
   }
+  m_next_planet = Pepper::CreateRef<Planet>(m_planets[0]);
+
+  m_score = 0;
 }
 
 uint32_t Level::GetPlayerScore() const

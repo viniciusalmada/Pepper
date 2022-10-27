@@ -33,7 +33,6 @@ private:
   Pepper::Ref<Planet> m_next_planet;
   std::array<Planet, 3> m_planets;
   float m_planet_new_position = 5.0f;
-  bool m_call_reset = false;
 
   std::array<Pepper::Ref<Pepper::Texture2D>, 8> m_planets_textures;
 };
