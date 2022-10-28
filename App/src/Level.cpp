@@ -9,6 +9,7 @@
 #include "Utilities.hpp"
 
 #include <imgui.h>
+#include <utility>
 
 Level::Level() = default;
 
@@ -135,7 +136,7 @@ void Level::GameOver()
   PP_INFO("New round starting!");
   m_player.Reset();
 
-  m_planet_new_position = 5.0f;
+  m_planet_new_position = 20.0f;
 
   m_planets = std::array<Planet, 3>{};
   for (auto& planet : m_planets)
@@ -144,10 +145,20 @@ void Level::GameOver()
   }
   m_next_planet = Pepper::CreateRef<Planet>(m_planets[0]);
 
+  m_on_game_over_cb(m_score);
   m_score = 0;
 }
 
 uint32_t Level::GetPlayerScore() const
 {
   return this->m_score;
+}
+
+void Level::Restart()
+{
+  m_player.StartMoving();
+}
+void Level::SetGameOverCallback(std::function<void(uint32_t)> onGameOver)
+{
+  m_on_game_over_cb = onGameOver;
 }
