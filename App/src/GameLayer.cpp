@@ -14,7 +14,7 @@ GameLayer::GameLayer() :
     Layer("GameLayer"),
     m_camera(),
     m_ts(0.0f),
-    m_clear_color_hsv({ 0.0f, 0.3f, 0.3f })
+    m_clear_color_hsv({ 0.0f, 0.3f, 0.1f })
 {
   PP_PROFILE_FUNCTION()
   auto& window = Pepper::Application::Get().GetWindow();
