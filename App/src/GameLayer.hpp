@@ -3,7 +3,10 @@
 #include "Level.hpp"
 
 #include <Pepper.hpp>
+#include <imgui.h>
 #include <list>
+
+enum class GameState { SPLASH, PLAYING, GAME_OVER };
 
 class GameLayer : public Pepper::Layer
 {
@@ -23,8 +26,8 @@ private:
 
   Level m_level;
   Pepper::Scope<Pepper::OrthoCamera> m_camera;
-  Pepper::TimeStep m_ts;
   glm::vec3 m_clear_color_hsv;
-  std::array<float, 100> m_FPSs{};
-  unsigned int m_FPS_id = 0;
+  ImFont* m_font;
+  GameState m_state;
+  uint32_t m_game_over_score;
 };
