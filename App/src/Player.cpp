@@ -4,11 +4,34 @@
 
 #include "Player.hpp"
 
+#include "Color.hpp"
 #include "Constants.hpp"
+#include "Random.hpp"
 #include "Utilities.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
+
+auto GetFlameColorBeginEnd()
+{
+  auto red_beg = Random::Float(226.0f, 252.0f) / 255.0f;
+  auto green_beg = Random::Float(67.0f, 163.0f) / 255.0f;
+  auto blue_beg = Random::Float(38.0f, 42.0f) / 255.0f;
+  auto red_end = Random::Float(226.0f, 252.0f) / 255.0f;
+  auto green_end = Random::Float(67.0f, 163.0f) / 255.0f;
+  auto blue_end = Random::Float(38.0f, 42.0f) / 255.0f;
+
+  return std::make_tuple(glm::vec4{ red_beg, green_beg, blue_beg, 1.0f },
+                         glm::vec4{ red_end, green_end, blue_end, 1.0f });
+}
+auto GetSmokeColorBeginEnd()
+{
+  auto grey_beg = Random::Float(0.3f, 1.0f);
+  auto grey_end = Random::Float(0.3f, 1.0f);
+
+  return std::make_tuple(glm::vec4{ grey_beg, grey_beg, grey_beg, 1.0f },
+                         glm::vec4{ grey_end, grey_end, grey_end, 1.0f });
+}
 
 Player::Player() = default;
 
@@ -27,20 +50,27 @@ void Player::LoadAssets()
 {
   PP_PROFILE_FUNCTION()
   m_rocket_tex = Pepper::Texture2D::Create("assets/textures/rocket.png");
-  m_flame1_tex = Pepper::Texture2D::Create("assets/textures/flame1.png");
-  m_flame2_tex = Pepper::Texture2D::Create("assets/textures/flame2.png");
-  m_flame3_tex = Pepper::Texture2D::Create("assets/textures/flame3.png");
-  m_flame_tex = m_flame1_tex;
+  m_flame_tex = Pepper::Texture2D::Create("assets/textures/flame3.png");
 }
 
 void Player::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION()
+  m_time += ts;
+
   if (!m_move)
     return;
 
+  auto hipot = (m_rocket_size.y) / 2.0f;
+  auto angle = glm::radians(std::abs(m_rotation_deg));
+  auto x_disp = glm::sin(angle) * hipot;
+  auto y_disp = glm::cos(angle) * hipot;
+  auto particle_position = glm::vec2{ m_position.x - x_disp, m_position.y - y_disp };
+
+  bool boost_pressed = false;
   if (Pepper::Input::IsKeyPressed(PP_KEY_SPACE))
   {
+    boost_pressed = true;
     m_velocity.y += m_engine_power * ts;
   }
   else
@@ -48,23 +78,10 @@ void Player::OnUpdate(Pepper::TimeStep ts)
     m_velocity.y -= m_gravity * ts;
   }
 
-  m_rotation_deg = Utils::Interpol(-20.0f, 20.0f, -180.0, 0.0, m_velocity.y);
-  m_flame_alpha = Utils::Interpol(-20.0f, 20.0f, 0.0, 1.0f, m_velocity.y);
-
-  if (m_flame_alpha == std::clamp(m_flame_alpha, 0.0f, 0.3f))
-  {
-    m_flame_tex = m_flame1_tex;
-  }
-  else if (m_flame_alpha == std::clamp(m_flame_alpha, 0.3f, 0.6f))
-  {
-    m_flame_tex = m_flame2_tex;
-  }
-  else
-  {
-    m_flame_tex = m_flame3_tex;
-  }
-
   m_velocity.y = std::clamp(m_velocity.y, -20.0f, 20.0f);
+
+  m_rotation_deg = Utils::Interpol(-20.0f, 20.0f, -180.0, 0.0, m_velocity.y);
+  m_flame_alpha = Utils::Interpol(0.0f, 20.0f, 0.0, 1.0f, m_velocity.y);
 
   m_position.y += m_velocity.y * (float)ts;
   m_position.x += m_velocity.x * (float)ts;
@@ -72,6 +89,22 @@ void Player::OnUpdate(Pepper::TimeStep ts)
   m_position.y = std::clamp(m_position.y, -5.625f - m_rocket_size.y, 5.625f + m_rocket_size.y);
 
   UpdateBoundingBox();
+
+  if (boost_pressed && m_time > m_flame_next_emit_time)
+  {
+    auto [beg, end] = GetFlameColorBeginEnd();
+    auto count = static_cast<uint32_t>(Utils::Interpol(-20.0f, 20.0f, 1.0f, 15.0f, m_velocity.y));
+    m_particle_system.Emit(count, particle_position, beg, end);
+    m_flame_next_emit_time += FLAME_EMIT_INTERVAL;
+  }
+
+  if (!boost_pressed && m_time > m_smoke_next_emit_time)
+  {
+    auto [beg, end] = GetSmokeColorBeginEnd();
+    m_particle_system.Emit(4, particle_position, beg, end);
+    m_smoke_next_emit_time += SMOKE_EMIT_INTERVAL;
+  }
+  m_particle_system.Update(ts);
 }
 
 void Player::OnImGuiLayer()
@@ -114,6 +147,10 @@ void Player::Reset()
   m_rotation_deg = 0.0f;
   m_flame_alpha = 1.0f;
   m_move = false;
+  m_particle_system.Clear();
+  m_time = 0.0f;
+  m_flame_next_emit_time = FLAME_EMIT_INTERVAL;
+  m_smoke_next_emit_time = SMOKE_EMIT_INTERVAL;
 }
 
 void Player::UpdateBoundingBox()

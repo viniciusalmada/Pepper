@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ParticleSystem.hpp"
+
 #include <Pepper.hpp>
 #include <glm/glm.hpp>
 
@@ -38,12 +40,17 @@ private:
 
   Pepper::Ref<Pepper::Texture2D> m_rocket_tex;
   Pepper::Ref<Pepper::Texture2D> m_flame_tex;
-  Pepper::Ref<Pepper::Texture2D> m_flame1_tex;
-  Pepper::Ref<Pepper::Texture2D> m_flame2_tex;
-  Pepper::Ref<Pepper::Texture2D> m_flame3_tex;
 
   const float m_engine_power = 30.0f;
   const float m_gravity = 24.0f;
   const glm::vec2 m_rocket_size = { 0.5f, 0.875f };
   const glm::vec2 m_flames_size = { 0.5f, 2.0f };
+
+  float m_time = 0.0f;
+  static constexpr float SMOKE_EMIT_INTERVAL = 0.4f;
+  static constexpr float FLAME_EMIT_INTERVAL = 0.05f;
+  float m_smoke_next_emit_time = SMOKE_EMIT_INTERVAL;
+  float m_flame_next_emit_time = FLAME_EMIT_INTERVAL;
+
+  ParticleSystem m_particle_system;
 };
