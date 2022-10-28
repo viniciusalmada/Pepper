@@ -177,3 +177,7 @@ void Player::UpdateBoundingBox()
   m_bounding_box[2] = calc_rot(bot_right) + glm::vec4{ m_position.x, m_position.y, 1.0f, 1.0f };
   m_bounding_box[3] = calc_rot(bot_left) + glm::vec4{ m_position.x, m_position.y, 1.0f, 1.0f };
 }
+void Player::StartMoving()
+{
+  m_move = true;
+}

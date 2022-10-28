@@ -24,6 +24,8 @@ public:
 
   void Reset();
 
+  void StartMoving();
+
 private:
   void LoadAssets();
 
