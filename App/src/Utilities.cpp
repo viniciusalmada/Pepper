@@ -70,3 +70,12 @@ Utils::LineIntersectCircle(const glm::vec2& p1, const glm::vec2& p2, float radiu
 
   return { false, {} };
 }
+void Utils::Repeat(uint64_t number, const std::function<bool()>& action)
+{
+  for ([[maybe_unused]] decltype(number) _ : std::views::iota(0u, number))
+  {
+    while (!action())
+    {
+    }
+  }
+}
