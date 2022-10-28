@@ -12,7 +12,7 @@ set(CXX_STANDARD cxx_std_20)
 # #############################################################################
 # Configuration types
 if(CMAKE_CONFIGURATION_TYPES)
-  set(CMAKE_CONFIGURATION_TYPES Debug Release Profiling)
+  set(CMAKE_CONFIGURATION_TYPES Debug Release Profiling Dist)
   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
     "Reset the configurations to what we need"
     FORCE)
@@ -21,6 +21,10 @@ endif()
 set(CMAKE_CXX_FLAGS_PROFILING "${CMAKE_CXX_FLAGS_RELEASE}")
 set(CMAKE_EXE_LINKER_FLAGS_PROFILING "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 set(CMAKE_SHARED_LINKER_FLAGS_PROFILING "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
+
+set(CMAKE_CXX_FLAGS_DIST "${CMAKE_CXX_FLAGS_RELEASE}")
+set(CMAKE_EXE_LINKER_FLAGS_DIST "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
+set(CMAKE_SHARED_LINKER_FLAGS_DIST "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
 
 # #############################################################################
 # GLFW library
@@ -121,10 +125,12 @@ target_include_directories(Pepper SYSTEM PUBLIC
 
 target_compile_definitions(Pepper
   PRIVATE GLFW_INCLUDE_NONE # Not include gl
-  PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE> # Configurations flags
+  PRIVATE $<$<CONFIG:Debug>:PP_DEBUG> # Debug defines
+  PRIVATE $<$<CONFIG:Release>:PP_RELEASE>
+  PRIVATE $<$<CONFIG:Dist>:PP_DIST>
+  PRIVATE $<$<CONFIG:Profiling>:PROFILING>
   PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
   PRIVATE PP_CORE
-  PRIVATE $<$<CONFIG:Profiling>:PROFILING>
   )
 
 if(WIN32)
@@ -185,9 +191,11 @@ endif(WIN32)
 # Configurations flags
 target_compile_definitions(App
   PRIVATE APP_WORKING_DIR="${PROJECT_SOURCE_DIR}"
-  PRIVATE $<IF:$<CONFIG:Debug>,PP_DEBUG,PP_RELEASE>
-  PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
+  PRIVATE $<$<CONFIG:Debug>:PP_DEBUG> # Debug defines
+  PRIVATE $<$<CONFIG:Release>:PP_RELEASE>
+  PRIVATE $<$<CONFIG:Dist>:PP_DIST>
   PRIVATE $<$<CONFIG:Profiling>:PROFILING>
+  PRIVATE $<$<CONFIG:Debug>:PP_ENABLE_ASSERTS> # Debug defines
   )
 
 if(WIN32)
@@ -195,6 +203,10 @@ if(WIN32)
 elseif(UNIX)
   target_compile_definitions(App PRIVATE PP_PLATFORM_LINUX)
 endif(WIN32)
+
+if(WIN32)
+  target_link_options(App PRIVATE $<$<CONFIG:Dist>:/SUBSYSTEM:windows /ENTRY:mainCRTStartup>)
+endif()
 
 target_link_libraries(App Pepper)
 

@@ -1,10 +1,12 @@
+#if !defined(PP_DIST)
+
 // clang-format off
 #include "PepperPCH.hpp"
 // clang-format on
 
-#include "Pepper/Platform/OpenGL/OpenGLDebugger.hpp"
+  #include "Pepper/Platform/OpenGL/OpenGLDebugger.hpp"
 
-#include <glad/glad.h>
+  #include <glad/glad.h>
 
 namespace Pepper
 {
@@ -26,3 +28,4 @@ namespace Pepper
     PP_CORE_ASSERT(false, "");
   }
 }
+#endif
