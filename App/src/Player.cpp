@@ -56,10 +56,11 @@ void Player::LoadAssets()
 void Player::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION()
-  m_time += ts;
 
   if (!m_move)
     return;
+
+  m_time += ts;
 
   auto hipot = (m_rocket_size.y) / 2.0f;
   auto angle = glm::radians(std::abs(m_rotation_deg));
@@ -127,6 +128,8 @@ void Player::OnRendererCall()
                                       m_flame_tex,
                                       1.0f,
                                       { 1.0f, 1.0f, 1.0f, m_flame_alpha * 2 });
+
+  m_particle_system.OnRendererCall();
 }
 
 const glm::vec3& Player::GetPosition() const
