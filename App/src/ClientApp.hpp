@@ -6,5 +6,5 @@ class ClientApp : public Pepper::Application
 {
 public:
   ClientApp();
-  ~ClientApp();
+  ~ClientApp() override;
 };

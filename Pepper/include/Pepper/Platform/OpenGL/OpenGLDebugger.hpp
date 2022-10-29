@@ -1,6 +1,7 @@
 #pragma once
+#if !defined(PP_DIST)
 
-#include <glad/glad.h>
+  #include <glad/glad.h>
 
 namespace Pepper
 {
@@ -12,3 +13,4 @@ namespace Pepper
                           const char* message,
                           const void* userParam);
 }
+#endif

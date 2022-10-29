@@ -57,10 +57,10 @@ namespace Pepper
     PP_PROFILE_FUNCTION();
     int w{}, h{};
     int channels{};
-    stbi_set_flip_vertically_on_load(1);
     stbi_uc* data;
     {
       PP_PROFILE_SCOPE("stbi_load");
+      stbi_set_flip_vertically_on_load(true);
       data = stbi_load(path.string().c_str(), &w, &h, &channels, 0);
       PP_CORE_ASSERT(data, "Failed to load image!");
     }
@@ -87,7 +87,7 @@ namespace Pepper
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_ID);
     glTextureStorage2D(renderer_ID, 1, internal_format, width, height);
 
-    glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     glTextureParameteri(renderer_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);

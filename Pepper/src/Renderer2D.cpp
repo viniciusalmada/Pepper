@@ -16,6 +16,7 @@ namespace Pepper
   {
     Ref<VertexArray> quad_vertex_array;
     Ref<Shader> shader;
+    Ref<Shader> pixel_shader;
     Ref<Texture2D> white_texture;
   };
 
@@ -48,6 +49,10 @@ namespace Pepper
     data->shader->Bind();
     data->shader->SetInt("u_texture", 0);
 
+    data->pixel_shader = Shader::Create(R"(assets/shaders/PixelateTexture.glsl)");
+    data->pixel_shader->Bind();
+    data->pixel_shader->SetInt("u_texture", 1);
+
     data->white_texture = Texture2D::Create(1, 1, { 0xFFFFFFFF }, sizeof(uint32_t));
   }
 
@@ -62,6 +67,8 @@ namespace Pepper
     PP_PROFILE_FUNCTION();
     data->shader->Bind();
     data->shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
+    data->pixel_shader->Bind();
+    data->pixel_shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
   }
 
   void Renderer2D::EndScene()
@@ -72,12 +79,13 @@ namespace Pepper
   void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
   {
     PP_PROFILE_FUNCTION();
+    data->shader->Bind();
     data->shader->SetFloat4("u_color", color);
     data->shader->SetFloat("u_tiling_factor", 1.0);
     data->white_texture->Bind();
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform =
+      glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -97,11 +105,12 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION();
     tex->Bind();
+    data->shader->Bind();
     data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform =
+      glm::translate(glm::mat4{ 1.0f }, position) * glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -123,6 +132,7 @@ namespace Pepper
                                    const glm::vec4& color)
   {
     PP_PROFILE_FUNCTION();
+    data->shader->Bind();
     data->shader->SetFloat4("u_color", color);
     data->shader->SetFloat("u_tiling_factor", 1.0);
     data->white_texture->Bind();
@@ -153,6 +163,7 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION();
     tex->Bind();
+    data->shader->Bind();
     data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
 
@@ -173,6 +184,30 @@ namespace Pepper
                                    const glm::vec4& tintColor)
   {
     DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotationDeg, tex, tilingFac, tintColor);
+  }
+
+  void Renderer2D::DrawPixelateQuad(const glm::vec3& position,
+                                    const glm::vec2& size,
+                                    const Ref<Texture2D>& tex,
+                                    float pixelFac,
+                                    const glm::vec4& tintColor)
+  {
+    PP_PROFILE_FUNCTION();
+    tex->Bind(1);
+    data->pixel_shader->Bind();
+    data->pixel_shader->SetFloat4("u_color", tintColor);
+    data->pixel_shader->SetFloat("u_pixel_fac", pixelFac);
+
+    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
+                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    data->pixel_shader->SetMat4("u_transform", transform);
+
+    data->quad_vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->quad_vertex_array);
+  }
+  void Renderer2D::UploadVec2ToPixelShader(const glm::vec2& dataToUpload)
+  {
+    data->pixel_shader->SetFloat2("u_pixel_vec2", dataToUpload);
   }
 
 }

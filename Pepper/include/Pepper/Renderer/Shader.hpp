@@ -20,6 +20,7 @@ namespace Pepper
     virtual void SetInt(const std::string&, const int&) = 0;
     virtual void SetMat4(const std::string&, const glm::mat4&) = 0;
     virtual void SetFloat(const std::string&, const float) = 0;
+    virtual void SetFloat2(const std::string&, const glm::vec2&) = 0;
     virtual void SetFloat4(const std::string&, const glm::vec4&) = 0;
 
     static Ref<Shader> Create(const std::filesystem::path& filepath);

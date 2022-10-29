@@ -45,5 +45,13 @@ namespace Pepper
                                 const Ref<Texture2D>& tex,
                                 float tilingFac = 1.0f,
                                 const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+    static void DrawPixelateQuad(const glm::vec3& position,
+                                 const glm::vec2& size,
+                                 const Ref<Texture2D>& tex,
+                                 float pixelFac,
+                                 const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+    static void UploadVec2ToPixelShader(const glm::vec2& data);
   };
 }
