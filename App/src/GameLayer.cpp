@@ -62,7 +62,7 @@ void GameLayer::OnUpdate(Pepper::TimeStep ts)
   m_level.OnUpdate(ts);
 
   const auto& ref_pos = m_level.GetPlayerPosition();
-  m_camera->SetPosition({ ref_pos.x, ref_pos.y / 2.0f, 0.0f });
+  m_camera->SetPosition({ ref_pos.x, ref_pos.y / 4.0f, 0.0f });
 
   Pepper::Renderer2D::BeginScene(*m_camera.get());
   m_level.OnRendererCall();
