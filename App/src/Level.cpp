@@ -73,6 +73,22 @@ void Level::OnUpdate(Pepper::TimeStep ts)
 
   const auto& player_bbox = m_player.GetBoundingBox();
   bool player_touched = false;
+  for (auto& corner : player_bbox)
+  {
+    if (corner.y <= -6.0f || corner.y >= 6.0f)
+    {
+      player_touched = true;
+      break;
+    }
+  }
+
+  if (player_touched)
+  {
+    PP_WARN("Player touched! - line touched");
+    GameOver();
+    return;
+  }
+
   for (const auto& planet : m_planets)
   {
     for (auto i : std::ranges::iota_view{ 0u, player_bbox.size() })
@@ -121,6 +137,13 @@ void Level::OnRendererCall()
   m_player.OnRendererCall();
 
   m_stars.OnRendererCall();
+
+  Pepper::Renderer2D::DrawQuad({ m_player.GetPosition().x, -9.0f, Constants::Z_ROCKET },
+                               { 20.0f, 6.0f },
+                               Color::BLACK);
+  Pepper::Renderer2D::DrawQuad({ m_player.GetPosition().x, 9.0f, Constants::Z_ROCKET },
+                               { 20.0f, 6.0f },
+                               Color::BLACK);
 }
 
 const glm::vec3& Level::GetPlayerPosition() const
