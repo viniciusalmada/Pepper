@@ -110,9 +110,6 @@ void Player::OnUpdate(Pepper::TimeStep ts)
 
 void Player::OnImGuiLayer()
 {
-  PP_PROFILE_FUNCTION()
-  ImGui::Checkbox("Move rocket", &m_move);
-  ImGui::DragFloat("Rotation", &m_rotation_deg, 1.f, -180.f, 0.0f);
 }
 
 void Player::OnRendererCall()

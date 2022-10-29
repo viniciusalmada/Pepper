@@ -55,7 +55,6 @@ void Level::OnUpdate(Pepper::TimeStep ts)
       if (m_planets[i] == *m_next_planet.get())
       {
         m_score++;
-        PP_INFO("Earned 1 point: SCORE={0}", m_score);
         m_next_planet = Pepper::CreateRef<Planet>(m_planets[i + 1 >= m_planets.size() ? 0 : i + 1]);
         break;
       }
@@ -117,13 +116,6 @@ void Level::OnUpdate(Pepper::TimeStep ts)
 
 void Level::OnImGuiRender()
 {
-  PP_PROFILE_FUNCTION()
-  if (ImGui::Button("Restart"))
-  {
-    GameOver();
-    return;
-  }
-  m_player.OnImGuiLayer();
 }
 
 void Level::OnRendererCall()
@@ -156,7 +148,6 @@ void Level::UpdatePlanet(Planet& planet)
 {
   PP_PROFILE_FUNCTION()
   auto plan_tex_id = Random::Int(0, 7);
-  PP_INFO("Next planet: {0}", plan_tex_id);
   planet.Update(m_planet_new_position, m_planets_textures[plan_tex_id]);
 
   m_planet_new_position += 10.f;
@@ -164,7 +155,6 @@ void Level::UpdatePlanet(Planet& planet)
 
 void Level::GameOver()
 {
-  PP_INFO("New round starting!");
   m_player.Reset();
 
   m_planet_new_position = 20.0f;

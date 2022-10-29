@@ -73,10 +73,6 @@ void GameLayer::OnUpdate(Pepper::TimeStep ts)
 void GameLayer::OnImGuiRender()
 {
   PP_PROFILE_FUNCTION()
-  ImGui::Begin("Settings");
-  m_level.OnImGuiRender();
-  ImGui::End();
-
   int xpos, ypos;
   glfwGetWindowPos(
     std::any_cast<GLFWwindow*>(Pepper::Application::Get().GetWindow().GetNativeWindow()),
