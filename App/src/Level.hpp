@@ -2,6 +2,7 @@
 
 #include "Planet.hpp"
 #include "Player.hpp"
+#include "StarsSystem.hpp"
 
 #include <Pepper.hpp>
 
@@ -40,4 +41,5 @@ private:
   float m_planet_new_position = 20.0f;
 
   std::array<Pepper::Ref<Pepper::Texture2D>, 8> m_planets_textures;
+  StarsSystem m_stars;
 };

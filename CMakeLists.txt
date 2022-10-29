@@ -165,7 +165,8 @@ add_executable(App
   App/src/Player.cpp
   App/src/Random.cpp
   App/src/Utilities.cpp
-  App/src/ParticleSystem.cpp)
+  App/src/ParticleSystem.cpp
+  App/src/StarsSystem.cpp)
 
 if(WIN32)
   target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)

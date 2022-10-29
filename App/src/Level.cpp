@@ -34,11 +34,17 @@ void Level::Init()
     UpdatePlanet(planet);
   }
   m_next_planet = Pepper::CreateRef<Planet>(m_planets[0]);
+
+  glm::vec2 position_start{ -10.0f, 0.0f };
+  glm::vec2 position_end{ 10.0f, 0.0f };
+  m_stars.Create(position_start, position_end);
 }
 
 void Level::OnUpdate(Pepper::TimeStep ts)
 {
   PP_PROFILE_FUNCTION()
+
+  m_stars.Update(m_player.GetPosition().x - 10.0f, ts);
 
   m_player.OnUpdate(ts);
 
@@ -113,6 +119,8 @@ void Level::OnRendererCall()
   }
 
   m_player.OnRendererCall();
+
+  m_stars.OnRendererCall();
 }
 
 const glm::vec3& Level::GetPlayerPosition() const
@@ -147,6 +155,11 @@ void Level::GameOver()
 
   m_on_game_over_cb(m_score);
   m_score = 0;
+
+  m_stars.Clear();
+  glm::vec2 position_start{ -10.0f, 0.0f };
+  glm::vec2 position_end{ 10.0f, 0.0f };
+  m_stars.Create(position_start, position_end);
 }
 
 uint32_t Level::GetPlayerScore() const
@@ -160,5 +173,5 @@ void Level::Restart()
 }
 void Level::SetGameOverCallback(std::function<void(uint32_t)> onGameOver)
 {
-  m_on_game_over_cb = onGameOver;
+  m_on_game_over_cb = std::move(onGameOver);
 }
