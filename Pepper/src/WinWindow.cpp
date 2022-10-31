@@ -13,10 +13,12 @@ namespace Pepper
 {
   static bool s_glfw_initialized = false;
 
+#if !defined(PP_DIST)
   static void GLFWErrorCallback(int error, const char* desc)
   {
     PP_CORE_ERROR("GLFW Error: ({0}: {1})", error, desc);
   }
+#endif
 
   Scope<Window> Window::Create(const WindowProps& props)
   {
@@ -84,8 +86,9 @@ namespace Pepper
       PP_CORE_ASSERT(success, "Could not initialize GLFW!");
       if (!success)
         return;
+#if !defined(PP_DIST)
       glfwSetErrorCallback(GLFWErrorCallback);
-
+#endif
       s_glfw_initialized = true;
     }
 
