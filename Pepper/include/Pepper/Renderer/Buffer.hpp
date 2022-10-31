@@ -21,10 +21,11 @@ namespace Pepper
   class VertexBuffer : public Buffer
   {
   public:
-    virtual const BufferLayout& GetLayout() const = 0;
+    [[nodiscard]] virtual const BufferLayout& GetLayout() const = 0;
 
     virtual void SetLayout(const BufferLayout& layout) = 0;
 
+    static Ref<VertexBuffer> Create(uint32_t verticesCount, uint32_t parent);
     static Ref<VertexBuffer> Create(const std::vector<float>& vertices, uint32_t parent);
   };
 

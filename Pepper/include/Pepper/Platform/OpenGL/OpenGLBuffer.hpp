@@ -9,6 +9,7 @@ namespace Pepper
   class OpenGLVertexBuffer : public VertexBuffer
   {
   public:
+    OpenGLVertexBuffer(uint32_t verticesCount, uint32_t parent);
     OpenGLVertexBuffer(const std::vector<float>& vertices, uint32_t parent);
 
     ~OpenGLVertexBuffer() override;
