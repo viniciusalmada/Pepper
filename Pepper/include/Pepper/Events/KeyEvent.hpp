@@ -20,7 +20,9 @@ namespace Pepper
   class KeyPressedEvent : public KeyEvent
   {
   public:
-    KeyPressedEvent(PPKey keyCode, int repeatCount) : KeyEvent(keyCode), repeat_count(repeatCount) {}
+    KeyPressedEvent(PPKey keyCode, int repeatCount) : KeyEvent(keyCode), repeat_count(repeatCount)
+    {
+    }
 
     int GetRepeatedCount() const { return repeat_count; }
 

@@ -45,7 +45,8 @@ namespace Pepper
     }
   }
 
-  BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& elements) : pimp(CreateScope<Impl>(elements))
+  BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& elements) :
+      pimp(CreateScope<Impl>(elements))
   {
   }
 

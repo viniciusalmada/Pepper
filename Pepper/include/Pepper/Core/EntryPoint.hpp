@@ -20,5 +20,4 @@ int main()
   auto* app_ptr = app.release();
   delete app_ptr;
   PP_PROFILE_END_SESSION();
-  
 }

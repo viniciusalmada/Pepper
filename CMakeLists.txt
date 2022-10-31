@@ -51,7 +51,7 @@ add_library(ImGui STATIC ${PP_VENDOR_DIR}/imgui/imgui_demo.cpp
   ${PP_VENDOR_DIR}/imgui/imgui.cpp
   ${PP_VENDOR_DIR}/imgui/backends/imgui_impl_opengl3.cpp
   ${PP_VENDOR_DIR}/imgui/backends/imgui_impl_glfw.cpp
-)
+  )
 
 target_compile_features(ImGui PRIVATE ${CXX_STANDARD})
 
@@ -121,7 +121,7 @@ target_include_directories(Pepper SYSTEM PUBLIC
   ${PP_VENDOR_DIR}/imgui
   ${PP_VENDOR_DIR}/glm/
   ${PP_VENDOR_DIR}/stb/
-)
+  )
 
 target_compile_definitions(Pepper
   PRIVATE GLFW_INCLUDE_NONE # Not include gl
@@ -144,7 +144,7 @@ target_link_libraries(Pepper
   PUBLIC glfw
   PUBLIC ImGui
   PUBLIC glm
-)
+  )
 
 if(WIN32)
   target_link_libraries(Pepper PRIVATE opengl32.lib)
@@ -161,7 +161,7 @@ add_executable(App
   App/src/ExampleLayer.cpp
   App/src/Sandbox2D.cpp
   App/src/IO.cpp
-)
+  )
 
 if(WIN32)
   target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)
@@ -177,7 +177,7 @@ target_include_directories(App PRIVATE SYSTEM
   ${PP_VENDOR_DIR}/spdlog/include
   ${PP_VENDOR_DIR}/glm/
   ${PP_VENDOR_DIR}/imgui
-)
+  )
 
 if(WIN32)
   set_property(TARGET App PROPERTY

@@ -41,12 +41,15 @@ namespace Pepper
   void OpenGLRendererAPI::Clear() const
   {
     PP_PROFILE_FUNCTION();
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray) const
   {
     PP_PROFILE_FUNCTION();
-    glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES,
+                   vertexArray->GetIndexBuffer()->GetCount(),
+                   GL_UNSIGNED_INT,
+                   nullptr);
   }
 }

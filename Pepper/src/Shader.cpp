@@ -23,7 +23,9 @@ namespace Pepper
     return nullptr;
   }
 
-  Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+  Ref<Shader> Shader::Create(const std::string& name,
+                             const std::string& vertexSrc,
+                             const std::string& fragmentSrc)
   {
     switch (Renderer::GetAPI())
     {

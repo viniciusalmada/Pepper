@@ -36,12 +36,15 @@ namespace Pepper
       -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, // top-left
     };
     // clang-format on
-    Ref<VertexBuffer> square_vb = VertexBuffer::Create(square_vertices, data->quad_vertex_array->GetRendererID());
-    square_vb->SetLayout({ { ShaderDataType::Float3, "in_position" }, { ShaderDataType::Float2, "in_tex_coords" } });
+    Ref<VertexBuffer> square_vb =
+      VertexBuffer::Create(square_vertices, data->quad_vertex_array->GetRendererID());
+    square_vb->SetLayout(
+      { { ShaderDataType::Float3, "in_position" }, { ShaderDataType::Float2, "in_tex_coords" } });
     data->quad_vertex_array->AddVertexBuffer(square_vb);
 
     std::vector<uint32_t> square_indices = { 0, 1, 2, 2, 3, 0 };
-    Ref<IndexBuffer> square_ib = IndexBuffer::Create(square_indices, data->quad_vertex_array->GetRendererID());
+    Ref<IndexBuffer> square_ib =
+      IndexBuffer::Create(square_indices, data->quad_vertex_array->GetRendererID());
     data->quad_vertex_array->SetIndexBuffer(square_ib);
 
     data->shader = Shader::Create(R"(assets/shaders/ColorOrTexture.glsl)");
@@ -69,7 +72,8 @@ namespace Pepper
     PP_PROFILE_FUNCTION();
   }
 
-  void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+  void
+  Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
   {
     PP_PROFILE_FUNCTION();
     data->shader->SetFloat4("u_color", color);
@@ -84,7 +88,8 @@ namespace Pepper
     RenderCommand::DrawIndexed(data->quad_vertex_array);
   }
 
-  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+  void
+  Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
   {
     DrawQuad({ position.x, position.y, 0.0f }, size, color);
   }
@@ -127,9 +132,10 @@ namespace Pepper
     data->shader->SetFloat("u_tiling_factor", 1.0);
     data->white_texture->Bind();
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform =
+      glm::translate(glm::mat4{ 1.0f }, position) *
+      glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
+      glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -156,9 +162,10 @@ namespace Pepper
     data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    glm::mat4 transform =
+      glm::translate(glm::mat4{ 1.0f }, position) *
+      glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
+      glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
     data->quad_vertex_array->Bind();
@@ -172,7 +179,12 @@ namespace Pepper
                                    float tilingFac,
                                    const glm::vec4& tintColor)
   {
-    DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotationDeg, tex, tilingFac, tintColor);
+    DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f },
+                    size,
+                    rotationDeg,
+                    tex,
+                    tilingFac,
+                    tintColor);
   }
 
 }

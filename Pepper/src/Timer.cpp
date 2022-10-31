@@ -19,7 +19,8 @@ namespace Pepper
     do
     {
       instant = std::chrono::high_resolution_clock::now();
-      instant_us = std::chrono::time_point_cast<std::chrono::microseconds>(instant).time_since_epoch().count();
+      instant_us =
+        std::chrono::time_point_cast<std::chrono::microseconds>(instant).time_since_epoch().count();
     } while (instant_us == _s_last_time);
 
     _s_last_time = instant_us;
@@ -36,7 +37,12 @@ namespace Pepper
     bool m_stopped;
   };
 
-  Timer::Impl::Impl(std::string&& title) : m_title(title), m_start_point(GetNowTime()), m_stopped(false) {}
+  Timer::Impl::Impl(std::string&& title) :
+      m_title(title),
+      m_start_point(GetNowTime()),
+      m_stopped(false)
+  {
+  }
 
   Timer::Timer(std::string&& title) : pimp(CreateScope<Impl>(std::move(title))) {}
 
@@ -50,9 +56,11 @@ namespace Pepper
   {
     auto end_time = GetNowTime();
 
-    uint64_t start =
-      std::chrono::time_point_cast<std::chrono::microseconds>(pimp->m_start_point).time_since_epoch().count();
-    uint64_t end = std::chrono::time_point_cast<std::chrono::microseconds>(end_time).time_since_epoch().count();
+    uint64_t start = std::chrono::time_point_cast<std::chrono::microseconds>(pimp->m_start_point)
+                       .time_since_epoch()
+                       .count();
+    uint64_t end =
+      std::chrono::time_point_cast<std::chrono::microseconds>(end_time).time_since_epoch().count();
 
     uint64_t thread_hash = std::hash<std::thread::id>{}(std::this_thread::get_id());
 

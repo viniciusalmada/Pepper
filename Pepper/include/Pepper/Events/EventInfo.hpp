@@ -43,15 +43,15 @@ namespace Pepper
     };
   };
 
-#define EVENT_INFO(x)                                                                                                  \
-  EventInfo GetEventInfo() const override                                                                              \
-  {                                                                                                                    \
-    return EventInfo{ GetStaticType(), (x) };                                                                          \
+#define EVENT_INFO(x)                                                                              \
+  EventInfo GetEventInfo() const override                                                          \
+  {                                                                                                \
+    return EventInfo{ GetStaticType(), (x) };                                                      \
   }
 
-#define STATIC_TYPE(x)                                                                                                 \
-  static EvType GetStaticType()                                                                                        \
-  {                                                                                                                    \
-    return (x);                                                                                                        \
+#define STATIC_TYPE(x)                                                                             \
+  static EvType GetStaticType()                                                                    \
+  {                                                                                                \
+    return (x);                                                                                    \
   }
 }

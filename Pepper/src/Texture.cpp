@@ -9,7 +9,10 @@
 
 namespace Pepper
 {
-  Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, const std::vector<uint32_t>& data, uint32_t size)
+  Ref<Texture2D> Texture2D::Create(uint32_t width,
+                                   uint32_t height,
+                                   const std::vector<uint32_t>& data,
+                                   uint32_t size)
   {
     switch (RendererAPI::GetAPI())
     {

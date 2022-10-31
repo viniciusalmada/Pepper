@@ -24,7 +24,10 @@ namespace Pepper
     uint32_t renderer_ID;
   };
 
-  OpenGLTexture2D::Impl::Impl(uint32_t width, uint32_t height, const std::vector<uint32_t>& data, uint32_t size) :
+  OpenGLTexture2D::Impl::Impl(uint32_t width,
+                              uint32_t height,
+                              const std::vector<uint32_t>& data,
+                              uint32_t size) :
       width(width),
       height(height)
   {
@@ -98,12 +101,18 @@ namespace Pepper
     stbi_image_free(data);
   }
 
-  OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, const std::vector<uint32_t>& data, uint32_t size) :
+  OpenGLTexture2D::OpenGLTexture2D(uint32_t width,
+                                   uint32_t height,
+                                   const std::vector<uint32_t>& data,
+                                   uint32_t size) :
       pimp(CreateScope<Impl>(width, height, data, size))
   {
   }
 
-  OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path) : pimp(CreateScope<Impl>(path)) {}
+  OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path) :
+      pimp(CreateScope<Impl>(path))
+  {
+  }
 
   OpenGLTexture2D::~OpenGLTexture2D()
   {

@@ -84,7 +84,8 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION();
     glm::mat4 pos_translated = glm::translate(glm::mat4(1.0f), position);
-    glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(rotation_deg), glm::vec3(0, 0, 1));
+    glm::mat4 rotation =
+      glm::rotate(glm::mat4(1.0f), glm::radians(rotation_deg), glm::vec3(0, 0, 1));
     glm::mat4 transform = pos_translated * rotation;
 
     view_matrix = glm::inverse(transform);

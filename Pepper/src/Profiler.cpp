@@ -1,6 +1,6 @@
 #if defined(PROFILING)
 
-// clang-format off
+  // clang-format off
 #include "PepperPCH.hpp"
 // clang-format on
 
@@ -23,7 +23,14 @@ namespace Pepper
     int m_threads_counter;
   };
 
-  Profiler::Impl::Impl() : m_output(), m_timer_count(0), m_lock(), m_threads_ids({}), m_threads_counter(0) {}
+  Profiler::Impl::Impl() :
+      m_output(),
+      m_timer_count(0),
+      m_lock(),
+      m_threads_ids({}),
+      m_threads_counter(0)
+  {
+  }
 
   void Profiler::Impl::WriteHeader()
   {

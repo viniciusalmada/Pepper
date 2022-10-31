@@ -57,16 +57,23 @@ namespace Pepper
     CreateProgram(shaders_src[ShaderType::VERTEX], shaders_src[ShaderType::FRAGMENT]);
   }
 
-  OpenGLShader::Impl::Impl(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
+  OpenGLShader::Impl::Impl(const std::string& name,
+                           const std::string& vertexSrc,
+                           const std::string& fragmentSrc) :
       name(name)
   {
     PP_PROFILE_FUNCTION();
     CreateProgram(vertexSrc, fragmentSrc);
   }
 
-  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) : pimp(CreateScope<Impl>(filepath)) {}
+  OpenGLShader::OpenGLShader(const std::filesystem::path& filepath) :
+      pimp(CreateScope<Impl>(filepath))
+  {
+  }
 
-  OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
+  OpenGLShader::OpenGLShader(const std::string& name,
+                             const std::string& vertexSrc,
+                             const std::string& fragmentSrc) :
       pimp(CreateScope<Impl>(name, vertexSrc, fragmentSrc))
   {
   }
@@ -168,7 +175,8 @@ namespace Pepper
     glUniform3f(location, vec.x, vec.y, vec.z);
   }
 
-  void OpenGLShader::Impl::UploadUniformFloat2(const std::string& uniformName, const glm::vec2& value)
+  void OpenGLShader::Impl::UploadUniformFloat2(const std::string& uniformName,
+                                               const glm::vec2& value)
   {
     if (!AssertShaderIsBound())
       return;
@@ -280,7 +288,8 @@ namespace Pepper
     return shader_raw_src;
   }
 
-  std::unordered_map<ShaderType, std::string> OpenGLShader::Impl::SplitShaderSrc(const std::string& rawSrc)
+  std::unordered_map<ShaderType, std::string>
+  OpenGLShader::Impl::SplitShaderSrc(const std::string& rawSrc)
   {
     PP_PROFILE_FUNCTION();
     std::unordered_map<std::string, std::string> shaders_src;
@@ -325,7 +334,8 @@ namespace Pepper
       }
     }
 
-    PP_CORE_ASSERT(shaders_src_by_type.size() == shaders_src.size(), "Error on spliting the shaders sources!");
+    PP_CORE_ASSERT(shaders_src_by_type.size() == shaders_src.size(),
+                   "Error on spliting the shaders sources!");
     return shaders_src_by_type;
   }
 
@@ -336,7 +346,8 @@ namespace Pepper
     return is_bound;
   }
 
-  void OpenGLShader::Impl::CreateProgram(const std::string& vertexSrc, const std::string& fragmentSrc)
+  void OpenGLShader::Impl::CreateProgram(const std::string& vertexSrc,
+                                         const std::string& fragmentSrc)
   {
     PP_PROFILE_FUNCTION();
     auto [vertex_shader, vertex_ok] = Compile(vertexSrc, ShaderType::VERTEX);

@@ -24,7 +24,10 @@ namespace Pepper
 
     int GetCategoryFlags() const { return GetEventInfo().GetFlags(); };
 
-    bool IsInCategory(EvCategory category) { return GetCategoryFlags() & static_cast<int>(category); }
+    bool IsInCategory(EvCategory category)
+    {
+      return GetCategoryFlags() & static_cast<int>(category);
+    }
 
     bool IsHandled() const { return handled; }
 

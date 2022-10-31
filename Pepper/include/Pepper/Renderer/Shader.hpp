@@ -24,6 +24,7 @@ namespace Pepper
     virtual void SetFloat4(const std::string&, const glm::vec4&) = 0;
 
     static Ref<Shader> Create(const std::filesystem::path& filepath);
-    static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+    static Ref<Shader>
+    Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
   };
 }

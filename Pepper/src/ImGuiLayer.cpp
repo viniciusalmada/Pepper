@@ -63,8 +63,8 @@ namespace Pepper
     PP_PROFILE_FUNCTION();
     ImGuiIO& io = ImGui::GetIO();
     Application& app = Application::Get();
-    io.DisplaySize =
-      ImVec2(static_cast<float>(app.GetWindow().GetWidth()), static_cast<float>(app.GetWindow().GetHeight()));
+    io.DisplaySize = ImVec2(static_cast<float>(app.GetWindow().GetWidth()),
+                            static_cast<float>(app.GetWindow().GetHeight()));
 
     // Rendering
     ImGui::Render();

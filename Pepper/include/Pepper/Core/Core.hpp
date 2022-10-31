@@ -9,21 +9,21 @@
 #endif
 
 #ifdef PP_ENABLE_ASSERTS
-  #define PP_ASSERT(x, ...)                                                                                            \
-    {                                                                                                                  \
-      if (!(x))                                                                                                        \
-      {                                                                                                                \
-        PP_ERROR("Assertion failed: {0}", __VA_ARGS__);                                                                \
-        DEBUG_BREAK                                                                                                    \
-      }                                                                                                                \
+  #define PP_ASSERT(x, ...)                                                                        \
+    {                                                                                              \
+      if (!(x))                                                                                    \
+      {                                                                                            \
+        PP_ERROR("Assertion failed: {0}", __VA_ARGS__);                                            \
+        DEBUG_BREAK                                                                                \
+      }                                                                                            \
     }
-  #define PP_CORE_ASSERT(x, ...)                                                                                       \
-    {                                                                                                                  \
-      if (!(x))                                                                                                        \
-      {                                                                                                                \
-        PP_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__);                                                           \
-        DEBUG_BREAK                                                                                                    \
-      }                                                                                                                \
+  #define PP_CORE_ASSERT(x, ...)                                                                   \
+    {                                                                                              \
+      if (!(x))                                                                                    \
+      {                                                                                            \
+        PP_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__);                                       \
+        DEBUG_BREAK                                                                                \
+      }                                                                                            \
     }
 #else
   #define PP_ASSERT(x, ...)
@@ -45,7 +45,7 @@ namespace Pepper
 
   template <typename T>
   using Ref = std::shared_ptr<T>;
-  
+
   template <typename T, typename... Args>
   constexpr Ref<T> CreateRef(Args&&... args)
   {
@@ -53,10 +53,10 @@ namespace Pepper
   }
 }
 
-#define DECLARE_PIMPL                                                                                                  \
-  class Impl;                                                                                                          \
+#define DECLARE_PIMPL                                                                              \
+  class Impl;                                                                                      \
   Scope<Impl> pimp;
 
-#define CONCAT(x, y) x ## y
+#define CONCAT(x, y) x##y
 
 #define COMBINE(x, y) CONCAT(x, y)
