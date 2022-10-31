@@ -21,7 +21,7 @@ const glm::vec3& Planet::GetPosition() const
 
 void Planet::OnRendererCall() const
 {
-  Pepper::Renderer2D::DrawPixelateQuad(m_position, m_size, m_texture, m_size.x * 20.0f);
+  Pepper::Renderer2D::DrawQuad(m_position, m_size, m_texture);
 }
 
 float Planet::GetRadius() const

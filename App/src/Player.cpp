@@ -116,7 +116,6 @@ void Player::OnRendererCall()
 {
   PP_PROFILE_FUNCTION()
   auto to_shader = glm::vec2{ 0.0, m_position.y / 11.25f };
-  Pepper::Renderer2D::UploadVec2ToPixelShader(to_shader);
 
   Pepper::Renderer2D::DrawRotatedQuad(m_position, m_rocket_size, m_rotation_deg, m_rocket_tex);
   Pepper::Renderer2D::DrawRotatedQuad({ m_position.x, m_position.y, Constants::Z_ENGINE },
