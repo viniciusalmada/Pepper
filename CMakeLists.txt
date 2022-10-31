@@ -52,6 +52,7 @@ target_include_directories(ImGui PRIVATE ${PP_VENDOR_DIR}/GLFW/include)
 add_library(Pepper STATIC
   ${PP_SRC_DIR}/Application.cpp
   ${PP_SRC_DIR}/Buffer.cpp
+  ${PP_SRC_DIR}/BufferElement.cpp
   ${PP_SRC_DIR}/BufferLayout.cpp
   ${PP_SRC_DIR}/Event.cpp
   ${PP_SRC_DIR}/ImGuiLayer.cpp
@@ -81,7 +82,7 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/VertexArray.cpp
   ${PP_SRC_DIR}/WinInput.cpp
   ${PP_SRC_DIR}/WinWindow.cpp
-)
+  )
 
 target_compile_features(Pepper PRIVATE ${CXX_STANDARD})
 
