@@ -4,6 +4,9 @@ struct PPKey
 {
   int keyCode;
 
+  bool operator==(const PPKey& rhs) const { return keyCode == rhs.keyCode; }
+  bool operator!=(const PPKey& rhs) const { return !(rhs == *this); }
+
   friend std::ostream& operator<<(std::ostream& os, PPKey ppKey) { return os << ppKey.keyCode; }
 
   static PPKey FromGLFWKey(int glfwKeyCode) { return PPKey{ glfwKeyCode }; }
