@@ -10,82 +10,143 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Pepper
+constexpr auto MAX_QUADS = 10'000;
+constexpr auto MAX_VERTICES = MAX_QUADS * 4;
+constexpr auto MAX_INDICES = MAX_QUADS * 6;
+
+namespace
 {
-  struct RendererData
+  struct QuadVertex
   {
-    Ref<VertexArray> quad_vertex_array;
-    Ref<Shader> shader;
-    Ref<Texture2D> white_texture;
+    glm::vec3 position;
+    glm::vec4 color;
+    glm::vec2 tex_coords;
   };
 
-  static Scope<RendererData> data;
+  struct RendererData
+  {
+    Pepper::Ref<Pepper::VertexArray> vertex_array;
+    Pepper::Ref<Pepper::VertexBuffer> vertex_buffer;
+    Pepper::Ref<Pepper::Shader> shader;
+    Pepper::Ref<Pepper::Texture2D> white_texture;
 
+    uint32_t quad_index_count = 0;
+    std::array<QuadVertex, MAX_VERTICES> vertex_buffer_base{};
+    uint32_t current_vertex = 0;
+  };
+
+  Pepper::Scope<RendererData> data;
+}
+
+namespace Pepper
+{
   void Renderer2D::Init()
   {
-    PP_PROFILE_FUNCTION();
+    PP_PROFILE_FUNCTION()
     data = CreateScope<RendererData>();
-    data->quad_vertex_array = VertexArray::Create();
-    data->quad_vertex_array->Bind();
+    data->vertex_array = VertexArray::Create();
+    data->vertex_array->Bind();
 
-    // clang-format off
-    std::vector<float> square_vertices = { 
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bot-left
-      +0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bot-right
-      +0.5f, +0.5f, 0.0f, 1.0f, 1.0f, // top-right
-      -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, // top-left
-    };
-    // clang-format on
-    Ref<VertexBuffer> square_vb =
-      VertexBuffer::Create(square_vertices, data->quad_vertex_array->GetRendererID());
-    square_vb->SetLayout(
-      { { ShaderDataType::Float3, "in_position" }, { ShaderDataType::Float2, "in_tex_coords" } });
-    data->quad_vertex_array->AddVertexBuffer(square_vb);
+    data->vertex_buffer =
+      VertexBuffer::Create(MAX_VERTICES * sizeof(QuadVertex), data->vertex_array->GetRendererID());
+    data->vertex_buffer->SetLayout({
+      {ShaderDataType::Float3,   "in_position"},
+      {ShaderDataType::Float4,      "in_color"},
+      {ShaderDataType::Float2, "in_tex_coords"}
+    });
+    data->vertex_array->AddVertexBuffer(data->vertex_buffer);
 
-    std::vector<uint32_t> square_indices = { 0, 1, 2, 2, 3, 0 };
-    Ref<IndexBuffer> square_ib =
-      IndexBuffer::Create(square_indices, data->quad_vertex_array->GetRendererID());
-    data->quad_vertex_array->SetIndexBuffer(square_ib);
+    std::vector<uint32_t> square_indices(MAX_INDICES);
+    uint32_t offset = 0;
+    for (auto i = 0u; i < MAX_VERTICES; i += 6)
+    {
+      square_indices[i + 0] = offset + 0;
+      square_indices[i + 1] = offset + 1;
+      square_indices[i + 2] = offset + 2;
+
+      square_indices[i + 3] = offset + 2;
+      square_indices[i + 4] = offset + 3;
+      square_indices[i + 5] = offset + 0;
+
+      offset += 4;
+    }
+    auto quad_ib = IndexBuffer::Create(square_indices, data->vertex_array->GetRendererID());
+    data->vertex_array->SetIndexBuffer(quad_ib);
 
     data->shader = Shader::Create(R"(assets/shaders/ColorOrTexture.glsl)");
     data->shader->Bind();
-    data->shader->SetInt("u_texture", 0);
 
     data->white_texture = Texture2D::Create(1, 1, { 0xFFFFFFFF }, sizeof(uint32_t));
   }
 
   void Renderer2D::Shutdown()
   {
-    PP_PROFILE_FUNCTION();
-    data.reset();
+    PP_PROFILE_FUNCTION()
+    // Free renderer data
   }
 
   void Renderer2D::BeginScene(const OrthoCamera& camera)
   {
-    PP_PROFILE_FUNCTION();
+    PP_PROFILE_FUNCTION()
     data->shader->Bind();
     data->shader->SetMat4("u_view_projection", camera.GetViewProjectionMatrix());
+
+    data->quad_index_count = 0;
+    data->current_vertex = 0;
   }
 
   void Renderer2D::EndScene()
   {
-    PP_PROFILE_FUNCTION();
+    PP_PROFILE_FUNCTION()
+
+    auto data_size = static_cast<uint32_t>(data->current_vertex * sizeof(QuadVertex));
+    data->vertex_buffer->UpdateData(data->vertex_buffer_base.data(), data_size);
+
+    Flush();
+  }
+
+  void Renderer2D::Flush()
+  {
+    data->vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->vertex_array, data->quad_index_count);
   }
 
   void
   Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
   {
-    PP_PROFILE_FUNCTION();
-    data->shader->SetFloat4("u_color", color);
-    data->shader->SetFloat("u_tiling_factor", 1.0);
-    data->white_texture->Bind();
+    PP_PROFILE_FUNCTION()
 
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    data->shader->SetMat4("u_transform", transform);
+    QuadVertex& bot_left = data->vertex_buffer_base[data->current_vertex++];
+    bot_left.position = { position.x - 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_left.color = color;
+    bot_left.tex_coords = { 0.0f, 0.0f };
 
-    data->quad_vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->quad_vertex_array);
+    QuadVertex& bot_right = data->vertex_buffer_base[data->current_vertex++];
+    bot_right.position = { position.x + 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_right.color = color;
+    bot_right.tex_coords = { 1.0f, 0.0f };
+
+    QuadVertex& top_right = data->vertex_buffer_base[data->current_vertex++];
+    top_right.position = { position.x + 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_right.color = color;
+    top_right.tex_coords = { 1.0f, 1.0f };
+
+    QuadVertex& top_left = data->vertex_buffer_base[data->current_vertex++];
+    top_left.position = { position.x - 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_left.color = color;
+    top_left.tex_coords = { 0.0f, 1.0f };
+
+    data->quad_index_count += 6;
+
+    //    data->shader->SetFloat("u_tiling_factor", 1.0);
+    //    data->white_texture->Bind();
+    //
+    //    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
+    //                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
+    //    data->shader->SetMat4("u_transform", transform);
+    //
+    //    data->vertex_array->Bind();
+    //    RenderCommand::DrawIndexed(data->vertex_array);
   }
 
   void
@@ -100,7 +161,7 @@ namespace Pepper
                             float tilingFac,
                             const glm::vec4& tintColor)
   {
-    PP_PROFILE_FUNCTION();
+    PP_PROFILE_FUNCTION()
     tex->Bind();
     data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
@@ -109,8 +170,8 @@ namespace Pepper
                           glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
-    data->quad_vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->quad_vertex_array);
+    data->vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->vertex_array);
   }
 
   void Renderer2D::DrawQuad(const glm::vec2& position,
@@ -127,7 +188,7 @@ namespace Pepper
                                    float rotationDeg,
                                    const glm::vec4& color)
   {
-    PP_PROFILE_FUNCTION();
+    PP_PROFILE_FUNCTION()
     data->shader->SetFloat4("u_color", color);
     data->shader->SetFloat("u_tiling_factor", 1.0);
     data->white_texture->Bind();
@@ -138,8 +199,8 @@ namespace Pepper
       glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
-    data->quad_vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->quad_vertex_array);
+    data->vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->vertex_array);
   }
 
   void Renderer2D::DrawRotatedQuad(const glm::vec2& position,
@@ -157,7 +218,7 @@ namespace Pepper
                                    float tilingFac,
                                    const glm::vec4& tintColor)
   {
-    PP_PROFILE_FUNCTION();
+    PP_PROFILE_FUNCTION()
     tex->Bind();
     data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
@@ -168,8 +229,8 @@ namespace Pepper
       glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
     data->shader->SetMat4("u_transform", transform);
 
-    data->quad_vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->quad_vertex_array);
+    data->vertex_array->Bind();
+    RenderCommand::DrawIndexed(data->vertex_array);
   }
 
   void Renderer2D::DrawRotatedQuad(const glm::vec2& position,

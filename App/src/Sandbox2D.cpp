@@ -44,23 +44,24 @@ void Sandbox2D::OnUpdate(Pepper::TimeStep ts)
     PP_PROFILE_SCOPE("Render");
     Pepper::Renderer2D::BeginScene(camera_controller.GetCamera());
 
-    Pepper::Renderer2D::DrawQuad({ 0.0, 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
+    Pepper::Renderer2D::DrawQuad({ 0.0, 0.0 }, { 0.75, 0.75 }, { 0.0f, 1.2f, 0.3f, 1.0f });
     Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.1 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
     Pepper::Renderer2D::DrawQuad({ .0, .0, 0.2 }, { 0.25, 0.25 }, { 1.0f, 0.2f, 0.3f, 1.0f });
     Pepper::Renderer2D::DrawQuad({ -1.0, -1.0, 0.3 }, { 0.10, 0.10 }, { 0.0f, 0.2f, 0.3f, 1.0f });
 
-    Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture, 10.0f);
-    Pepper::Renderer2D::DrawQuad({ 0.f, 0.f }, { 0.2, 0.2 }, { 0.0f, 0.2f, 0.3f, 1.0f });
+    //    Pepper::Renderer2D::DrawQuad({ 0., 0., -0.9 }, { 10., 10. }, texture, 10.0f);
+    //    Pepper::Renderer2D::DrawQuad({ 0.f, 0.f }, { 0.2, 0.2 }, { 0.0f, 0.2f, 0.3f, 1.0f });
+    //
+    //    Pepper::Renderer2D::DrawRotatedQuad({ 0.f, 0.f, 0.5f },
+    //                                        { 0.5, 0.5 },
+    //                                        45.f,
+    //                                        texture,
+    //                                        20.f,
+    //                                        { 0.0f, 0.0f, 1.0f, 1.0f });
+    //    Pepper::Renderer2D::DrawRotatedQuad({ 0.f, 0.f, 0.51f }, { 0.4, 0.4 }, 45.f, { 1.0f, 0.2f,
+    //    0.3f, 1.0f });
 
-    Pepper::Renderer2D::DrawRotatedQuad({ 0.f, 0.f, 0.5f },
-                                        { 0.5, 0.5 },
-                                        45.f,
-                                        texture,
-                                        20.f,
-                                        { 0.0f, 0.0f, 1.0f, 1.0f });
-    Pepper::Renderer2D::DrawRotatedQuad({ 0.f, 0.f, 0.51f }, { 0.4, 0.4 }, 45.f, { 1.0f, 0.2f, 0.3f, 1.0f });
-
-    // DrawRuler(); 
+    // DrawRuler();
 
     Pepper::Renderer2D::EndScene();
   }

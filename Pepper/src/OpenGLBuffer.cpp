@@ -40,7 +40,7 @@ namespace Pepper
   class OpenGLVertexBuffer::Impl
   {
   public:
-    Impl(uint32_t verticesCount, uint32_t parent);
+    Impl(uint32_t verticesSize, uint32_t parent);
     Impl(const std::vector<float>& vertices, uint32_t parent);
 
     uint32_t renderer_id;
@@ -48,7 +48,7 @@ namespace Pepper
     BufferLayout layout;
   };
 
-  OpenGLVertexBuffer::Impl::Impl(uint32_t verticesCount, uint32_t parent) :
+  OpenGLVertexBuffer::Impl::Impl(uint32_t verticesSize, uint32_t parent) :
       renderer_id(0),
       parent_id(parent),
       layout({})
@@ -60,7 +60,7 @@ namespace Pepper
 
     glCreateBuffers(1, &renderer_id);
     glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
-    glBufferData(GL_ARRAY_BUFFER, verticesCount, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verticesSize, nullptr, GL_DYNAMIC_DRAW);
   }
 
   OpenGLVertexBuffer::Impl::Impl(const std::vector<float>& vertices, uint32_t parent) :
@@ -79,8 +79,8 @@ namespace Pepper
     glBufferData(GL_ARRAY_BUFFER, size, vertices.data(), GL_STATIC_DRAW);
   }
 
-  OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t vertices, uint32_t parent) :
-      pimp(CreateScope<Impl>(vertices, parent))
+  OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t verticesSize, uint32_t parent) :
+      pimp(CreateScope<Impl>(verticesSize, parent))
   {
   }
 
@@ -118,6 +118,12 @@ namespace Pepper
   void OpenGLVertexBuffer::SetLayout(const BufferLayout& newLayout)
   {
     this->pimp->layout = newLayout;
+  }
+
+  void OpenGLVertexBuffer::UpdateData(const void* data, uint32_t size)
+  {
+    Bind();
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
   }
 
   /****************

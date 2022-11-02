@@ -18,9 +18,9 @@ namespace Pepper
 
     static void Clear() { renderer_api->Clear(); };
 
-    static void DrawIndexed(const Ref<VertexArray>& vertexArray)
+    static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
     {
-      renderer_api->DrawIndexed(vertexArray);
+      renderer_api->DrawIndexed(vertexArray, indexCount);
     }
 
   private:

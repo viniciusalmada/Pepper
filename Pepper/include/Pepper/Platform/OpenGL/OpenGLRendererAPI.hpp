@@ -15,6 +15,6 @@ namespace Pepper
 
     void Clear() const override;
 
-    void DrawIndexed(const Ref<VertexArray>&) const override;
+    void DrawIndexed(const Ref<VertexArray>&, uint32_t indexCount) const override;
   };
 }

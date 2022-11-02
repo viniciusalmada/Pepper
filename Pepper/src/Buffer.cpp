@@ -10,12 +10,12 @@
 namespace Pepper
 {
 
-  Ref<VertexBuffer> VertexBuffer::Create(uint32_t verticesCount, uint32_t parent)
+  Ref<VertexBuffer> VertexBuffer::Create(uint32_t verticesSize, uint32_t parent)
   {
     switch (Renderer::GetAPI())
     {
     case RendererAPI::API::OPEN_GL:
-      return std::make_shared<OpenGLVertexBuffer>(verticesCount, parent);
+      return std::make_shared<OpenGLVertexBuffer>(verticesSize, parent);
     case RendererAPI::API::NONE:
       PP_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
       return nullptr;
