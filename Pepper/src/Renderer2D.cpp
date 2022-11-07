@@ -10,9 +10,11 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+constexpr auto VERTEX_PER_QUAD = 6;
 constexpr auto MAX_QUADS = 10'000;
 constexpr auto MAX_VERTICES = MAX_QUADS * 4;
-constexpr auto MAX_INDICES = MAX_QUADS * 6;
+constexpr auto MAX_INDICES = MAX_QUADS * VERTEX_PER_QUAD;
+constexpr auto MAX_TEXTURE_SLOTS = 32;
 
 namespace
 {
@@ -21,6 +23,7 @@ namespace
     glm::vec3 position;
     glm::vec4 color;
     glm::vec2 tex_coords;
+    float texture_id;
   };
 
   struct RendererData
@@ -31,8 +34,11 @@ namespace
     Pepper::Ref<Pepper::Texture2D> white_texture;
 
     uint32_t quad_index_count = 0;
-    std::array<QuadVertex, MAX_VERTICES> vertex_buffer_base{};
+    std::array<QuadVertex, MAX_VERTICES> vertices_data{};
     uint32_t current_vertex = 0;
+
+    std::array<Pepper::Ref<Pepper::Texture2D>, MAX_TEXTURE_SLOTS> textures_slots{ nullptr };
+    uint32_t current_texture = 0; // 0 = empty texture (white)
   };
 
   Pepper::Scope<RendererData> data;
@@ -52,13 +58,14 @@ namespace Pepper
     data->vertex_buffer->SetLayout({
       {ShaderDataType::Float3,   "in_position"},
       {ShaderDataType::Float4,      "in_color"},
-      {ShaderDataType::Float2, "in_tex_coords"}
+      {ShaderDataType::Float2, "in_tex_coords"},
+      { ShaderDataType::Float, "in_texture_id"}
     });
     data->vertex_array->AddVertexBuffer(data->vertex_buffer);
 
     std::vector<uint32_t> square_indices(MAX_INDICES);
     uint32_t offset = 0;
-    for (auto i = 0u; i < MAX_VERTICES; i += 6)
+    for (auto i = 0u; i < MAX_VERTICES; i += VERTEX_PER_QUAD)
     {
       square_indices[i + 0] = offset + 0;
       square_indices[i + 1] = offset + 1;
@@ -77,12 +84,18 @@ namespace Pepper
     data->shader->Bind();
 
     data->white_texture = Texture2D::Create(1, 1, { 0xFFFFFFFF }, sizeof(uint32_t));
+
+    auto range = std::views::iota(0, MAX_TEXTURE_SLOTS);
+    std::vector<int> samplers{ range.begin(), range.end() };
+    data->shader->SetIntArray("u_textures", samplers);
+
+    data->textures_slots[data->current_texture++] = data->white_texture;
   }
 
   void Renderer2D::Shutdown()
   {
     PP_PROFILE_FUNCTION()
-    // Free renderer data
+    data.reset();
   }
 
   void Renderer2D::BeginScene(const OrthoCamera& camera)
@@ -100,14 +113,20 @@ namespace Pepper
     PP_PROFILE_FUNCTION()
 
     auto data_size = static_cast<uint32_t>(data->current_vertex * sizeof(QuadVertex));
-    data->vertex_buffer->UpdateData(data->vertex_buffer_base.data(), data_size);
+    data->vertex_buffer->UpdateData(data->vertices_data.data(), data_size);
 
     Flush();
   }
 
   void Renderer2D::Flush()
   {
-    data->vertex_array->Bind();
+    auto not_null = [](const Ref<Texture2D>& t) { return t != nullptr; };
+    uint32_t i = 0;
+    for (const auto& tex : data->textures_slots | std::views::filter(not_null))
+    {
+      tex->Bind(i++);
+    }
+
     RenderCommand::DrawIndexed(data->vertex_array, data->quad_index_count);
   }
 
@@ -116,37 +135,31 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION()
 
-    QuadVertex& bot_left = data->vertex_buffer_base[data->current_vertex++];
+    QuadVertex& bot_left = data->vertices_data[data->current_vertex++];
     bot_left.position = { position.x - 0.5f * size.x, position.y - 0.5f * size.y, position.z };
     bot_left.color = color;
     bot_left.tex_coords = { 0.0f, 0.0f };
+    bot_left.texture_id = 0;
 
-    QuadVertex& bot_right = data->vertex_buffer_base[data->current_vertex++];
+    QuadVertex& bot_right = data->vertices_data[data->current_vertex++];
     bot_right.position = { position.x + 0.5f * size.x, position.y - 0.5f * size.y, position.z };
     bot_right.color = color;
     bot_right.tex_coords = { 1.0f, 0.0f };
+    bot_right.texture_id = 0;
 
-    QuadVertex& top_right = data->vertex_buffer_base[data->current_vertex++];
+    QuadVertex& top_right = data->vertices_data[data->current_vertex++];
     top_right.position = { position.x + 0.5f * size.x, position.y + 0.5f * size.y, position.z };
     top_right.color = color;
     top_right.tex_coords = { 1.0f, 1.0f };
+    top_right.texture_id = 0;
 
-    QuadVertex& top_left = data->vertex_buffer_base[data->current_vertex++];
+    QuadVertex& top_left = data->vertices_data[data->current_vertex++];
     top_left.position = { position.x - 0.5f * size.x, position.y + 0.5f * size.y, position.z };
     top_left.color = color;
     top_left.tex_coords = { 0.0f, 1.0f };
+    top_left.texture_id = 0;
 
-    data->quad_index_count += 6;
-
-    //    data->shader->SetFloat("u_tiling_factor", 1.0);
-    //    data->white_texture->Bind();
-    //
-    //    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-    //                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    //    data->shader->SetMat4("u_transform", transform);
-    //
-    //    data->vertex_array->Bind();
-    //    RenderCommand::DrawIndexed(data->vertex_array);
+    data->quad_index_count += VERTEX_PER_QUAD;
   }
 
   void
@@ -157,12 +170,66 @@ namespace Pepper
 
   void Renderer2D::DrawQuad(const glm::vec3& position,
                             const glm::vec2& size,
-                            const Ref<Texture2D>& tex,
-                            float tilingFac,
-                            const glm::vec4& tintColor)
+                            const Ref<Texture2D>& quadTexture,
+                            float,
+                            const glm::vec4&)
   {
     PP_PROFILE_FUNCTION()
-    tex->Bind();
+    constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+    uint32_t tex_id = 0;
+    for (auto i : std::views::iota(0u, data->textures_slots.size()))
+    {
+      if (data->textures_slots[i] == nullptr)
+        continue;
+      if (*data->textures_slots[i] == *quadTexture.get())
+      {
+        tex_id = i;
+        break;
+      }
+    }
+
+    if (tex_id == 0)
+    {
+      if (data->current_texture < MAX_TEXTURE_SLOTS)
+      {
+        tex_id = data->current_texture;
+        data->textures_slots[tex_id] = quadTexture;
+        data->current_texture++;
+      }
+    }
+
+    QuadVertex& bot_left = data->vertices_data[data->current_vertex++];
+    bot_left.position = { position.x - 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_left.color = color;
+    bot_left.tex_coords = { 0.0f, 0.0f };
+    bot_left.texture_id = static_cast<float>(tex_id);
+
+    QuadVertex& bot_right = data->vertices_data[data->current_vertex++];
+    bot_right.position = { position.x + 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_right.color = color;
+    bot_right.tex_coords = { 1.0f, 0.0f };
+    bot_right.texture_id = static_cast<float>(tex_id);
+    ;
+
+    QuadVertex& top_right = data->vertices_data[data->current_vertex++];
+    top_right.position = { position.x + 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_right.color = color;
+    top_right.tex_coords = { 1.0f, 1.0f };
+    top_right.texture_id = static_cast<float>(tex_id);
+    ;
+
+    QuadVertex& top_left = data->vertices_data[data->current_vertex++];
+    top_left.position = { position.x - 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_left.color = color;
+    top_left.tex_coords = { 0.0f, 1.0f };
+    top_left.texture_id = static_cast<float>(tex_id);
+    ;
+
+    data->quad_index_count += VERTEX_PER_QUAD;
+
+#ifdef WITHOU_BATCH
+    quadTexture->Bind();
     data->shader->SetFloat4("u_color", tintColor);
     data->shader->SetFloat("u_tiling_factor", tilingFac);
 
@@ -172,6 +239,7 @@ namespace Pepper
 
     data->vertex_array->Bind();
     RenderCommand::DrawIndexed(data->vertex_array);
+#endif
   }
 
   void Renderer2D::DrawQuad(const glm::vec2& position,

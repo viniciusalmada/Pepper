@@ -91,7 +91,7 @@ namespace Pepper
     glTextureStorage2D(renderer_ID, 1, internal_format, width, height);
 
     glTextureParameteri(renderer_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(renderer_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glTextureParameteri(renderer_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTextureParameteri(renderer_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -134,5 +134,10 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION();
     glBindTextureUnit(slot, pimp->renderer_ID);
+  }
+
+  bool OpenGLTexture2D::operator==(const Texture2D& other) const
+  {
+    return this->pimp->renderer_ID == dynamic_cast<const OpenGLTexture2D&>(other).pimp->renderer_ID;
   }
 }

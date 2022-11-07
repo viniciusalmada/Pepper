@@ -35,6 +35,7 @@ namespace Pepper
     void UploadUniformBool(const std::string& name, bool value);
 
     void UploadUniformInt(const std::string& name, const int& value);
+    void UploadUniformIntArray(const std::string& name, const std::vector<int>& value);
 
     void UploadUniformFloat(const std::string& name, const float& value);
     void UploadUniformFloat2(const std::string& name, const glm::vec2& value);
@@ -136,6 +137,11 @@ namespace Pepper
     PP_PROFILE_FUNCTION();
     this->pimp->UploadUniformFloat4(uniformName, vec);
   }
+  void OpenGLShader::SetIntArray(const std::string& name, const std::vector<int>& value)
+  {
+    PP_PROFILE_FUNCTION();
+    this->pimp->UploadUniformIntArray(name, value);
+  }
 
   void OpenGLShader::Impl::UploadUniformMat4(const std::string& uniformName,
                                              const glm::mat4& matrix)
@@ -201,6 +207,16 @@ namespace Pepper
 
     int location = RetrieveUniformLocation(uniformName);
     glUniform1i(location, value);
+  }
+
+  void OpenGLShader::Impl::UploadUniformIntArray(const std::string& uniformName,
+                                                 const std::vector<int>& value)
+  {
+    if (!AssertShaderIsBound())
+      return;
+
+    int location = RetrieveUniformLocation(uniformName);
+    glUniform1iv(location, static_cast<int>(value.size()), value.data());
   }
 
   void OpenGLShader::Impl::UploadUniformBool(const std::string& uniformName, bool value)

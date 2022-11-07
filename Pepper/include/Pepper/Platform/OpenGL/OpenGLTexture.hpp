@@ -21,6 +21,8 @@ namespace Pepper
 
     void Bind(uint32_t slot) const override;
 
+    bool operator==(const Texture2D& other) const override;
+
   private:
     DECLARE_PIMPL
   };

@@ -27,5 +27,7 @@ namespace Pepper
     Create(uint32_t width, uint32_t height, const std::vector<uint32_t>& data, uint32_t size);
 
     static Ref<Texture2D> Create(const std::filesystem::path& path);
+
+    virtual bool operator==(const Texture2D& other) const = 0;
   };
 }

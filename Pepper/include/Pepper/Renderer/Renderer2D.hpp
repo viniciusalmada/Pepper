@@ -22,7 +22,7 @@ namespace Pepper
 
     static void DrawQuad(const glm::vec3& position,
                          const glm::vec2& size,
-                         const Ref<Texture2D>& tex,
+                         const Ref<Texture2D>& quadTexture,
                          float tilingFac = 1.0f,
                          const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
     static void DrawQuad(const glm::vec2& position,

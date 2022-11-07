@@ -41,6 +41,9 @@ namespace Pepper
     PP_CORE_INFO("OpenGL Vendor: {0}", (char*)glGetString(GL_VENDOR));
     PP_CORE_INFO("OpenGL Renderer: {0}", (char*)glGetString(GL_RENDERER));
     PP_CORE_INFO("OpenGL Version: {0}", (char*)glGetString(GL_VERSION));
+    int max_texture{};
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_texture);
+    PP_CORE_INFO("Max texture slots: {0}", max_texture);
 
 #ifdef PP_ENABLE_ASSERTS
     int versionMajor;
