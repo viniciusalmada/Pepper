@@ -10,6 +10,9 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+namespace Ranges = std::ranges;
+namespace Views = std::views;
+
 constexpr auto VERTEX_PER_QUAD = 6;
 constexpr auto MAX_QUADS = 10'000;
 constexpr auto MAX_VERTICES = MAX_QUADS * 4;
@@ -37,7 +40,7 @@ namespace
     std::array<QuadVertex, MAX_VERTICES> vertices_data{};
     uint32_t current_vertex = 0;
 
-    std::array<Pepper::Ref<Pepper::Texture2D>, MAX_TEXTURE_SLOTS> textures_slots{ nullptr };
+    std::map<uint32_t, Pepper::Ref<Pepper::Texture2D>> textures_slots{};
     uint32_t current_texture = 0; // 0 = empty texture (white)
   };
 
@@ -85,7 +88,7 @@ namespace Pepper
 
     data->white_texture = Texture2D::Create(1, 1, { 0xFFFFFFFF }, sizeof(uint32_t));
 
-    auto range = std::views::iota(0, MAX_TEXTURE_SLOTS);
+    auto range = Views::iota(0, MAX_TEXTURE_SLOTS);
     std::vector<int> samplers{ range.begin(), range.end() };
     data->shader->SetIntArray("u_textures", samplers);
 
@@ -122,10 +125,8 @@ namespace Pepper
   {
     auto not_null = [](const Ref<Texture2D>& t) { return t != nullptr; };
     uint32_t i = 0;
-    for (const auto& tex : data->textures_slots | std::views::filter(not_null))
-    {
-      tex->Bind(i++);
-    }
+    auto bind_tex = [&i](const Ref<Texture2D>& t) { t->Bind(i++); };
+    Ranges::for_each(data->textures_slots | Views::values | Views::filter(not_null), bind_tex);
 
     RenderCommand::DrawIndexed(data->vertex_array, data->quad_index_count);
   }
@@ -177,17 +178,18 @@ namespace Pepper
     PP_PROFILE_FUNCTION()
     constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    uint32_t tex_id = 0;
-    for (auto i : std::views::iota(0u, data->textures_slots.size()))
-    {
-      if (data->textures_slots[i] == nullptr)
-        continue;
-      if (*data->textures_slots[i] == *quadTexture.get())
+    auto res = Ranges::find_if(
+      data->textures_slots,
+      [in_tex = quadTexture](const std::pair<const uint32_t, Ref<Texture2D>>& tex_pair)
       {
-        tex_id = i;
-        break;
-      }
-    }
+        if (tex_pair.second == nullptr)
+          return false;
+        return *tex_pair.second == *in_tex.get();
+      });
+
+    uint32_t tex_id = 0;
+    if (res != data->textures_slots.end())
+      tex_id = res->first;
 
     if (tex_id == 0)
     {
@@ -210,21 +212,18 @@ namespace Pepper
     bot_right.color = color;
     bot_right.tex_coords = { 1.0f, 0.0f };
     bot_right.texture_id = static_cast<float>(tex_id);
-    ;
 
     QuadVertex& top_right = data->vertices_data[data->current_vertex++];
     top_right.position = { position.x + 0.5f * size.x, position.y + 0.5f * size.y, position.z };
     top_right.color = color;
     top_right.tex_coords = { 1.0f, 1.0f };
     top_right.texture_id = static_cast<float>(tex_id);
-    ;
 
     QuadVertex& top_left = data->vertices_data[data->current_vertex++];
     top_left.position = { position.x - 0.5f * size.x, position.y + 0.5f * size.y, position.z };
     top_left.color = color;
     top_left.tex_coords = { 0.0f, 1.0f };
     top_left.texture_id = static_cast<float>(tex_id);
-    ;
 
     data->quad_index_count += VERTEX_PER_QUAD;
 
