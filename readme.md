@@ -17,14 +17,14 @@ Based on Angular guidelines
 
 ### Types
 
-Each type has a unique emoji to be used as prefix of the commit message.
+Each type has a unique emoji to be used as prefix of the commit message. See https://gitmoji.dev/
 
-- 🍳 : changes on build or dependencies
-- 📝 : changes documentation only
-- 💡 : new feature
-- 🩹 : bug fix
-- 📈 : improves performance
-- ✏️ : refactor that neither fix a bug nor add a feature
-- 🌱 : changes on development environment or style conventions
-- 🧪 : tests
-- ⏪ : reverts commit
+- :hammer: (hammer) : changes on build or dependencies
+- :memo: (memo): changes documentation only
+- :sparkles: (sparkles): new feature
+- :bug: (bug): bug fix
+- :zap: (zap): improves performance
+- :fire: (fire): refactor that neither fix a bug nor add a feature
+- :art: (art): changes on development environment or style conventions
+- :test_tube: (test_tube): tests
+- :rewind: (rewind): reverts commit
