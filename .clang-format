@@ -1,3 +1,7 @@
+## This is Vinicius Almada <viniciusalmada10@gmail.com>
+## clang-format options.
+## Available at <https://gist.github.com/viniciusalmada/198b4db50618437aa3d8d5e757bb2ed7>
+
 ---
 BasedOnStyle: LLVM
 IndentWidth: 2
@@ -38,9 +42,10 @@ AllowAllArgumentsOnNextLine: false
 BinPackArguments: false
 BinPackParameters: false
 AllowAllParametersOfDeclarationOnNextLine: false
-ForEachMacros: [TEST_CLASS, TEST_METHOD]
+ForEachMacros: [ TEST_CLASS, TEST_METHOD ]
 IndentPPDirectives: BeforeHash
 AlwaysBreakTemplateDeclarations: Yes
 BreakConstructorInitializers: AfterColon
 AllowShortFunctionsOnASingleLine: Inline
 PackConstructorInitializers: CurrentLine
+AlignArrayOfStructures: Right
