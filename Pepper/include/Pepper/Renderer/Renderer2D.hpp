@@ -23,12 +23,11 @@ namespace Pepper
     static void DrawQuad(const glm::vec3& position,
                          const glm::vec2& size,
                          const Ref<Texture2D>& quadTexture,
-                         float tilingFac = 1.0f,
                          const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+
     static void DrawQuad(const glm::vec2& position,
                          const glm::vec2& size,
                          const Ref<Texture2D>& tex,
-                         float tilingFac = 1.0f,
                          const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
     static void DrawRotatedQuad(const glm::vec3& position,
@@ -43,13 +42,11 @@ namespace Pepper
                                 const glm::vec2& size,
                                 float rotationDeg,
                                 const Ref<Texture2D>& tex,
-                                float tilingFac = 1.0f,
                                 const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
     static void DrawRotatedQuad(const glm::vec2& position,
                                 const glm::vec2& size,
                                 float rotationDeg,
                                 const Ref<Texture2D>& tex,
-                                float tilingFac = 1.0f,
                                 const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
   };
 }

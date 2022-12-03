@@ -42,6 +42,8 @@ namespace
 
     std::map<uint32_t, Pepper::Ref<Pepper::Texture2D>> textures_slots{};
     uint32_t current_texture = 0; // 0 = empty texture (white)
+
+    std::array<glm::vec4, 4> quad_vertex_positions;
   };
 
   Pepper::Scope<RendererData> data;
@@ -93,6 +95,11 @@ namespace Pepper
     data->shader->SetIntArray("u_textures", samplers);
 
     data->textures_slots[data->current_texture++] = data->white_texture;
+
+    data->quad_vertex_positions[0] = { -0.5, -0.5, 0.0f, 1.0f };
+    data->quad_vertex_positions[1] = { +0.5, -0.5, 0.0f, 1.0f };
+    data->quad_vertex_positions[2] = { +0.5, +0.5, 0.0f, 1.0f };
+    data->quad_vertex_positions[3] = { -0.5, +0.5, 0.0f, 1.0f };
   }
 
   void Renderer2D::Shutdown()
@@ -136,26 +143,30 @@ namespace Pepper
   {
     PP_PROFILE_FUNCTION()
 
+    glm::mat4 transform_mat = glm::translate(glm::mat4(1.0f), position) *
+                              glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
     QuadVertex& bot_left = data->vertices_data[data->current_vertex++];
-    bot_left.position = { position.x - 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_left.position = transform_mat * data->quad_vertex_positions[0];
     bot_left.color = color;
     bot_left.tex_coords = { 0.0f, 0.0f };
     bot_left.texture_id = 0;
 
     QuadVertex& bot_right = data->vertices_data[data->current_vertex++];
-    bot_right.position = { position.x + 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_right.position = transform_mat * data->quad_vertex_positions[1];
     bot_right.color = color;
     bot_right.tex_coords = { 1.0f, 0.0f };
     bot_right.texture_id = 0;
 
     QuadVertex& top_right = data->vertices_data[data->current_vertex++];
-    top_right.position = { position.x + 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_right.position = transform_mat * data->quad_vertex_positions[2];
     top_right.color = color;
     top_right.tex_coords = { 1.0f, 1.0f };
     top_right.texture_id = 0;
 
     QuadVertex& top_left = data->vertices_data[data->current_vertex++];
-    top_left.position = { position.x - 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_left.position = transform_mat * data->quad_vertex_positions[3];
+    ;
     top_left.color = color;
     top_left.tex_coords = { 0.0f, 1.0f };
     top_left.texture_id = 0;
@@ -172,7 +183,6 @@ namespace Pepper
   void Renderer2D::DrawQuad(const glm::vec3& position,
                             const glm::vec2& size,
                             const Ref<Texture2D>& quadTexture,
-                            float,
                             const glm::vec4&)
   {
     PP_PROFILE_FUNCTION()
@@ -201,53 +211,42 @@ namespace Pepper
       }
     }
 
+    glm::mat4 transform_mat = glm::translate(glm::mat4(1.0f), position) *
+                              glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
     QuadVertex& bot_left = data->vertices_data[data->current_vertex++];
-    bot_left.position = { position.x - 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_left.position = transform_mat * data->quad_vertex_positions[0];
     bot_left.color = color;
     bot_left.tex_coords = { 0.0f, 0.0f };
     bot_left.texture_id = static_cast<float>(tex_id);
 
     QuadVertex& bot_right = data->vertices_data[data->current_vertex++];
-    bot_right.position = { position.x + 0.5f * size.x, position.y - 0.5f * size.y, position.z };
+    bot_right.position = transform_mat * data->quad_vertex_positions[1];
     bot_right.color = color;
     bot_right.tex_coords = { 1.0f, 0.0f };
     bot_right.texture_id = static_cast<float>(tex_id);
 
     QuadVertex& top_right = data->vertices_data[data->current_vertex++];
-    top_right.position = { position.x + 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_right.position = transform_mat * data->quad_vertex_positions[2];
     top_right.color = color;
     top_right.tex_coords = { 1.0f, 1.0f };
     top_right.texture_id = static_cast<float>(tex_id);
 
     QuadVertex& top_left = data->vertices_data[data->current_vertex++];
-    top_left.position = { position.x - 0.5f * size.x, position.y + 0.5f * size.y, position.z };
+    top_left.position = transform_mat * data->quad_vertex_positions[3];
     top_left.color = color;
     top_left.tex_coords = { 0.0f, 1.0f };
     top_left.texture_id = static_cast<float>(tex_id);
 
     data->quad_index_count += VERTEX_PER_QUAD;
-
-#ifdef WITHOU_BATCH
-    quadTexture->Bind();
-    data->shader->SetFloat4("u_color", tintColor);
-    data->shader->SetFloat("u_tiling_factor", tilingFac);
-
-    glm::mat4 transform = glm::translate(glm::mat4{ 1.0f }, position) *
-                          glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    data->shader->SetMat4("u_transform", transform);
-
-    data->vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->vertex_array);
-#endif
   }
 
   void Renderer2D::DrawQuad(const glm::vec2& position,
                             const glm::vec2& size,
                             const Ref<Texture2D>& tex,
-                            float tilingFac,
                             const glm::vec4& tintColor)
   {
-    DrawQuad({ position.x, position.y, 0.0f }, size, tex, tilingFac, tintColor);
+    DrawQuad({ position.x, position.y, 0.0f }, size, tex, tintColor);
   }
 
   void Renderer2D::DrawRotatedQuad(const glm::vec3& position,
@@ -256,18 +255,36 @@ namespace Pepper
                                    const glm::vec4& color)
   {
     PP_PROFILE_FUNCTION()
-    data->shader->SetFloat4("u_color", color);
-    data->shader->SetFloat("u_tiling_factor", 1.0);
-    data->white_texture->Bind();
+    glm::mat4 transform_mat =
+      glm::translate(glm::mat4(1.0f), position) *
+      glm::rotate(glm::mat4(1.0f), glm::radians(rotationDeg), { 0.0f, 0.0f, 1.0f }) *
+      glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-    glm::mat4 transform =
-      glm::translate(glm::mat4{ 1.0f }, position) *
-      glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
-      glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    data->shader->SetMat4("u_transform", transform);
+    QuadVertex& bot_left = data->vertices_data[data->current_vertex++];
+    bot_left.position = transform_mat * data->quad_vertex_positions[0];
+    bot_left.color = color;
+    bot_left.tex_coords = { 0.0f, 0.0f };
+    bot_left.texture_id = 0;
 
-    data->vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->vertex_array);
+    QuadVertex& bot_right = data->vertices_data[data->current_vertex++];
+    bot_right.position = transform_mat * data->quad_vertex_positions[1];
+    bot_right.color = color;
+    bot_right.tex_coords = { 1.0f, 0.0f };
+    bot_right.texture_id = 0;
+
+    QuadVertex& top_right = data->vertices_data[data->current_vertex++];
+    top_right.position = transform_mat * data->quad_vertex_positions[2];
+    top_right.color = color;
+    top_right.tex_coords = { 1.0f, 1.0f };
+    top_right.texture_id = 0;
+
+    QuadVertex& top_left = data->vertices_data[data->current_vertex++];
+    top_left.position = transform_mat * data->quad_vertex_positions[3];
+    top_left.color = color;
+    top_left.tex_coords = { 0.0f, 1.0f };
+    top_left.texture_id = 0;
+
+    data->quad_index_count += VERTEX_PER_QUAD;
   }
 
   void Renderer2D::DrawRotatedQuad(const glm::vec2& position,
@@ -281,38 +298,75 @@ namespace Pepper
   void Renderer2D::DrawRotatedQuad(const glm::vec3& position,
                                    const glm::vec2& size,
                                    float rotationDeg,
-                                   const Ref<Texture2D>& tex,
-                                   float tilingFac,
-                                   const glm::vec4& tintColor)
+                                   const Ref<Texture2D>& quadTexture,
+                                   const glm::vec4&)
   {
     PP_PROFILE_FUNCTION()
-    tex->Bind();
-    data->shader->SetFloat4("u_color", tintColor);
-    data->shader->SetFloat("u_tiling_factor", tilingFac);
+    constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    glm::mat4 transform =
-      glm::translate(glm::mat4{ 1.0f }, position) *
-      glm::rotate(glm::mat4{ 1.0f }, glm::radians(rotationDeg), glm::vec3{ 0.0, 0.0, 1.0f }) *
-      glm::scale(glm::mat4{ 1.0f }, glm::vec3{ size.x, size.y, 1.0f });
-    data->shader->SetMat4("u_transform", transform);
+    auto res = Ranges::find_if(
+      data->textures_slots,
+      [in_tex = quadTexture](const std::pair<const uint32_t, Ref<Texture2D>>& tex_pair)
+      {
+        if (tex_pair.second == nullptr)
+          return false;
+        return *tex_pair.second == *in_tex.get();
+      });
 
-    data->vertex_array->Bind();
-    RenderCommand::DrawIndexed(data->vertex_array);
+    uint32_t tex_id = 0;
+    if (res != data->textures_slots.end())
+      tex_id = res->first;
+
+    if (tex_id == 0)
+    {
+      if (data->current_texture < MAX_TEXTURE_SLOTS)
+      {
+        tex_id = data->current_texture;
+        data->textures_slots[tex_id] = quadTexture;
+        data->current_texture++;
+      }
+    }
+
+    glm::mat4 transform_mat =
+      glm::translate(glm::mat4(1.0f), position) *
+      glm::rotate(glm::mat4(1.0f), glm::radians(rotationDeg), { 0.0f, 0.0f, 1.0f }) *
+      glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+    QuadVertex& bot_left = data->vertices_data[data->current_vertex++];
+    bot_left.position = transform_mat * data->quad_vertex_positions[0];
+    bot_left.color = color;
+    bot_left.tex_coords = { 0.0f, 0.0f };
+    bot_left.texture_id = static_cast<float>(tex_id);
+
+    QuadVertex& bot_right = data->vertices_data[data->current_vertex++];
+    bot_right.position = transform_mat * data->quad_vertex_positions[1];
+    bot_right.color = color;
+    bot_right.tex_coords = { 1.0f, 0.0f };
+    bot_right.texture_id = static_cast<float>(tex_id);
+
+    QuadVertex& top_right = data->vertices_data[data->current_vertex++];
+    top_right.position = transform_mat * data->quad_vertex_positions[2];
+    top_right.color = color;
+    top_right.tex_coords = { 1.0f, 1.0f };
+    top_right.texture_id = static_cast<float>(tex_id);
+
+    QuadVertex& top_left = data->vertices_data[data->current_vertex++];
+    top_left.position = transform_mat * data->quad_vertex_positions[3];
+    ;
+    top_left.color = color;
+    top_left.tex_coords = { 0.0f, 1.0f };
+    top_left.texture_id = static_cast<float>(tex_id);
+
+    data->quad_index_count += VERTEX_PER_QUAD;
   }
 
   void Renderer2D::DrawRotatedQuad(const glm::vec2& position,
                                    const glm::vec2& size,
                                    float rotationDeg,
                                    const Ref<Texture2D>& tex,
-                                   float tilingFac,
                                    const glm::vec4& tintColor)
   {
-    DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f },
-                    size,
-                    rotationDeg,
-                    tex,
-                    tilingFac,
-                    tintColor);
+    DrawRotatedQuad(glm::vec3{ position.x, position.y, 0.0f }, size, rotationDeg, tex, tintColor);
   }
 
 }
