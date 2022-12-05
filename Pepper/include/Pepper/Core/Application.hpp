@@ -10,7 +10,7 @@ namespace Pepper
   class Application
   {
   public:
-    Application();
+    explicit Application(std::string&& title, uint32_t width = 1280, uint32_t height = 720);
     virtual ~Application();
 
     void Run();

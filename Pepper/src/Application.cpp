@@ -35,13 +35,14 @@ namespace Pepper
 
   Application* Application::Impl::app_instance = nullptr;
 
-  Application::Application() : pimp(CreateScope<Impl>())
+  Application::Application(std::string&& title, uint32_t width, uint32_t height) :
+      pimp(CreateScope<Impl>())
   {
     PP_PROFILE_FUNCTION();
     PP_CORE_ASSERT(!pimp->app_instance, "Application already defined!");
     pimp->app_instance = this;
 
-    pimp->window = std::unique_ptr<Window>(Window::Create());
+    pimp->window = std::unique_ptr<Window>(Window::Create({ title, width, height }));
     pimp->window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
     Renderer::Init();
