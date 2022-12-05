@@ -5,6 +5,7 @@
 #include "Pepper/Core/Application.hpp"
 #include "Pepper/Layers/Layer.hpp"
 #include "Pepper/Core/Log.hpp"
+#include "Pepper/Core/Colors.hpp"
 #include "Pepper/Core/TimeStep.hpp"
 #include "Pepper/Core/OrthoCameraController.hpp"
 #include "Pepper/Core/Utils.hpp"
