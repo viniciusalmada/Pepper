@@ -11,8 +11,12 @@ public:
 
   void OnAttach() override;
   void OnUpdate(Pepper::TimeStep) override;
+  void OnImGuiRender() override;
+  void OnEvent(Pepper::Event&) override;
 
 private:
+  static void DrawGrid();
+
   struct Implementation;
   Pepper::Scope<Implementation> impl;
 };
