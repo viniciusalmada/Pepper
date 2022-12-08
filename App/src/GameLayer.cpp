@@ -1,16 +1,12 @@
 #include "GameLayer.hpp"
 
 #include "Constants.hpp"
+#include "Pieces/Piece.hpp"
+#include "Session.hpp"
 
 #include <imgui.h>
 
 using namespace Pepper;
-
-namespace
-{
-  constexpr auto RED = glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f };
-  constexpr auto GREY = glm::vec4{ 0.7f, 0.7f, 0.7f, 0.75f };
-}
 
 struct GameLayer::Implementation
 {
@@ -29,6 +25,8 @@ void GameLayer::OnAttach()
 
 void GameLayer::OnUpdate(TimeStep ts)
 {
+  Session::OnUpdate(ts);
+
   RenderCommand::SetClearColor(Color::BLACK);
   RenderCommand::Clear();
 
@@ -38,6 +36,24 @@ void GameLayer::OnUpdate(TimeStep ts)
   Renderer2D::DrawQuad({ 397.0f, 320.0f, 0.1f }, { 126.0f, 600.0f }, Color::WHITE);
   Renderer2D::DrawQuad({ 397.0f, 320.0f, 0.2f }, { 122.0f, 596.0f }, Color::BLACK);
   DrawGrid();
+
+  Session::OnEachPiece(
+    [](const Ref<Piece>& p)
+    {
+      const auto& quads = p->GetQuads();
+      Renderer2D::DrawQuad({ quads[0].x, quads[0].y, 0.4f },
+                           { QUAD_SIDE, QUAD_SIDE },
+                           p->GetColor());
+      Renderer2D::DrawQuad({ quads[1].x, quads[1].y, 0.4f },
+                           { QUAD_SIDE, QUAD_SIDE },
+                           p->GetColor());
+      Renderer2D::DrawQuad({ quads[2].x, quads[2].y, 0.4f },
+                           { QUAD_SIDE, QUAD_SIDE },
+                           p->GetColor());
+      Renderer2D::DrawQuad({ quads[3].x, quads[3].y, 0.4f },
+                           { QUAD_SIDE, QUAD_SIDE },
+                           p->GetColor());
+    });
 
   Renderer2D::EndScene();
 }

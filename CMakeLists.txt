@@ -158,12 +158,15 @@ target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 # The client application
 add_executable(App
   App/src/TetrisApp.cpp
-  App/src/GameLayer.cpp)
+  App/src/GameLayer.cpp
+  App/src/Pieces/SPiece.cpp
+  App/src/Session.cpp
+  )
 
 if(WIN32)
-  target_compile_options(App PRIVATE /MP /W4 /WX /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)
+  target_compile_options(App PRIVATE /MP /W4 /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)
 elseif(UNIX)
-  target_compile_options(App PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Werror -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
+  target_compile_options(App PRIVATE -flto=auto -Wall -Wextra -Wpedantic -Wfatal-errors -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override -fimplicit-constexpr -fstrict-enums -Wnon-virtual-dtor -Wno-pessimizing-move -Wno-redundant-move -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wmismatched-new-delete)
 endif(WIN32)
 
 target_compile_features(App PRIVATE ${CXX_STANDARD})
