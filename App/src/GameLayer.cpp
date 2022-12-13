@@ -31,28 +31,23 @@ void GameLayer::OnUpdate(TimeStep ts)
   RenderCommand::Clear();
 
   Renderer2D::BeginScene(CAMERA);
-  Renderer2D::DrawQuad({ 167.0f, 320.0f, 0.1f }, { 294.0f, 600.0f }, Color::WHITE);
-  Renderer2D::DrawQuad({ 167.0f, 320.0f, 0.2f }, { 290.0f, 596.0f }, Color::BLACK);
-  Renderer2D::DrawQuad({ 397.0f, 320.0f, 0.1f }, { 126.0f, 600.0f }, Color::WHITE);
-  Renderer2D::DrawQuad({ 397.0f, 320.0f, 0.2f }, { 122.0f, 596.0f }, Color::BLACK);
+  //  Renderer2D::DrawQuad({ 167.0f, 322.0f, 0.1f }, { 294.0f, 584.0f - 0.0f }, Color::WHITE);
+  //  Renderer2D::DrawQuad({ 167.0f, 322.0f, 0.2f }, { 290.0f, 580.0f - 0.0f }, Color::BLACK);
+  //  Renderer2D::DrawQuad({ 397.0f, 322.0f, 0.1f }, { 126.0f, 584.0f - 0.0f }, Color::WHITE);
+  //  Renderer2D::DrawQuad({ 397.0f, 322.0f, 0.2f }, { 122.0f, 580.0f - 0.0f }, Color::BLACK);
   DrawGrid();
 
   Session::OnEachPiece(
     [](const Ref<Piece>& p)
     {
       const auto& quads = p->GetQuads();
-      Renderer2D::DrawQuad({ quads[0].x, quads[0].y, 0.4f },
-                           { QUAD_SIDE, QUAD_SIDE },
-                           p->GetColor());
-      Renderer2D::DrawQuad({ quads[1].x, quads[1].y, 0.4f },
-                           { QUAD_SIDE, QUAD_SIDE },
-                           p->GetColor());
-      Renderer2D::DrawQuad({ quads[2].x, quads[2].y, 0.4f },
-                           { QUAD_SIDE, QUAD_SIDE },
-                           p->GetColor());
-      Renderer2D::DrawQuad({ quads[3].x, quads[3].y, 0.4f },
-                           { QUAD_SIDE, QUAD_SIDE },
-                           p->GetColor());
+      auto draw_quad = [color = p->GetColor()](GridSquare gs)
+      {
+        auto position = Session::ConvertSquare(gs);
+        Renderer2D::DrawQuad({ position.x, position.y, 0.3f }, { QUAD_SIDE, QUAD_SIDE }, color);
+      };
+
+      std::ranges::for_each(quads, draw_quad);
     });
 
   Renderer2D::EndScene();
@@ -72,24 +67,27 @@ void GameLayer::OnEvent(Event& event)
     [&](MouseMovedEvent& mouseEvent)
     {
       impl->mouse_x = (int)mouseEvent.GetX();
-      impl->mouse_y = WINDOW_HEIGHT - (int)mouseEvent.GetY();
+      impl->mouse_y = (int)mouseEvent.GetY();
       return true;
     });
 }
 
 void GameLayer::DrawGrid()
 {
-  uint32_t start_x = 22;
-  for (uint32_t col : std::views::iota(1, 10))
+  constexpr uint32_t start_x = 10;
+  constexpr uint32_t start_y = WINDOW_HEIGHT - 10;
+  constexpr float VERTICAL_POS = WINDOW_HEIGHT / 2.0f;
+  constexpr float HORIZONTAL_POS = ((10 * CELL_SIDE) / 2.0f) + start_x;
+
+  for (uint32_t col : std::views::iota(0, 11))
   {
-    uint32_t x = start_x + col * 29;
-    Renderer2D::DrawQuad({ x, 320.0f, 0.3f }, { 1.0f, 596.0f }, GREY);
+    uint32_t x = start_x + col * (int)CELL_SIDE;
+    Renderer2D::DrawQuad({ x, VERTICAL_POS, 0.3f }, { 1.0f, SCENE_HEIGHT }, GREY);
   }
 
-  uint32_t start_y = 22;
-  for (uint32_t row : std::views::iota(1, 21))
+  for (uint32_t row : std::views::iota(0, 21))
   {
-    uint32_t y = start_y + row * 29;
-    Renderer2D::DrawQuad({ 167.0f, y, 0.3f }, { 290.0f, 1.0f }, GREY);
+    uint32_t y = start_y - row * (int)CELL_SIDE;
+    Renderer2D::DrawQuad({ HORIZONTAL_POS, y, 0.3f }, { SCENE_WIDTH, 1.0f }, GREY);
   }
 }

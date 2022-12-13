@@ -20,9 +20,9 @@ Shapes SPiece::GetShape() const
   return Shapes::S;
 }
 
-SPiece::SPiece(glm::vec4 color, glm::vec2 origin) : Piece(color, origin)
+SPiece::SPiece(glm::vec4 color, GridSquare origin) : Piece(color, origin)
 {
-  UpdateQuads();
+  this->UpdateQuads();
 }
 
 void SPiece::UpdateQuads()
@@ -32,19 +32,19 @@ void SPiece::UpdateQuads()
   case Rotation::A0:
   case Rotation::A180:
   {
-    m_quads[0] = m_origin + glm::vec2{ 1 * HALF_QUAD_SIDE, 1 * HALF_QUAD_SIDE };
-    m_quads[1] = m_origin + glm::vec2{ 3 * HALF_QUAD_SIDE, 1 * HALF_QUAD_SIDE };
-    m_quads[2] = m_origin + glm::vec2{ 3 * HALF_QUAD_SIDE, 3 * HALF_QUAD_SIDE };
-    m_quads[3] = m_origin + glm::vec2{ 5 * HALF_QUAD_SIDE, 3 * HALF_QUAD_SIDE };
+    m_quads[0] = m_origin;
+    m_quads[1] = m_origin + GridSquare(1, 0);
+    m_quads[2] = m_origin + GridSquare(1, 1);
+    m_quads[3] = m_origin + GridSquare(2, 1);
     break;
   }
   case Rotation::A90:
   case Rotation::A270:
   {
-    m_quads[0] = m_origin + glm::vec2{ 3 * HALF_QUAD_SIDE, 1 * HALF_QUAD_SIDE };
-    m_quads[1] = m_origin + glm::vec2{ 1 * HALF_QUAD_SIDE, 3 * HALF_QUAD_SIDE };
-    m_quads[2] = m_origin + glm::vec2{ 3 * HALF_QUAD_SIDE, 3 * HALF_QUAD_SIDE };
-    m_quads[3] = m_origin + glm::vec2{ 1 * HALF_QUAD_SIDE, 5 * HALF_QUAD_SIDE };
+    m_quads[0] = m_origin;
+    m_quads[1] = m_origin + GridSquare(-1, 1);
+    m_quads[2] = m_origin + GridSquare(0, 1);
+    m_quads[3] = m_origin + GridSquare(-1, 2);
     break;
   }
   }

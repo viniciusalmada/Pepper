@@ -1,7 +1,9 @@
 #ifndef PIECE_HPP
 #define PIECE_HPP
 
-#include "glm/glm.hpp"
+#include "GridSquare.hpp"
+
+#include <glm/glm.hpp>
 
 enum class Shapes { S, Z, T, O, I, L, J };
 
@@ -10,20 +12,20 @@ enum class Rotation { A0, A90, A180, A270 };
 class Piece
 {
 public:
-  void DownIncrement(glm::vec2&& increment)
+  void DownIncrement()
   {
-    m_origin += increment;
+    m_origin += { 0, -1 };
     UpdateQuads();
   }
 
   virtual Shapes GetShape() const = 0;
 
-  [[nodiscard]] const std::array<glm::vec2, 4>& GetQuads() const { return m_quads; }
+  [[nodiscard]] const std::array<GridSquare, 4>& GetQuads() const { return m_quads; }
 
   [[nodiscard]] const glm::vec4& GetColor() const { return m_color; }
 
 protected:
-  Piece(const glm::vec4& color, const glm::vec2& origin) :
+  Piece(const glm::vec4& color, const GridSquare& origin) :
       m_color(color),
       m_origin(origin),
       m_quads({}),
@@ -34,8 +36,8 @@ protected:
   virtual void UpdateQuads() = 0;
 
   glm::vec4 m_color;
-  glm::vec2 m_origin;
-  std::array<glm::vec2, 4> m_quads;
+  GridSquare m_origin;
+  std::array<GridSquare, 4> m_quads;
   Rotation m_rotation;
 };
 

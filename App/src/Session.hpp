@@ -1,6 +1,7 @@
 #ifndef SESSION_HPP
 #define SESSION_HPP
 
+#include "GridSquare.hpp"
 #include "Pieces/Piece.hpp"
 
 #include <Pepper.hpp>
@@ -13,6 +14,8 @@ public:
   static void OnUpdate(Pepper::TimeStep ts);
 
   static void OnEachPiece(std::function<void(Pepper::Ref<Piece>)> fun);
+
+  static glm::vec2 ConvertSquare(GridSquare gs);
 
 private:
   static void AddPiece(Pepper::Ref<Piece> piece);
