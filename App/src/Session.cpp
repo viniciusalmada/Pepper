@@ -8,8 +8,8 @@
 
 namespace
 {
-  constexpr auto ORIGIN_ARENA_X = 22.0f;
-  constexpr auto ORIGIN_ARENA_Y = 618.0f;
+  constexpr auto ORIGIN_ARENA_X = 11.0f;
+  constexpr auto ORIGIN_ARENA_Y = 11.0f + SCENE_HEIGHT - 2.0f;
   float increment_to_move = 0.0f;
 }
 
