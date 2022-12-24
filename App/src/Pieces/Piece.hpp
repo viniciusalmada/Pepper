@@ -5,36 +5,30 @@
 
 #include <glm/glm.hpp>
 
-enum class Shapes { S, Z, T, O, I, L, J };
+enum class Shapes : uint32_t { S = 0, Z = 1, T = 2, O = 3, I = 4, L = 5, J = 6 };
 
-enum class Rotation { A0, A90, A180, A270 };
+enum class Rotation : uint32_t { A0 = 0, A90 = 1, A180 = 2, A270 = 3 };
 
 class Piece
 {
 public:
-  void DownIncrement()
-  {
-    m_origin += { 0, -1 };
-    UpdateQuads();
-  }
+  Piece(Shapes shape, const glm::vec4& color, const GridSquare& origin, Rotation rot);
 
-  virtual Shapes GetShape() const = 0;
+  void DownIncrement();
+
+  [[nodiscard]] Shapes GetShape() const { return m_shape; };
+
+  [[nodiscard]] static uint8_t GetWidth(Shapes s, Rotation r);
+  [[nodiscard]] static uint8_t GetHeight(Shapes s, Rotation r);
 
   [[nodiscard]] const std::array<GridSquare, 4>& GetQuads() const { return m_quads; }
 
   [[nodiscard]] const glm::vec4& GetColor() const { return m_color; }
 
-protected:
-  Piece(const glm::vec4& color, const GridSquare& origin) :
-      m_color(color),
-      m_origin(origin),
-      m_quads({}),
-      m_rotation{ Rotation::A0 }
-  {
-  }
+private:
+  void UpdateQuads();
 
-  virtual void UpdateQuads() = 0;
-
+  Shapes m_shape;
   glm::vec4 m_color;
   GridSquare m_origin;
   std::array<GridSquare, 4> m_quads;

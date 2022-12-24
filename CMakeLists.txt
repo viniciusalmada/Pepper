@@ -160,9 +160,8 @@ target_precompile_headers(Pepper PRIVATE ${PP_INCLUDE_DIR}/PepperPCH.hpp)
 add_executable(App
   App/src/TetrisApp.cpp
   App/src/GameLayer.cpp
-  App/src/Pieces/SPiece.cpp
   App/src/Session.cpp
-  App/src/GridSquare.cpp)
+  App/src/GridSquare.cpp App/src/Pieces/Piece.cpp)
 
 if(WIN32)
   target_compile_options(App PRIVATE /MP /W4 /w44061 /w44062 /w44191 /w44254 /w44263 /w44265 /w44287 /w44266 /w44289 /w44296 /w44339 /w44350 /w44355)

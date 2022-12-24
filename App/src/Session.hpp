@@ -18,7 +18,7 @@ public:
   static glm::vec2 ConvertSquare(GridSquare gs);
 
 private:
-  static void AddPiece(Pepper::Ref<Piece> piece);
+  static void AddPiece();
 
   static std::vector<Pepper::Ref<Piece>> m_pieces;
   static std::vector<std::pair<GridSquare, glm::vec4>> m_squares;
