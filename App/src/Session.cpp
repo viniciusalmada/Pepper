@@ -11,6 +11,8 @@ namespace
   constexpr auto ORIGIN_ARENA_X = 11.0f;
   constexpr auto ORIGIN_ARENA_Y = 11.0f + SCENE_HEIGHT - 2.0f;
   float increment_to_move = 0.0f;
+
+  std::array<glm::vec4, 5> COLORS{ RED, GREEN, YELLOW, BLUE, PURPLE };
 }
 
 std::vector<Pepper::Ref<Piece>> Session::m_pieces{};
@@ -19,7 +21,8 @@ void Session::Start()
 {
   m_pieces.clear();
 
-  Pepper::Ref<Piece> p = Pepper::CreateRef<SPiece>(RED, GridSquare{ 5, 19 });
+  Pepper::Ref<Piece> p =
+    Pepper::CreateRef<SPiece>(COLORS[Pepper::IntRandom(0, 4)], GridSquare{ 5, 19 });
   AddPiece(p);
 }
 

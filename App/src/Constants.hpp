@@ -17,7 +17,12 @@ namespace
   constexpr auto HALF_QUAD_SIDE = QUAD_SIDE / 2.0f;
   constexpr auto HALF_CELL_SIDE = QUAD_SIDE / 2.0f;
 
-  constexpr auto RED = glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f };
+  const auto RED = Color::FromRGB(204, 52, 43);
+  const auto GREEN = Color::FromRGB(25, 136, 68);
+  const auto YELLOW = Color::FromRGB(251, 169, 34);
+  const auto BLUE = Color::FromRGB(57, 113, 237);
+  const auto PURPLE = Color::FromRGB(163, 106, 199);
+
   constexpr auto GREY = glm::vec4{ 0.7f, 0.7f, 0.7f, 0.75f };
 
   const Pepper::OrthoCamera CAMERA{

@@ -21,6 +21,7 @@ private:
   static void AddPiece(Pepper::Ref<Piece> piece);
 
   static std::vector<Pepper::Ref<Piece>> m_pieces;
+  static std::vector<std::pair<GridSquare, glm::vec4>> m_squares;
 };
 
 #endif // SESSION_HPP
