@@ -36,11 +36,10 @@ namespace
   };
 }
 
-std::vector<Pepper::Ref<Piece>> Session::m_pieces{};
-
 void Session::Start()
 {
   m_pieces.clear();
+  m_squares.clear();
 
   AddPiece();
 }
@@ -64,22 +63,57 @@ void Session::AddPiece()
            column,
            line);
 
-  auto piece = Pepper::CreateRef<Piece>(shape, color, GridSquare{ column, 20 }, rotation);
-  m_pieces.emplace_back(std::move(piece));
+  m_current_piece = Pepper::CreateRef<Piece>(shape, color, GridSquare{ column, 20 }, rotation);
 }
 
 void Session::OnUpdate(Pepper::TimeStep ts)
 {
-  increment_to_move += 20.0f * ts;
-  if (increment_to_move < 20.0f)
+  // Check if piece can move down
+  auto is_piece_at_zero = m_current_piece->GetOrigin().IsAtZero();
+  if (is_piece_at_zero)
+  {
+    for (const auto& square : m_current_piece->GetQuads())
+    {
+      m_squares.emplace_back(square, m_current_piece->GetColor());
+    }
+    AddPiece();
     return;
-  m_pieces.front()->DownIncrement();
-  increment_to_move = 0.0f;
+  }
+
+  auto is_piece_above_others = [this](const GridSquare& standingGS)
+  {
+    const auto& quads = m_current_piece->GetQuads();
+    return std::ranges::all_of(quads,
+                               [&standingGS](const GridSquare& quad)
+                               { return quad.IsAbove(standingGS); });
+  };
+
+  if (!std::ranges::all_of(m_squares | std::views::elements<0>, is_piece_above_others))
+  {
+    for (const auto& square : m_current_piece->GetQuads())
+    {
+      m_squares.emplace_back(square, m_current_piece->GetColor());
+    }
+    AddPiece();
+    return;
+  }
+
+  increment_to_move += 20.0f * ts;
+  if (increment_to_move >= 20.0f)
+  {
+    m_current_piece->DownIncrement();
+    increment_to_move = 0.0f;
+  }
 }
 
-void Session::OnEachPiece(std::function<void(Pepper::Ref<Piece>)> fun)
+void Session::OnCurrentPiece(const std::function<void(Pepper::Ref<Piece>)>& fun)
 {
-  std::ranges::for_each(m_pieces, std::move(fun));
+  fun(m_current_piece);
+}
+
+void Session::OnEachSquare(std::function<void(std::pair<GridSquare, glm::vec4>)> fun)
+{
+  std::ranges::for_each(m_squares, std::move(fun));
 }
 
 glm::vec2 Session::ConvertSquare(GridSquare gs)

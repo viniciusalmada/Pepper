@@ -113,4 +113,5 @@ Piece::Piece(Shapes shape, const glm::vec4& color, const GridSquare& origin, Rot
     m_quads({}),
     m_rotation{ rot }
 {
+  UpdateQuads();
 }

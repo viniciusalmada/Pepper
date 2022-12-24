@@ -25,6 +25,8 @@ public:
 
   [[nodiscard]] const glm::vec4& GetColor() const { return m_color; }
 
+  [[nodiscard]] const GridSquare& GetOrigin() const { return m_origin; }
+
 private:
   void UpdateQuads();
 

@@ -15,6 +15,11 @@ public:
   [[nodiscard]] int32_t GetRow() const { return m_row_id; }
   [[nodiscard]] int32_t GetColumn() const { return m_column_id; }
 
+  [[nodiscard]] bool IsAbove(const GridSquare& other) const;
+  [[nodiscard]] bool IsBelowOrEqual(const GridSquare& other) const;
+
+  [[nodiscard]] bool IsAtZero() const;
+
 private:
   int32_t m_column_id;
   int32_t m_row_id;

@@ -12,6 +12,7 @@ struct GameLayer::Implementation
 {
   int mouse_x = 0;
   int mouse_y = 0;
+  Session session;
 };
 
 GameLayer::GameLayer() : Layer("GameLayer"), impl(CreateScope<Implementation>()) {}
@@ -21,11 +22,12 @@ GameLayer::~GameLayer() = default;
 void GameLayer::OnAttach()
 {
   PP_INFO("GameLayer attached!");
+  impl->session.Start();
 }
 
 void GameLayer::OnUpdate(TimeStep ts)
 {
-  Session::OnUpdate(ts);
+  impl->session.OnUpdate(ts);
 
   RenderCommand::SetClearColor(Color::BLACK);
   RenderCommand::Clear();
@@ -33,17 +35,25 @@ void GameLayer::OnUpdate(TimeStep ts)
   Renderer2D::BeginScene(CAMERA);
   DrawGrid();
 
-  Session::OnEachPiece(
-    [](const Ref<Piece>& p)
+  impl->session.OnEachSquare(
+    [](std::pair<GridSquare, glm::vec4> squareAndColor)
     {
-      const auto& quads = p->GetQuads();
-      auto draw_quad = [color = p->GetColor()](GridSquare gs)
+      auto position = Session::ConvertSquare(squareAndColor.first);
+      Renderer2D::DrawQuad({ position.x, position.y, 0.35f },
+                           { QUAD_SIDE, QUAD_SIDE },
+                           squareAndColor.second);
+    });
+
+  impl->session.OnCurrentPiece(
+    [](const Pepper::Ref<Piece>& piece)
+    {
+      for (const auto& gs : piece->GetQuads())
       {
         auto position = Session::ConvertSquare(gs);
-        Renderer2D::DrawQuad({ position.x, position.y, 0.35f }, { QUAD_SIDE, QUAD_SIDE }, color);
-      };
-
-      std::ranges::for_each(quads, draw_quad);
+        Renderer2D::DrawQuad({ position.x, position.y, 0.35f },
+                             { QUAD_SIDE, QUAD_SIDE },
+                             piece->GetColor());
+      }
     });
 
   Renderer2D::EndScene();

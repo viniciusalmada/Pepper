@@ -10,7 +10,6 @@ TetrisApp::TetrisApp() :
     Application("Tetris", WINDOW_WIDTH, WINDOW_HEIGHT)
 {
   PushLayer(m_game_layer);
-  Session::Start();
 }
 
 Pepper::Scope<Pepper::Application> Pepper::CreateApplication()
