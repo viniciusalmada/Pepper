@@ -16,6 +16,8 @@ namespace
 {
   constexpr auto ORIGIN_ARENA_X = 11.0f;
   constexpr auto ORIGIN_ARENA_Y = 11.0f + SCENE_HEIGHT - 2.0f;
+  const float INCREMENT = 50.0f;
+  const float VELOCITY = 10.0f;
   float increment_to_move = 0.0f;
 
   std::array<glm::vec4, 5> COLORS{ RED, GREEN, YELLOW, BLUE, PURPLE };
@@ -69,40 +71,52 @@ void Session::AddPiece()
 void Session::OnUpdate(Pepper::TimeStep ts)
 {
   // Check if piece can move down
-  auto is_piece_at_zero = m_current_piece->GetOrigin().IsAtZero();
-  if (is_piece_at_zero)
-  {
-    for (const auto& square : m_current_piece->GetQuads())
-    {
-      m_squares.emplace_back(square, m_current_piece->GetColor());
-    }
-    AddPiece();
-    return;
-  }
-
-  auto is_piece_above_others = [this](const GridSquare& standingGS)
-  {
-    const auto& quads = m_current_piece->GetQuads();
-    return std::ranges::all_of(quads,
-                               [&standingGS](const GridSquare& quad)
-                               { return quad.IsAbove(standingGS); });
-  };
-
-  if (!std::ranges::all_of(m_squares | std::views::elements<0>, is_piece_above_others))
-  {
-    for (const auto& square : m_current_piece->GetQuads())
-    {
-      m_squares.emplace_back(square, m_current_piece->GetColor());
-    }
-    AddPiece();
-    return;
-  }
-
-  increment_to_move += 20.0f * ts;
-  if (increment_to_move >= 20.0f)
+  increment_to_move += INCREMENT * ts;
+  if (increment_to_move >= VELOCITY)
   {
     m_current_piece->DownIncrement();
     increment_to_move = 0.0f;
+    return;
+  }
+
+  auto is_piece_at_zero = m_current_piece->GetOrigin().IsAtZero();
+  if (is_piece_at_zero)
+  {
+    LockPiece();
+    AddPiece();
+    return;
+  }
+
+  bool is_piece_above_others = true;
+  for (auto& [square, _] : m_squares)
+  {
+    auto& quads = m_current_piece->GetQuads();
+    for (auto& piece_quad : quads)
+    {
+      if (piece_quad.GetColumn() != square.GetColumn())
+        continue;
+
+      if (piece_quad.GetRow() != square.GetRow() + 1)
+        continue;
+
+      is_piece_above_others = false;
+    }
+    if (!is_piece_above_others)
+      break;
+  }
+
+  if (!is_piece_above_others)
+  {
+    LockPiece();
+    AddPiece();
+    return;
+  }
+}
+void Session::LockPiece()
+{
+  for (const auto& square : m_current_piece->GetQuads())
+  {
+    m_squares.emplace_back(square, m_current_piece->GetColor());
   }
 }
 
@@ -111,9 +125,9 @@ void Session::OnCurrentPiece(const std::function<void(Pepper::Ref<Piece>)>& fun)
   fun(m_current_piece);
 }
 
-void Session::OnEachSquare(std::function<void(std::pair<GridSquare, glm::vec4>)> fun)
+void Session::OnEachSquare(const std::function<void(std::pair<GridSquare, glm::vec4>)>& fun)
 {
-  std::ranges::for_each(m_squares, std::move(fun));
+  std::ranges::for_each(m_squares, fun);
 }
 
 glm::vec2 Session::ConvertSquare(GridSquare gs)
