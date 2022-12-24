@@ -12,6 +12,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <random>
 #include <ranges>
 #include <sstream>
 #include <string>

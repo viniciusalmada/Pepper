@@ -10,6 +10,9 @@
 #include "Pepper/Core/OrthoCameraController.hpp"
 #include "Pepper/Core/Utils.hpp"
 
+// --Utilities-----------------------
+#include "Pepper/Utilities/Random.hpp"
+
 // --Events-----------------------
 #include "Pepper/Events/Event.hpp"
 #include "Pepper/Events/EventDispatcher.hpp"

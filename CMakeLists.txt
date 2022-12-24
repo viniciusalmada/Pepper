@@ -86,6 +86,7 @@ add_library(Pepper STATIC
   ${PP_SRC_DIR}/OrthoCamera.cpp
   ${PP_SRC_DIR}/OrthoCameraController.cpp
   ${PP_SRC_DIR}/Profiler.cpp
+  ${PP_SRC_DIR}/Random.cpp
   ${PP_SRC_DIR}/RenderCommand.cpp
   ${PP_SRC_DIR}/Renderer.cpp
   ${PP_SRC_DIR}/Renderer2D.cpp
