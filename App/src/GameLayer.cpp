@@ -76,6 +76,20 @@ void GameLayer::OnEvent(Event& event)
       impl->mouse_y = (int)mouseEvent.GetY();
       return true;
     });
+
+  dispatcher.Dispatch<KeyPressedEvent>(
+    [&](KeyPressedEvent& keyEvent)
+    {
+      if (keyEvent.GetKeyCode() == PP_KEY_LEFT)
+        impl->session.MoveLeft();
+      if (keyEvent.GetKeyCode() == PP_KEY_RIGHT)
+        impl->session.MoveRigth();
+      if (keyEvent.GetKeyCode() == PP_KEY_DOWN)
+        impl->session.DownPiece();
+      if (keyEvent.GetKeyCode() == PP_KEY_UP)
+        impl->session.RotatePiece();
+      return true;
+    });
 }
 
 void GameLayer::DrawGrid()

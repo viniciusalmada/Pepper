@@ -100,9 +100,21 @@ void Piece::UpdateQuads()
   }
 }
 
-void Piece::DownIncrement()
+void Piece::MoveDown()
 {
   m_origin += { 0, -1 };
+  UpdateQuads();
+}
+
+void Piece::MoveLeft()
+{
+  m_origin += { -1, 0 };
+  UpdateQuads();
+}
+
+void Piece::MoveRight()
+{
+  m_origin += { +1, 0 };
   UpdateQuads();
 }
 
@@ -113,5 +125,15 @@ Piece::Piece(Shapes shape, const glm::vec4& color, const GridSquare& origin, Rot
     m_squares({}),
     m_rotation{ rot }
 {
+  UpdateQuads();
+}
+
+void Piece::Rotate()
+{
+  auto new_rotation = static_cast<uint32_t>(m_rotation) + 1;
+  if (new_rotation > 3)
+    m_rotation = Rotation::A0;
+  else
+    m_rotation = static_cast<Rotation>(new_rotation);
   UpdateQuads();
 }

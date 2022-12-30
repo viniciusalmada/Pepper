@@ -17,7 +17,7 @@ namespace
   constexpr auto ORIGIN_ARENA_X = 11.0f;
   constexpr auto ORIGIN_ARENA_Y = 11.0f + SCENE_HEIGHT - 2.0f;
   const float INCREMENT = 50.0f;
-  const float VELOCITY = 10.0f;
+  const float VELOCITY = 20.0f;
   float increment_to_move = 0.0f;
 
   std::array<glm::vec4, 5> COLORS{ RED, GREEN, YELLOW, BLUE, PURPLE };
@@ -55,7 +55,7 @@ void Session::AddPiece()
   auto height = Piece::GetHeight(shape, rotation);
   auto width = Piece::GetWidth(shape, rotation);
 
-  auto column = Pepper::IntRandom(0, 9 - (width - 1));
+  auto column = (10 - width) / 2;
   auto line = Pepper::IntRandom(0, 9);
 
   PP_TRACE("shape={0},rot={1},h={2},w={3},col={4},lin={5}",
@@ -75,7 +75,7 @@ void Session::OnUpdate(Pepper::TimeStep ts)
   increment_to_move += INCREMENT * ts;
   if (increment_to_move >= VELOCITY)
   {
-    m_current_piece->DownIncrement();
+    m_current_piece->MoveDown();
     increment_to_move = 0.0f;
     return;
   }
@@ -138,4 +138,24 @@ glm::vec2 Session::ConvertSquare(GridSquare gs)
   float x = static_cast<float>(gs.GetColumn()) * CELL_SIDE + ORIGIN_ARENA_X + CELL_SIDE / 2.0f;
   float y = ORIGIN_ARENA_Y - (static_cast<float>(gs.GetRow()) * CELL_SIDE + CELL_SIDE / 2.0f);
   return { x, y };
+}
+
+void Session::MoveLeft()
+{
+  m_current_piece->MoveLeft();
+}
+
+void Session::MoveRigth()
+{
+  m_current_piece->MoveRight();
+}
+
+void Session::DownPiece()
+{
+  m_current_piece->MoveDown();
+}
+
+void Session::RotatePiece()
+{
+  m_current_piece->Rotate();
 }

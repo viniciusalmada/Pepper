@@ -14,7 +14,11 @@ class Piece
 public:
   Piece(Shapes shape, const glm::vec4& color, const GridSquare& origin, Rotation rot);
 
-  void DownIncrement();
+  void MoveDown();
+  void MoveLeft();
+  void MoveRight();
+
+  void Rotate();
 
   [[nodiscard]] Shapes GetShape() const { return m_shape; };
 
