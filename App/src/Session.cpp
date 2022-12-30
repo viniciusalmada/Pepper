@@ -41,16 +41,17 @@ namespace
 void Session::Start()
 {
   m_pieces.clear();
-  m_squares.clear();
+  m_locked_squares.clear();
 
   AddPiece();
 }
 
 void Session::AddPiece()
 {
-  auto shape = Shapes::S;        // Shapes(Pepper::IntRandom(0,6));
-  auto rotation = Rotation::A90; // Rotation(Pepper::IntRandom(0, 3));
-  auto color = COLORS[Pepper::IntRandom(0, COLORS.size() - 1)];
+  auto shape = Shapes::S; // Shapes(Pepper::IntRandom(0,6));
+  auto rotation =
+    Pepper::IntRandom(0, 1) ? Rotation::A90 : Rotation::A0; // Rotation(Pepper::IntRandom(0, 3));
+  auto color = COLORS[Pepper::IntRandom(1, COLORS.size()) - 1];
   auto height = Piece::GetHeight(shape, rotation);
   auto width = Piece::GetWidth(shape, rotation);
 
@@ -88,15 +89,15 @@ void Session::OnUpdate(Pepper::TimeStep ts)
   }
 
   bool is_piece_above_others = true;
-  for (auto& [square, _] : m_squares)
+  for (auto& [locked_square, _] : m_locked_squares)
   {
-    auto& quads = m_current_piece->GetQuads();
-    for (auto& piece_quad : quads)
+    auto& piece_squares = m_current_piece->GetSquares();
+    for (auto& piece_square : piece_squares)
     {
-      if (piece_quad.GetColumn() != square.GetColumn())
+      if (piece_square.GetColumn() != locked_square.GetColumn())
         continue;
 
-      if (piece_quad.GetRow() != square.GetRow() + 1)
+      if (piece_square.GetRow() != locked_square.GetRow() + 1)
         continue;
 
       is_piece_above_others = false;
@@ -114,9 +115,9 @@ void Session::OnUpdate(Pepper::TimeStep ts)
 }
 void Session::LockPiece()
 {
-  for (const auto& square : m_current_piece->GetQuads())
+  for (const auto& square : m_current_piece->GetSquares())
   {
-    m_squares.emplace_back(square, m_current_piece->GetColor());
+    m_locked_squares.emplace_back(square, m_current_piece->GetColor());
   }
 }
 
@@ -127,7 +128,7 @@ void Session::OnCurrentPiece(const std::function<void(Pepper::Ref<Piece>)>& fun)
 
 void Session::OnEachSquare(const std::function<void(std::pair<GridSquare, glm::vec4>)>& fun)
 {
-  std::ranges::for_each(m_squares, fun);
+  std::ranges::for_each(m_locked_squares, fun);
 }
 
 glm::vec2 Session::ConvertSquare(GridSquare gs)

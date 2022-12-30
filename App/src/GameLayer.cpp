@@ -47,7 +47,7 @@ void GameLayer::OnUpdate(TimeStep ts)
   impl->session.OnCurrentPiece(
     [](const Pepper::Ref<Piece>& piece)
     {
-      for (const auto& gs : piece->GetQuads())
+      for (const auto& gs : piece->GetSquares())
       {
         auto position = Session::ConvertSquare(gs);
         Renderer2D::DrawQuad({ position.x, position.y, 0.35f },

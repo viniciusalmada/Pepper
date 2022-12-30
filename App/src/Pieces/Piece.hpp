@@ -21,7 +21,7 @@ public:
   [[nodiscard]] static uint8_t GetWidth(Shapes s, Rotation r);
   [[nodiscard]] static uint8_t GetHeight(Shapes s, Rotation r);
 
-  [[nodiscard]] const std::array<GridSquare, 4>& GetQuads() const { return m_quads; }
+  [[nodiscard]] const std::array<GridSquare, 4>& GetSquares() const { return m_squares; }
 
   [[nodiscard]] const glm::vec4& GetColor() const { return m_color; }
 
@@ -33,7 +33,7 @@ private:
   Shapes m_shape;
   glm::vec4 m_color;
   GridSquare m_origin;
-  std::array<GridSquare, 4> m_quads;
+  std::array<GridSquare, 4> m_squares;
   Rotation m_rotation;
 };
 

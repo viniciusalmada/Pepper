@@ -74,19 +74,19 @@ void Piece::UpdateQuads()
     case Rotation::A0:
     case Rotation::A180:
     {
-      m_quads[0] = m_origin;
-      m_quads[1] = m_origin + GridSquare(1, 0);
-      m_quads[2] = m_origin + GridSquare(1, 1);
-      m_quads[3] = m_origin + GridSquare(2, 1);
+      m_squares[0] = m_origin;
+      m_squares[1] = m_origin + GridSquare(1, 0);
+      m_squares[2] = m_origin + GridSquare(1, 1);
+      m_squares[3] = m_origin + GridSquare(2, 1);
       break;
     }
     case Rotation::A90:
     case Rotation::A270:
     {
-      m_quads[0] = m_origin + GridSquare(1, 0);
-      m_quads[1] = m_origin + GridSquare(0, 1);
-      m_quads[2] = m_origin + GridSquare(1, 1);
-      m_quads[3] = m_origin + GridSquare(0, 2);
+      m_squares[0] = m_origin + GridSquare(1, 0);
+      m_squares[1] = m_origin + GridSquare(0, 1);
+      m_squares[2] = m_origin + GridSquare(1, 1);
+      m_squares[3] = m_origin + GridSquare(0, 2);
       break;
     }
     }
@@ -110,7 +110,7 @@ Piece::Piece(Shapes shape, const glm::vec4& color, const GridSquare& origin, Rot
     m_shape(shape),
     m_color(color),
     m_origin(origin),
-    m_quads({}),
+    m_squares({}),
     m_rotation{ rot }
 {
   UpdateQuads();

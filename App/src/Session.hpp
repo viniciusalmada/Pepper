@@ -23,7 +23,7 @@ private:
 
   Pepper::Ref<Piece> m_current_piece{};
   std::vector<Pepper::Ref<Piece>> m_pieces{};
-  std::vector<std::pair<GridSquare, glm::vec4>> m_squares{};
+  std::vector<std::pair<GridSquare, glm::vec4>> m_locked_squares{};
   void LockPiece();
 };
 

@@ -26,16 +26,6 @@ void GridSquare::operator-=(const GridSquare& other)
   *this = *this - other;
 }
 
-bool GridSquare::IsAbove(const GridSquare& other) const
-{
-  return this->m_row_id > other.m_row_id;
-}
-
-bool GridSquare::IsBelowOrEqual(const GridSquare& other) const
-{
-  return this->m_row_id <= other.m_row_id;
-}
-
 bool GridSquare::IsAtZero() const
 {
   return this->m_row_id == 0;
