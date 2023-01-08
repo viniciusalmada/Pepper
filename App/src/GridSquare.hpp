@@ -1,6 +1,8 @@
 #ifndef HOUSE_HPP
 #define HOUSE_HPP
 
+#include <cstdint>
+
 class GridSquare
 {
 public:

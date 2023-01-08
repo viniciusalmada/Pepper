@@ -16,9 +16,11 @@ namespace
 {
   constexpr auto ORIGIN_ARENA_X = 11.0f;
   constexpr auto ORIGIN_ARENA_Y = 11.0f + SCENE_HEIGHT - 2.0f;
-  const float INCREMENT = 50.0f;
-  const float VELOCITY = 20.0f;
-  float increment_to_move = 0.0f;
+  const float INCREMENT_TO_FALL = 30.0f;
+  const float INCREMENT_TO_MOVE = 300.0f;
+  const float VALUE_TO_FALL = 20.0f;
+  float fall_factor = 0.0f;
+  float value_to_move = 0.0f;
 
   std::array<glm::vec4, 5> COLORS{ RED, GREEN, YELLOW, BLUE, PURPLE };
   std::map<Shapes, std::string> SHAPES{
@@ -36,6 +38,42 @@ namespace
     {Rotation::A270, "A270"},
     { Rotation::A90,  "A90"},
   };
+
+  enum class Direction { LEFT, RIGHT, DOWN };
+  bool PieceTouchesSquares(Direction direction,
+                           const Pepper::Ref<Piece>& piece,
+                           const std::vector<std::pair<GridSquare, glm::vec4>>& squares)
+  {
+    for (auto& [locked_square, _] : squares)
+    {
+      auto& piece_squares = piece->GetSquares();
+      for (auto& piece_square : piece_squares)
+      {
+        switch (direction)
+        {
+        case Direction::DOWN:
+          if (piece_square.GetColumn() != locked_square.GetColumn())
+            continue;
+          if (piece_square.GetRow() != locked_square.GetRow() + 1)
+            continue;
+          return true;
+        case Direction::LEFT:
+          if (piece_square.GetRow() != locked_square.GetRow())
+            continue;
+          if (piece_square.GetColumn() != locked_square.GetColumn() + 1)
+            continue;
+          return true;
+        case Direction::RIGHT:
+          if (piece_square.GetRow() != locked_square.GetRow())
+            continue;
+          if (piece_square.GetColumn() != locked_square.GetColumn() - 1)
+            continue;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }
 
 void Session::Start()
@@ -43,17 +81,17 @@ void Session::Start()
   m_pieces.clear();
   m_locked_squares.clear();
 
-  AddPiece();
+  AddNewPiece();
 }
 
-void Session::AddPiece()
+void Session::AddNewPiece()
 {
   auto shape = Shapes::S; // Shapes(Pepper::IntRandom(0,6));
   auto rotation =
     Pepper::IntRandom(0, 1) ? Rotation::A90 : Rotation::A0; // Rotation(Pepper::IntRandom(0, 3));
   auto color = COLORS[Pepper::IntRandom(1, COLORS.size()) - 1];
-  auto height = Piece::GetHeight(shape, rotation);
-  auto width = Piece::GetWidth(shape, rotation);
+  auto height = Piece::ComputeHeight(shape, rotation);
+  auto width = Piece::ComputeWidth(shape, rotation);
 
   auto column = (10 - width) / 2;
   auto line = Pepper::IntRandom(0, 9);
@@ -71,47 +109,48 @@ void Session::AddPiece()
 
 void Session::OnUpdate(Pepper::TimeStep ts)
 {
-  // Check if piece can move down
-  increment_to_move += INCREMENT * ts;
-  if (increment_to_move >= VELOCITY)
-  {
-    m_current_piece->MoveDown();
-    increment_to_move = 0.0f;
+  // Check if piece must be updated
+  fall_factor += INCREMENT_TO_FALL * ts;
+  if (fall_factor < VALUE_TO_FALL)
     return;
-  }
 
   auto is_piece_at_zero = m_current_piece->GetOrigin().IsAtZero();
   if (is_piece_at_zero)
   {
     LockPiece();
-    AddPiece();
+    AddNewPiece();
+    fall_factor = 0.0f;
     return;
   }
 
-  bool is_piece_above_others = true;
-  for (auto& [locked_square, _] : m_locked_squares)
-  {
-    auto& piece_squares = m_current_piece->GetSquares();
-    for (auto& piece_square : piece_squares)
-    {
-      if (piece_square.GetColumn() != locked_square.GetColumn())
-        continue;
+  //  bool is_piece_above_others = true;
+  //  for (auto& [locked_square, _] : m_locked_squares)
+  //  {
+  //    auto& piece_squares = m_current_piece->GetSquares();
+  //    for (auto& piece_square : piece_squares)
+  //    {
+  //      if (piece_square.GetColumn() != locked_square.GetColumn())
+  //        continue;
+  //
+  //      if (piece_square.GetRow() != locked_square.GetRow() + 1)
+  //        continue;
+  //
+  //      is_piece_above_others = false;
+  //    }
+  //    if (!is_piece_above_others)
+  //      break;
+  //  }
 
-      if (piece_square.GetRow() != locked_square.GetRow() + 1)
-        continue;
-
-      is_piece_above_others = false;
-    }
-    if (!is_piece_above_others)
-      break;
-  }
-
-  if (!is_piece_above_others)
+  if (PieceTouchesSquares(Direction::DOWN, m_current_piece, m_locked_squares))
   {
     LockPiece();
-    AddPiece();
+    AddNewPiece();
+    fall_factor = 0.0f;
     return;
   }
+
+  m_current_piece->MoveDown();
+  fall_factor = 0.0f;
 }
 void Session::LockPiece()
 {
@@ -140,19 +179,71 @@ glm::vec2 Session::ConvertSquare(GridSquare gs)
   return { x, y };
 }
 
-void Session::MoveLeft()
+void Session::MoveLeft(Pepper::TimeStep ts)
 {
-  m_current_piece->MoveLeft();
+  if (ts == 0.0f)
+  {
+    if (m_current_piece->GetOrigin().GetColumn() == 0)
+      return;
+    if (PieceTouchesSquares(Direction::LEFT, m_current_piece, m_locked_squares))
+      return;
+    m_current_piece->MoveLeft();
+    return;
+  }
+#ifdef ENABLE_POLLING
+  value_to_move += INCREMENT_TO_MOVE * ts;
+  if (value_to_move >= VALUE_TO_FALL)
+  {
+    m_current_piece->MoveLeft();
+    value_to_move = 0;
+  }
+#endif
 }
 
-void Session::MoveRigth()
+void Session::MoveRight(Pepper::TimeStep ts)
 {
-  m_current_piece->MoveRight();
+  if (ts == 0.0f)
+  {
+    if (m_current_piece->GetOrigin().GetColumn() == 10 - m_current_piece->GetWidth())
+      return;
+    if (PieceTouchesSquares(Direction::RIGHT, m_current_piece, m_locked_squares))
+      return;
+    m_current_piece->MoveRight();
+    return;
+  }
+#ifdef ENABLE_POLLING
+  value_to_move += INCREMENT_TO_MOVE * ts;
+  if (value_to_move >= VALUE_TO_FALL)
+  {
+    m_current_piece->MoveRight();
+    value_to_move = 0;
+  }
+#endif
 }
 
-void Session::DownPiece()
+void Session::DownPiece(Pepper::TimeStep ts)
 {
-  m_current_piece->MoveDown();
+  if (!m_current_piece->GetOrigin().IsAtZero())
+  {
+    if (ts == 0.0f)
+    {
+      m_current_piece->MoveDown();
+      return;
+    }
+#ifdef ENABLE_POLLING
+    value_to_move += INCREMENT_TO_MOVE * ts;
+    if (value_to_move >= VALUE_TO_FALL)
+    {
+      m_current_piece->MoveDown();
+      value_to_move = 0;
+    }
+    return;
+  }
+  LockPiece();
+  AddNewPiece();
+#else
+  }
+#endif
 }
 
 void Session::RotatePiece()

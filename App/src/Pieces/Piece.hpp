@@ -14,6 +14,8 @@ class Piece
 public:
   Piece(Shapes shape, const glm::vec4& color, const GridSquare& origin, Rotation rot);
 
+  [[nodiscard]] uint8_t GetWidth() const;
+
   void MoveDown();
   void MoveLeft();
   void MoveRight();
@@ -22,8 +24,8 @@ public:
 
   [[nodiscard]] Shapes GetShape() const { return m_shape; };
 
-  [[nodiscard]] static uint8_t GetWidth(Shapes s, Rotation r);
-  [[nodiscard]] static uint8_t GetHeight(Shapes s, Rotation r);
+  [[nodiscard]] static uint8_t ComputeWidth(Shapes s, Rotation r);
+  [[nodiscard]] static uint8_t ComputeHeight(Shapes s, Rotation r);
 
   [[nodiscard]] const std::array<GridSquare, 4>& GetSquares() const { return m_squares; }
 

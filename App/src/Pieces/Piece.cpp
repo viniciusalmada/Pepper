@@ -14,7 +14,7 @@
  *
  */
 
-uint8_t Piece::GetWidth(Shapes s, Rotation r)
+uint8_t Piece::ComputeWidth(Shapes s, Rotation r)
 {
   switch (s)
   {
@@ -39,7 +39,7 @@ uint8_t Piece::GetWidth(Shapes s, Rotation r)
   return 0;
 }
 
-uint8_t Piece::GetHeight(Shapes s, Rotation r)
+uint8_t Piece::ComputeHeight(Shapes s, Rotation r)
 {
   switch (s)
   {
@@ -136,4 +136,9 @@ void Piece::Rotate()
   else
     m_rotation = static_cast<Rotation>(new_rotation);
   UpdateQuads();
+}
+
+uint8_t Piece::GetWidth() const
+{
+  return ComputeWidth(m_shape, m_rotation);
 }

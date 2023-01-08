@@ -16,15 +16,15 @@ public:
   void OnCurrentPiece(const std::function<void(Pepper::Ref<Piece>)>& fun);
   void OnEachSquare(const std::function<void(std::pair<GridSquare, glm::vec4>)>& fun);
 
-  void MoveLeft();
-  void MoveRigth();
-  void DownPiece();
+  void MoveLeft(Pepper::TimeStep ts);
+  void MoveRight(Pepper::TimeStep ts);
+  void DownPiece(Pepper::TimeStep ts);
   void RotatePiece();
 
   static glm::vec2 ConvertSquare(GridSquare gs);
 
 private:
-  void AddPiece();
+  void AddNewPiece();
 
   Pepper::Ref<Piece> m_current_piece{};
   std::vector<Pepper::Ref<Piece>> m_pieces{};

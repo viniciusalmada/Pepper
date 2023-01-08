@@ -27,6 +27,15 @@ void GameLayer::OnAttach()
 
 void GameLayer::OnUpdate(TimeStep ts)
 {
+#ifdef ENABLE_POLLING
+  if (Pepper::Input::IsKeyPressed(PP_KEY_LEFT))
+    impl->session.MoveLeft(ts);
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_RIGHT))
+    impl->session.MoveRight(ts);
+  else if (Pepper::Input::IsKeyPressed(PP_KEY_DOWN))
+    impl->session.DownPiece(ts);
+#endif
+
   impl->session.OnUpdate(ts);
 
   RenderCommand::SetClearColor(Color::BLACK);
@@ -81,12 +90,12 @@ void GameLayer::OnEvent(Event& event)
     [&](KeyPressedEvent& keyEvent)
     {
       if (keyEvent.GetKeyCode() == PP_KEY_LEFT)
-        impl->session.MoveLeft();
-      if (keyEvent.GetKeyCode() == PP_KEY_RIGHT)
-        impl->session.MoveRigth();
-      if (keyEvent.GetKeyCode() == PP_KEY_DOWN)
-        impl->session.DownPiece();
-      if (keyEvent.GetKeyCode() == PP_KEY_UP)
+        impl->session.MoveLeft(0);
+      else if (keyEvent.GetKeyCode() == PP_KEY_RIGHT)
+        impl->session.MoveRight(0);
+      else if (keyEvent.GetKeyCode() == PP_KEY_DOWN)
+        impl->session.DownPiece(0);
+      else if (keyEvent.GetKeyCode() == PP_KEY_UP)
         impl->session.RotatePiece();
       return true;
     });
